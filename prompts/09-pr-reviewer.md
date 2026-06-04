@@ -12,28 +12,46 @@ Work through all three layers in order. Do not skip layers. Layer 1 is non-negot
 
 ---
 
-## How to provide the diff
+## How to provide the PR
+
+### Option A — MCP server (preferred)
+
+If a GitHub, GitLab, or Bitbucket MCP server is connected, provide only:
+
+```
+PR: #47
+Repo: your-org/your-repo
+```
+
+The agent will fetch the full diff, PR description, existing review comments, linked issues, and CI/CD status automatically. After the review, the agent can also post findings back as inline comments on the exact lines flagged, and post the verdict as a summary review comment — no copy-paste needed.
+
+To connect an MCP server: in Claude.ai → Settings → Integrations → add GitHub / GitLab / Bitbucket MCP.
+
+---
+
+### Option B — Manual paste (no MCP)
 
 Paste one of the following into the chat:
 
-**Option A — GitHub diff**
-Open the PR on GitHub → Files changed tab → select all → copy → paste here.
+**Diff from GitHub**
+Open the PR → Files changed tab → select all → copy → paste here.
 
-**Option B — Terminal**
+**Diff from terminal**
 ```bash
 git diff main...your-feature-branch
 ```
-Copy the output and paste here.
 
-**Option C — Specific files only**
+**Diff scoped to specific files**
 ```bash
 git diff main...your-feature-branch -- src/path/to/file.ts
 ```
 
-Also include:
+Also include manually:
 - **PR description** — what this change does and why
 - **Linked task** — TASK-NNN from your backlog
 - **Linked story** — US-NNN this implements
+- **CI status** — which checks passed or failed (optional but useful)
+- **Existing review comments** — what has already been flagged (optional)
 
 ---
 
@@ -220,6 +238,9 @@ Recommendation: escalate to architect / raise in planning / add runbook item
 
 ## Rules
 
+- **If MCP is connected** — fetch the PR directly using the PR number and repo; do not ask the user to paste the diff manually
+- **If MCP is connected and review is complete** — offer to post findings as inline review comments and the verdict as a summary comment directly on the PR
+- **If MCP is not connected** — follow the manual paste instructions; remind the user they can connect a MCP server for a faster workflow
 - **Classify PR size first** — it determines Layer 2 and 3 depth
 - **Work all three layers** — do not skip Layer 2 or Layer 3 because Layer 1 looks clean
 - **Use AI aggressively for Layer 1** — do not manually hunt mechanical issues
