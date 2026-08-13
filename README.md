@@ -1,17 +1,38 @@
 # AI Dev Pipeline
 
-A professional AI-assisted development setup using 8 specialised agents across Claude.ai and Cursor.
+A structured AI-assisted development pipeline that covers the full SDLC — from a raw idea to PR review. Built as **Antigravity IDE skills** so the entire workflow runs natively inside your editor.
+
+## How it works
+
+The pipeline has **10 specialised agent personas** packaged as 6 skills and 1 always-on rule. Instead of copy-pasting between separate AI chat windows, you invoke skills by name and the agent chains through the SDLC phases automatically.
+
+```
+Your idea
+    ↓ "plan my project: [idea]"
+requirements.md → user-stories.md → architecture.md → tasks.md
+    ↓ "implement TASK-001"
+Code + unit tests + handoff note
+    ↓ "review TASK-001"
+Code review → Security review (if applicable)
+    ↓ "test TASK-001"
+Full test suite + coverage matrix → task marked done
+    ↓ repeat for next task
+```
 
 ## Folder structure
 
 ```
 .
-├── .cursorrules                    # Global architecture context — Cursor reads this on every request
-├── .cursor/
-│   └── rules/
-│       ├── developer.mdc           # Agent 5 coding standards (auto-applies to src/**)
-│       └── tests.mdc               # Agent 8 test standards (auto-applies to *.test.*)
-├── prompts/                        # Source of truth for all agent system prompts
+├── .agents/                            # Antigravity customization root
+│   ├── AGENTS.md                       # Always-on coding standards (Agent 5)
+│   └── skills/
+│       ├── sdlc-plan/SKILL.md          # Planning chain (Agents 1→2→3→4)
+│       ├── sdlc-develop/SKILL.md       # Task implementation (Agent 5)
+│       ├── sdlc-review/SKILL.md        # Code + Security review (Agents 6→7)
+│       ├── sdlc-test/SKILL.md          # Test generation (Agent 8)
+│       ├── pr-review/SKILL.md          # PR review at merge gate (Agent 9)
+│       └── pr-triage/SKILL.md          # Large PR triage (Agent 10)
+├── prompts/                            # Source of truth for all agent instructions
 │   ├── 01-requirements-analyst.md
 │   ├── 02-user-story-writer.md
 │   ├── 03-architect.md
@@ -19,117 +40,128 @@ A professional AI-assisted development setup using 8 specialised agents across C
 │   ├── 05-developer.md
 │   ├── 06-code-reviewer.md
 │   ├── 07-security-reviewer.md
-│   └── 08-test-generator.md
-└── docs/                           # Living project documents (agent outputs)
-    ├── requirements.md             # Agent 1 output
-    ├── user-stories.md             # Agent 2 output
-    ├── architecture.md             # Agent 3 output
-    └── tasks.md                    # Agent 4 output — your task backlog
+│   ├── 08-test-generator.md
+│   ├── 09-pr-reviewer.md
+│   └── 10-large-pr-triage.md
+└── docs/                               # Living project documents (pipeline outputs)
+    ├── requirements.md                  # Agent 1 output
+    ├── user-stories.md                  # Agent 2 output
+    ├── architecture.md                  # Agent 3 output
+    ├── tasks.md                         # Agent 4 output — your task backlog
+    ├── handoffs/                        # Agent 5 handoff notes per task
+    ├── reviews/                         # Agent 6+7 review reports per task
+    └── test-reports/                    # Agent 8 test reports per task
 ```
 
 ---
 
 ## Setup
 
-### 1. Cursor (one-time per project)
+### Antigravity IDE (recommended)
 
-Cursor reads `.cursorrules` and `.cursor/rules/*.mdc` automatically.
+1. Copy this entire folder into your project root (or clone it)
+2. Open the project in Antigravity IDE
+3. The `.agents/` directory is discovered automatically — skills appear immediately
+4. Start a conversation and say: `"plan my project: [your idea]"`
 
-1. Copy this entire folder into your project root
-2. Fill in `.cursorrules` with your architecture context (paste Agent 3 output here)
-3. Cursor now has your architecture and coding standards on every request — nothing else needed
+That's it. No Claude.ai Projects to configure, no API keys, no separate tools.
 
-### 2. Claude.ai Projects (one-time, reusable across projects)
+### Antigravity CLI (`agy`)
 
-Create one Project per agent. The projects are reusable — you don't recreate them per project.
-
-| Agent | Claude Project name | System prompt source |
-|-------|--------------------|--------------------|
-| 1 | Requirements Analyst | `prompts/01-requirements-analyst.md` |
-| 2 | User Story Writer | `prompts/02-user-story-writer.md` |
-| 3 | Architect | `prompts/03-architect.md` |
-| 4 | Task Planner | `prompts/04-task-planner.md` |
-| 6 | Code Reviewer | `prompts/06-code-reviewer.md` |
-| 7 | Security Reviewer | `prompts/07-security-reviewer.md` |
-| 8 | Test Generator | `prompts/08-test-generator.md` |
-
-**Steps:**
-1. Go to [claude.ai](https://claude.ai) → Projects → New Project
-2. Name it e.g. `Agent 1 — Requirements Analyst`
-3. Open Project Instructions → paste the contents of the matching `prompts/*.md` file
-4. Done — every conversation in this project behaves as that agent automatically
+Works the same way — the `.agents/` directory is discovered automatically when you run `agy` from the project root.
 
 ---
 
 ## Workflow
 
-### Starting a new project (run once)
+### Phase 1: Planning (run once per project/feature)
+
+Say: **"plan my project: [your idea or requirements]"**
+
+The `sdlc-plan` skill chains four agents automatically:
+
+| Step | Agent | Input | Output |
+|------|-------|-------|--------|
+| 1 | Requirements Analyst | Your raw idea | `docs/requirements.md` |
+| 2 | User Story Writer | Requirements | `docs/user-stories.md` |
+| 3 | Architect | User stories | `docs/architecture.md` |
+| 4 | Task Planner | Architecture + stories | `docs/tasks.md` |
+
+After the chain completes, you review the full plan and approve or refine.
+
+### Phase 2: Per-task development loop (repeat per task)
 
 ```
-Your idea
-    ↓ paste into Agent 1 (Claude web)
-requirements.md
-    ↓ paste into Agent 2 (Claude web)
-user-stories.md
-    ↓ paste into Agent 3 (Claude web)
-architecture.md  →  also paste into .cursorrules
-    ↓ paste into Agent 4 (Claude web)
-tasks.md  ← your backlog
+1. "implement TASK-NNN"     → sdlc-develop skill writes code + tests + handoff
+2. "review TASK-NNN"        → sdlc-review skill runs code review (+ security if needed)
+3. Fix any review findings   → re-run "review TASK-NNN"
+4. "test TASK-NNN"          → sdlc-test skill generates test suite + marks task done
+5. Pick next task            → repeat
 ```
 
-### Each task (repeat per task)
+### Merge gate (before merging PRs)
 
-```
-Pick TASK-NNN from tasks.md
-    ↓
-Cursor Agent mode: "Implement TASK-NNN. Context in .cursorrules."
-    ↓ Cursor writes files
-Copy the generated code
-    ↓ paste into Agent 6 (Claude web)
-Code review findings
-    ↓ paste into Cursor: "Fix these findings"
-    ↓ (if touches auth/payments/PII)
-Paste fixed code into Agent 7 (Claude web)
-Security findings → Cursor fixes
-    ↓
-Paste code into Agent 8 (Claude web)
-Generated tests → paste into Cursor: "Create these test files and run them"
-    ↓
-Mark TASK-NNN done in tasks.md
-```
+| Situation | What to say |
+|-----------|-------------|
+| Normal PR | "review this PR" or "review PR #47" |
+| Large PR (20+ files) | "triage this PR" first, then "review segment 1", "review segment 2", etc. |
 
 ---
 
-## When to use each tool
+## Skills reference
 
-| Situation | Use |
-|-----------|-----|
-| Vague idea, not sure what to build | Agent 1 (Claude web) |
-| Have requirements, need stories | Agent 2 (Claude web) |
-| Need to design the system | Agent 3 (Claude web) |
-| Need to break design into tasks | Agent 4 (Claude web) |
-| Implementing a task | Cursor Agent mode |
-| Code review | Agent 6 (Claude web) |
-| Auth, payments, or PII code | Agent 7 (Claude web) |
-| Need tests written | Agent 8 (Claude web) |
-| Quick simple change | Cursor directly, skip agents |
+| Skill | Trigger phrases | What it does |
+|-------|----------------|--------------|
+| `sdlc-plan` | "plan my project", "start new project", "create requirements" | Chains Agents 1→2→3→4, writes all docs |
+| `sdlc-develop` | "implement TASK-NNN", "build TASK-NNN" | Implements one task with self-review checklist |
+| `sdlc-review` | "review TASK-NNN", "code review TASK-NNN" | Code review + conditional security review |
+| `sdlc-test` | "test TASK-NNN", "generate tests" | Full test suite + coverage matrix |
+| `pr-review` | "review this PR", "review PR #47" | Three-layer PR review with verdict |
+| `pr-triage` | "triage this PR", "this PR is too large" | Segments large PRs for reviewable chunks |
+
+---
+
+## Always-on rules
+
+The coding standards from Agent 5 (Developer) are installed as `AGENTS.md` — they apply to **every** coding interaction in the workspace, not just when pipeline skills are active. This covers:
+
+- Naming & readability conventions
+- Error handling requirements
+- Input validation standards
+- Retry & resilience patterns
+- Security practices
+- Logging & observability standards
+- Unit test requirements
+
+---
+
+## Using as a project template
+
+This repo is designed to be a **reusable template**. To use it for a new project:
+
+1. Copy the `.agents/` and `prompts/` directories into your new project
+2. Clear the `docs/` directory (or start fresh)
+3. Open in Antigravity and say: "plan my project: [your idea]"
+
+The skills, rules, and prompts travel with the project. No external configuration needed.
 
 ---
 
 ## Updating prompts
 
-Prompts are files — improve them like code.
+Prompts are the source of truth — skills reference them. To update agent behaviour:
 
 1. Edit the relevant file in `prompts/`
-2. Commit the change with a message explaining why: `improve: tighten input validation rules in developer agent`
-3. Update the matching Claude Project Instructions by pasting the new version
-4. For `.mdc` files, Cursor picks up the change automatically on the next request
+2. Commit the change: `improve: tighten input validation rules in developer agent`
+3. The skills will read the updated prompt on the next invocation — no other changes needed
 
 ---
 
 ## Tips
 
-- **Keep `.cursorrules` updated** — paste the latest architecture doc here whenever components change
-- **One task per Cursor session** — don't pile multiple tasks into one Agent conversation
-- **Save agent outputs to `docs/`** — they become context for later agents
-- **The review agents are optional for simple tasks** — use them when the code touches security, shared state, or complex business logic
+- **One task per conversation** — don't pile multiple tasks into one conversation
+- **Review the plan before implementing** — the planning chain pauses for your approval
+- **Security review is automatic** — it triggers when code touches auth, payments, or PII
+- **The review agents are optional for simple tasks** — skip them for trivial changes
+- **Keep docs/ in version control** — they provide context for future development
+- **Prompts are the source of truth** — edit `prompts/` to change agent behaviour; skills reference them automatically
