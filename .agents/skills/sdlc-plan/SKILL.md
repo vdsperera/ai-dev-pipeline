@@ -18,7 +18,16 @@ The user must provide a raw idea, brief, or requirements description as input. T
 
 ## Workflow
 
-Execute these four phases **in strict order**. After each phase, write the output to the specified file before proceeding to the next phase. Do NOT skip phases or run them out of order.
+Execute these four phases **in strict order**. After each phase, write the output to the specified file, then **pause at the checkpoint** before proceeding. Do NOT skip phases or run them out of order.
+
+### How checkpoints work
+
+After each phase, present a brief summary and ask the user:
+*"Phase N complete. Review the output above. You can give feedback to refine, or say 'continue' to proceed to the next phase."*
+
+- If the user says **"continue"**, **"looks good"**, **"next"**, or similar — proceed to the next phase immediately
+- If the user provides **feedback or corrections** — incorporate them, update the output file, and present the revised summary before proceeding
+- This lets the user control the pace: say "continue" four times for a fast run, or pause and refine at any stage
 
 ---
 
@@ -36,7 +45,7 @@ Execute these four phases **in strict order**. After each phase, write the outpu
 
 **Output**: Write the complete output to `docs/requirements.md`
 
-**Before proceeding**: Present a brief summary of the key issues found and the refined requirements to the user. Ask if they want to clarify any `[NEEDS CLARIFICATION]` items before continuing. If the user says to continue, proceed. If they provide clarifications, incorporate them and update `docs/requirements.md`.
+**⏸️ Checkpoint 1**: Present a brief summary: number of issues found, number of `[NEEDS CLARIFICATION]` items, and key requirements identified. Then ask the user to review, give feedback, or continue.
 
 ---
 
@@ -55,6 +64,8 @@ Execute these four phases **in strict order**. After each phase, write the outpu
 
 **Output**: Write the complete output to `docs/user-stories.md`
 
+**⏸️ Checkpoint 2**: Present a brief summary: number of stories produced, MoSCoW breakdown, any stories flagged from `[NEEDS CLARIFICATION]` requirements. Then ask the user to review, give feedback, or continue.
+
 ---
 
 ### Phase 3: Architecture Design
@@ -70,6 +81,8 @@ Execute these four phases **in strict order**. After each phase, write the outpu
 4. Enforce all design principles from the agent instructions
 
 **Output**: Write the complete output to `docs/architecture.md`
+
+**⏸️ Checkpoint 3**: Present a brief summary: number of components, key technology choices, number of ADRs, risk flags raised. Then ask the user to review, give feedback, or continue.
 
 ---
 
