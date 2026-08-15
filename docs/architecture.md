@@ -4,6 +4,25 @@ _Last updated: [date]_
 
 ---
 
+## Tech stack
+- **Runtime:** [e.g. Node.js 20, Python 3.12, Go 1.22]
+- **Framework:** [e.g. Express, FastAPI, Gin]
+- **Database:** [e.g. PostgreSQL 16]
+- **Cache:** [e.g. Redis 7]
+- **Queue:** [e.g. BullMQ, SQS]
+- **Auth:** [e.g. JWT, OAuth2]
+
+## Folder structure
+```
+src/
+├── api/          # Route handlers and middleware — entry point for all HTTP requests
+├── services/     # Business logic — no direct DB access, calls repositories
+├── repositories/ # Data access layer — all DB queries live here
+├── models/       # Entity definitions and types
+├── utils/        # Shared utilities (logger, errors, retry, validation helpers)
+└── config/       # Environment config and constants
+```
+
 ## Component map
 
 ### [ComponentName]
