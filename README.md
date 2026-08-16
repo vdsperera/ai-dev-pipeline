@@ -4,12 +4,12 @@ A structured AI-assisted development pipeline that covers the full SDLC — from
 
 ## How it works
 
-The pipeline has **13 specialised agent personas** packaged as 8 skills and 1 always-on rule. Instead of copy-pasting between separate AI chat windows, you invoke skills by name and the agent chains through the SDLC phases automatically.
+The pipeline has **14 specialised agent personas** packaged as 8 skills and 1 always-on rule. Instead of copy-pasting between separate AI chat windows, you invoke skills by name and the agent chains through the SDLC phases automatically.
 
 ```
 Your idea
     ↓ "plan my project: [idea]"
-requirements.md → user-stories.md → architecture.md → tasks.md
+product-brief.md → requirements.md → user-stories.md → architecture.md → tasks.md
     ↓ "implement TASK-001"
 Code + unit tests + handoff note
     ↓ "review TASK-001"
@@ -30,7 +30,7 @@ API docs + README update + changelog
 ├── .agents/                            # Antigravity customization root
 │   ├── AGENTS.md                       # Always-on coding standards (Agent 5)
 │   └── skills/
-│       ├── sdlc-plan/SKILL.md          # Planning chain (Agents 1→2→3→4)
+│       ├── sdlc-plan/SKILL.md          # Planning chain (Agents 0→1→2→3→4)
 │       ├── sdlc-develop/SKILL.md       # Task implementation (Agent 5)
 │       ├── sdlc-review/SKILL.md        # Code + Security + UX review (Agents 6→7→13)
 │       ├── sdlc-test/SKILL.md          # Test generation (Agent 8)
@@ -39,6 +39,7 @@ API docs + README update + changelog
 │       ├── pr-review/SKILL.md          # PR review at merge gate (Agent 9)
 │       └── pr-triage/SKILL.md          # Large PR triage (Agent 10)
 ├── prompts/                            # Source of truth for all agent instructions
+│   ├── 00-product-strategist.md       # Business thinking, MVP scope
 │   ├── 01-requirements-analyst.md
 │   ├── 02-user-story-writer.md
 │   ├── 03-architect.md
@@ -53,6 +54,7 @@ API docs + README update + changelog
 │   ├── 12-documentation-agent.md      # API docs, README, changelog
 │   └── 13-ux-accessibility-reviewer.md # WCAG 2.1 AA, responsive, UX
 └── docs/                               # Living project documents (pipeline outputs)
+    ├── product-brief.md                 # Agent 0 output
     ├── requirements.md                  # Agent 1 output
     ├── user-stories.md                  # Agent 2 output
     ├── architecture.md                  # Agent 3 output
@@ -89,11 +91,12 @@ Works the same way — the `.agents/` directory is discovered automatically when
 
 Say: **"plan my project: [your idea or requirements]"**
 
-The `sdlc-plan` skill chains four agents automatically:
+The `sdlc-plan` skill chains five agents automatically:
 
 | Step | Agent | Input | Output |
 |------|-------|-------|--------|
-| 1 | Requirements Analyst | Your raw idea | `docs/requirements.md` |
+| 0 | Product Strategist | Your raw idea | `docs/product-brief.md` |
+| 1 | Requirements Analyst | Product brief | `docs/requirements.md` |
 | 2 | User Story Writer | Requirements | `docs/user-stories.md` |
 | 3 | Architect | User stories | `docs/architecture.md` |
 | 4 | Task Planner | Architecture + stories | `docs/tasks.md` |
@@ -125,6 +128,7 @@ After the chain completes, you review the full plan and approve or refine.
 
 | # | Agent | Real-world role | Prompt |
 |---|-------|----------------|--------|
+| 0 | Product Strategist | Product Manager | `prompts/00-product-strategist.md` |
 | 1 | Requirements Analyst | Business Analyst | `prompts/01-requirements-analyst.md` |
 | 2 | User Story Writer | BA / Product Owner | `prompts/02-user-story-writer.md` |
 | 3 | Architect | Solution Architect | `prompts/03-architect.md` |
@@ -143,7 +147,7 @@ After the chain completes, you review the full plan and approve or refine.
 
 | Skill | Trigger phrases | What it does |
 |-------|----------------|--------------|
-| `sdlc-plan` | "plan my project", "start new project", "create requirements" | Chains Agents 1→2→3→4, writes all docs |
+| `sdlc-plan` | "plan my project", "start new project", "create requirements" | Chains Agents 0→1→2→3→4, writes all docs |
 | `sdlc-develop` | "implement TASK-NNN", "build TASK-NNN" | Implements one task with self-review checklist |
 | `sdlc-review` | "review TASK-NNN", "code review TASK-NNN" | Code review + conditional security review + conditional UX review |
 | `sdlc-test` | "test TASK-NNN", "generate tests" | Full test suite + coverage matrix |
@@ -194,11 +198,12 @@ Open the project in Antigravity IDE and say:
 
 > "plan my project: I want to build a REST API for a task management app with user authentication, team workspaces, and real-time notifications"
 
-The planning pipeline runs four agents in sequence:
-1. **Requirements Analyst** → analyses your idea, finds gaps, writes `docs/requirements.md`
-2. **User Story Writer** → creates user stories with Gherkin acceptance criteria in `docs/user-stories.md`
-3. **Architect** → designs components, APIs, data models in `docs/architecture.md`
-4. **Task Planner** → breaks everything into ordered atomic tasks in `docs/tasks.md`
+The planning pipeline runs five agents in sequence:
+1. **Product Strategist** → defines MVP scope, business model, and risk in `docs/product-brief.md`
+2. **Requirements Analyst** → analyses your idea, finds gaps, writes `docs/requirements.md`
+3. **User Story Writer** → creates user stories with Gherkin acceptance criteria in `docs/user-stories.md`
+4. **Architect** → designs components, APIs, data models in `docs/architecture.md`
+5. **Task Planner** → breaks everything into ordered atomic tasks in `docs/tasks.md`
 
 Each phase pauses for your review. Say "continue" to proceed or give feedback to refine.
 

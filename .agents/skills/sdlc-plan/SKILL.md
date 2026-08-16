@@ -3,14 +3,14 @@ name: sdlc-plan
 description: >-
   Use this skill when the user wants to plan a new project or feature from scratch.
   Triggers on phrases like "plan my project", "start a new project", "create requirements",
-  "plan this feature", or "run the planning pipeline". Chains four agents in sequence:
-  Requirements Analyst → User Story Writer → Architect → Task Planner. Each agent's
+  "plan this feature", or "run the planning pipeline". Chains five agents in sequence:
+  Product Strategist → Requirements Analyst → User Story Writer → Architect → Task Planner. Each agent's
   output is written to docs/ and fed into the next agent.
 ---
 
 # SDLC Planning Pipeline
 
-Run four planning agents in sequence to go from a raw idea to an actionable task backlog.
+Run five planning agents in sequence to go from a raw idea to an actionable task backlog.
 
 ## Prerequisites
 
@@ -27,7 +27,24 @@ After each phase, present a brief summary and ask the user:
 
 - If the user says **"continue"**, **"looks good"**, **"next"**, or similar — proceed to the next phase immediately
 - If the user provides **feedback or corrections** — incorporate them, update the output file, and present the revised summary before proceeding
-- This lets the user control the pace: say "continue" four times for a fast run, or pause and refine at any stage
+- This lets the user control the pace: say "continue" five times for a fast run, or pause and refine at any stage
+
+---
+
+### Phase 0: Product Strategy
+
+**Read the full agent instructions** from [`prompts/00-product-strategist.md`](../../prompts/00-product-strategist.md) before starting this phase.
+
+**Role**: You are a Product Strategist. Interrogate the user's raw idea from a business perspective to define the MVP scope and identify risks before any technical planning begins.
+
+**Process**:
+1. Read the agent instructions from the prompts file
+2. Work through the 6-step interrogation checklist based on the user's input (Problem & audience, Value proposition, Business model, MVP scope, Risks & assumptions, Recommendation)
+3. Produce the structured Product Brief in the format specified by the agent instructions
+
+**Output**: Write the complete output to `docs/product-brief.md`
+
+**⏸️ Checkpoint 0**: Present a brief summary: the defined MVP scope, identified business model, and key risks. Ask the user to review, give feedback, or continue.
 
 ---
 
@@ -35,12 +52,13 @@ After each phase, present a brief summary and ask the user:
 
 **Read the full agent instructions** from [`prompts/01-requirements-analyst.md`](../../prompts/01-requirements-analyst.md) before starting this phase.
 
-**Role**: You are a Requirements Analyst. Analyse the user's raw input and produce a refined requirements document.
+**Role**: You are a Requirements Analyst. Analyse the product brief produced in Phase 0 and produce a refined requirements document.
 
 **Process**:
 1. Read the agent instructions from the prompts file
-2. Apply the interrogation checklist to every requirement from the user's input
-3. Detect gaps, ambiguities, conflicts, hidden assumptions, and missing constraints
+2. Read `docs/product-brief.md` as your input
+3. Apply the interrogation checklist to every requirement
+4. Detect gaps, ambiguities, conflicts, hidden assumptions, and missing constraints
 4. Produce the issues list and refined requirements document in the format specified by the agent instructions
 
 **Output**: Write the complete output to `docs/requirements.md`
@@ -105,12 +123,13 @@ After each phase, present a brief summary and ask the user:
 
 ## Final Presentation
 
-After all four phases complete, present a summary to the user:
+After all five phases complete, present a summary to the user:
 
-1. **Requirements**: Number of issues found, number of items needing clarification
-2. **User Stories**: Number of stories produced, MoSCoW breakdown
-3. **Architecture**: Number of components, key technology choices, number of ADRs, number of risk flags
-4. **Tasks**: Total task count, layer breakdown, critical path, estimated effort distribution
+1. **Product Strategy**: MVP scope defined, key risks identified, go/no-go recommendation
+2. **Requirements**: Number of issues found, number of items needing clarification
+3. **User Stories**: Number of stories produced, MoSCoW breakdown
+4. **Architecture**: Number of components, key technology choices, number of ADRs, number of risk flags
+5. **Tasks**: Total task count, layer breakdown, critical path, estimated effort distribution
 
 Tell the user: *"Your planning pipeline is complete. All outputs are in the `docs/` directory. You can now start implementing tasks by asking me to implement a specific TASK-NNN."*
 
