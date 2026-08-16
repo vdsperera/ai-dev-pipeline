@@ -74,6 +74,34 @@ Verification: how to confirm the fix works — specific test or check
 - [ ] Dependencies from maintained, reputable sources
 - [ ] Versions pinned — floating ranges (`^`, `*`, `latest`) on security-sensitive packages are flagged
 
+## Regulatory compliance checks
+
+### GDPR — check when PII is processed
+
+- [ ] Lawful basis for processing documented — consent, contract, legitimate interest, or legal obligation identified
+- [ ] Data minimisation enforced — only PII fields actually needed are collected and stored
+- [ ] Right to erasure implemented — deletion cascades correctly through all storage (DB, cache, logs, backups, third-party sync)
+- [ ] Right to access implemented — user can export their complete data in machine-readable format
+- [ ] Data Processing Agreement (DPA) exists for every third-party processor receiving PII
+- [ ] Breach notification flow defined — detection, assessment, authority notification (72h), user notification
+- [ ] Privacy by design — PII is encrypted at rest, pseudonymised where possible, access-logged
+
+### SOC2 — check when building auditable systems
+
+- [ ] Access controls logged — every grant, revoke, and escalation of privilege produces an audit entry
+- [ ] Change management audit trail — deployments, configuration changes, and infrastructure modifications are logged with actor, timestamp, and justification
+- [ ] Incident response documented — detection, triage, communication, remediation, and post-mortem process exists
+- [ ] Logical access reviews — mechanism exists to periodically review and revoke unnecessary access
+- [ ] Data backup and recovery tested — RPO/RTO targets defined and restoration process verified
+
+### General compliance
+
+- [ ] Data classification applied — every data field classified as Public, Internal, Confidential, or Restricted
+- [ ] Retention policy enforced — data retention periods defined per classification, automated deletion or archival in place
+- [ ] Cross-border transfer controls — data residency requirements identified, transfer mechanisms (SCCs, adequacy decisions) documented
+- [ ] Consent boundaries respected — data not used beyond the scope of collected consent
+- [ ] Audit logging for privileged operations — admin actions, data exports, bulk operations, and configuration changes logged with actor and timestamp
+
 ## Verdict — exactly one per review
 
 | Verdict | Meaning |

@@ -3,13 +3,14 @@ name: sdlc-review
 description: >-
   Use this skill when the user wants to review code for a completed task.
   Triggers on phrases like "review TASK-NNN", "code review TASK-NNN",
-  "check TASK-NNN", or "review the code". Chains the Code Reviewer (Agent 6)
-  and optionally the Security Reviewer (Agent 7) on the implemented code.
+  "check TASK-NNN", or "review the code". Chains the Code Reviewer (Agent 6),
+  optionally the Security Reviewer (Agent 7), and optionally the UX &
+  Accessibility Reviewer (Agent 13) on the implemented code.
 ---
 
-# SDLC Review — Code Review & Security Review
+# SDLC Review — Code Review, Security Review & UX Review
 
-Review implemented code for a task through two review layers: Code Review (Agent 6) followed by Security Review (Agent 7) when applicable.
+Review implemented code for a task through up to three review layers: Code Review (Agent 6), Security Review (Agent 7) when applicable, and UX & Accessibility Review (Agent 13) when applicable.
 
 ## Prerequisites
 
@@ -114,10 +115,55 @@ Write the security review report to `docs/reviews/TASK-NNN-security-review.md`.
 
 **If verdict is Remediate or Escalate** — stop here. Present the findings.
 
+### Step 3.5: UX & Accessibility Review (Agent 13) — Conditional
+
+**Only run this step if the code touches any of**:
+- UI components, templates, or views
+- CSS, SCSS, or styling files
+- Client-side routing or navigation
+- Form handling or user input components
+- Media rendering (images, video, audio)
+
+If none of these apply, skip to Step 4.
+
+**Read the full agent instructions** from [`prompts/13-ux-accessibility-reviewer.md`](../../prompts/13-ux-accessibility-reviewer.md).
+
+**Role**: You are now a UX & Accessibility Reviewer. Your input is the UI code, task definition, linked user stories, and the architecture document.
+
+Run the complete WCAG 2.1 AA checklist from the agent instructions. Also check:
+- Responsive design across breakpoints (mobile, tablet, desktop, wide)
+- All five user flow states (empty, loading, error, success, partial)
+- Design consistency (spacing, typography, colour palette)
+- Internationalisation readiness
+
+**Produce findings** using the format from the agent instructions:
+```
+ID: UX-NNN
+Severity: Blocker | Major | Minor | Suggestion | Praise
+Category: Accessibility | Responsive | Consistency | User flow | i18n | Performance
+Location: file, line, component name
+Problem: what is wrong and what user impact it has
+Affected users: who is impacted
+Fix: concrete remediation
+WCAG criterion: (if applicable)
+```
+
+**Issue a verdict**:
+
+| Verdict | Action |
+|---------|--------|
+| **Cleared** | Proceed to Test Generation |
+| **Rework** | Stop. Present findings. WCAG AA blockers and missing user flow states must be fixed before proceeding |
+| **Escalate** | Stop. Design decision needed — component pattern, interaction model, or layout approach requires discussion |
+
+Write the UX review report to `docs/reviews/TASK-NNN-ux-review.md`.
+
+**If verdict is Rework or Escalate** — stop here. Present the findings.
+
 ### Step 4: Next Steps
 
-If both reviews pass (Approved/Cleared), tell the user:
-*"TASK-NNN has passed code review [and security review]. To generate the test suite, ask me to test TASK-NNN."*
+If all applicable reviews pass (Approved/Cleared), tell the user:
+*"TASK-NNN has passed code review [and security review] [and UX review]. To generate the test suite, ask me to test TASK-NNN."*
 
 ## Rules
 
@@ -130,3 +176,5 @@ If both reviews pass (Approved/Cleared), tell the user:
 - Do not block on nits — nits are logged, not blockers
 - Critical security findings always require human acknowledgment — do not self-approve
 - Security review is a hard gate, not advisory — do not skip under time pressure
+- UX review runs only when UI code is touched — do not force it on backend-only tasks
+- WCAG AA blockers are hard gates — accessibility is not optional

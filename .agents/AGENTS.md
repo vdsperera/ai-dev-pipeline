@@ -61,6 +61,15 @@ These standards apply to all code written in this workspace. They are extracted 
 - No TODO without a linked task ID
 - Style consistent with surrounding codebase
 
+## Data & Schema
+
+- Database migrations are reversible — `up` has a corresponding `down`
+- No N+1 queries — use batch/join operations instead of loops issuing individual queries
+- Columns used in `WHERE`, `JOIN`, or `ORDER BY` have appropriate indexes
+- Schema changes are backward-compatible — additive preferred, breaking changes flagged
+- Query results are bounded — no unbounded `SELECT *` without `LIMIT` or pagination
+- Connection pool usage is correct — acquired and released in the same scope, released on error
+
 ## Unit Tests (when writing code)
 
 - Cover: happy path, at least one failure path, at least one boundary/edge case
@@ -71,10 +80,15 @@ These standards apply to all code written in this workspace. They are extracted 
 
 ## Pipeline Context
 
-This workspace uses an SDLC pipeline with specialised skills. Pipeline docs live in `docs/`:
+This workspace uses an SDLC pipeline with 13 specialised agent personas packaged as 8 skills. Pipeline docs live in `docs/`:
 - `docs/requirements.md` — refined requirements
 - `docs/user-stories.md` — user stories with Gherkin acceptance criteria
 - `docs/architecture.md` — system design document
 - `docs/tasks.md` — ordered task backlog
+- `docs/handoffs/` — developer handoff notes per task
+- `docs/reviews/` — code review, security review, and UX review reports per task
+- `docs/test-reports/` — test suite reports and coverage matrices per task
+- `docs/deploy/` — deployment review reports per task
+- `docs/documentation/` — documentation generation reports per task
 
 When implementing code, always check these docs for context. The architecture document in `docs/architecture.md` is the source of truth for component design, API contracts, and data models.

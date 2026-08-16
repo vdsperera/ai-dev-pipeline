@@ -81,6 +81,33 @@ Acceptance link: which Gherkin scenario this covers
 - **Soak test** — sustained load for at least 10 minutes (catches memory leaks, connection pool exhaustion)
 - **Spike test** — sudden 10× load (verifies graceful degradation, not crash)
 - Performance tests produce a pass/fail result against the NFR threshold — not just a report
+- If the project has explicit NFR targets, increase performance test allocation to 5% of the test suite
+
+### Profiling checklist — check for performance anti-patterns
+- Memory allocation hotspots — objects created in tight loops, large collections held unnecessarily
+- CPU-bound loops — O(n²) or worse complexity on unbounded input
+- Connection pool saturation — more concurrent requests than pool size, no queuing or backpressure
+- Synchronous I/O blocking async event loop
+- Unbatched database operations — individual queries in loops instead of batch operations
+
+### SLA validation
+- Every SLA target from architecture NFRs has an explicit pass/fail test
+- p50/p95/p99 latency thresholds tested under expected load
+- Error rate ceiling tested — system stays below threshold under sustained load
+- Throughput target tested — system handles minimum required RPS
+- Test results include: measured value, target value, pass/fail, margin
+
+### Regression baseline
+- Capture baseline performance metrics on first run
+- Subsequent runs compare against baseline
+- Fail if any metric regresses by more than 10% without explicit justification
+- Baseline stored in version control — `docs/test-reports/performance-baseline.json`
+
+### Resource leak detection
+- Connection count monitored over sustained load — should stabilise, not grow
+- File handle count monitored — should not grow unboundedly
+- Memory usage monitored over soak test — should plateau, not linearly increase
+- Thread/goroutine/worker count monitored — should be bounded by pool configuration
 
 ## Coverage matrix — produce at the end of every output
 
