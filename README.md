@@ -169,15 +169,225 @@ The coding standards from Agent 5 (Developer) are installed as `AGENTS.md` — t
 
 ---
 
-## Using as a project template
+## Usage guide
 
-This repo is designed to be a **reusable template**. To use it for a new project:
+### Scenario A: Brand new project (start from zero)
 
-1. Copy the `.agents/` and `prompts/` directories into your new project
-2. Clear the `docs/` directory (or start fresh)
-3. Open in Antigravity and say: "plan my project: [your idea]"
+You have an idea but no code yet. Run the full pipeline from the beginning.
 
-The skills, rules, and prompts travel with the project. No external configuration needed.
+**Step 1 — Set up the pipeline**
+```
+# Option 1: Clone this repo and start fresh
+git clone https://github.com/vdsperera/ai-dev-pipeline.git my-new-project
+cd my-new-project
+rm -rf docs/*
+
+# Option 2: Copy into an empty project
+mkdir my-new-project && cd my-new-project
+git init
+# Copy .agents/ and prompts/ from this repo into your project
+```
+
+**Step 2 — Plan your project**
+
+Open the project in Antigravity IDE and say:
+
+> "plan my project: I want to build a REST API for a task management app with user authentication, team workspaces, and real-time notifications"
+
+The planning pipeline runs four agents in sequence:
+1. **Requirements Analyst** → analyses your idea, finds gaps, writes `docs/requirements.md`
+2. **User Story Writer** → creates user stories with Gherkin acceptance criteria in `docs/user-stories.md`
+3. **Architect** → designs components, APIs, data models in `docs/architecture.md`
+4. **Task Planner** → breaks everything into ordered atomic tasks in `docs/tasks.md`
+
+Each phase pauses for your review. Say "continue" to proceed or give feedback to refine.
+
+**Step 3 — Build task by task**
+
+Once planning is complete, work through tasks in order:
+
+```
+"implement TASK-001"     → Agent writes code + unit tests + handoff note
+"review TASK-001"        → Code review (+ security + UX review if applicable)
+"test TASK-001"          → Full test suite generated, task marked done
+"deploy TASK-001"        → Dockerfile + CI/CD generated (when ready to deploy)
+"document TASK-001"      → API docs + README updated (when ready to document)
+
+"implement TASK-002"     → next task...
+```
+
+**Step 4 — Merge and repeat**
+
+When you're ready to merge a feature branch:
+```
+"review this PR"         → Three-layer PR review at the merge gate
+```
+
+---
+
+### Scenario B: Existing project (adopt the pipeline into an already-built codebase)
+
+You have a working project and want to add the pipeline for future development.
+
+**Step 1 — Copy the pipeline files**
+```
+# Copy .agents/ and prompts/ into your existing project root
+# Do NOT copy docs/ — you'll generate fresh docs for your codebase
+```
+
+**Step 2 — Generate baseline docs from your existing code**
+
+You don't need to re-plan your whole project. Instead, generate documentation for what already exists:
+
+> "document my existing project — scan the codebase and generate docs/architecture.md with the current component map, API contracts, and data models"
+
+This gives the pipeline context about your existing system. You can also manually create or refine:
+- `docs/architecture.md` — describe your current system design
+- `docs/requirements.md` — document your current requirements (even briefly)
+
+**Step 3 — Plan only new work**
+
+When you need to add a feature, plan just that feature:
+
+> "plan this feature: add real-time notifications using WebSocket for the existing task management API"
+
+The planning agents will read your existing `docs/architecture.md` and plan the new feature within your existing system — they won't try to redesign what's already built.
+
+**Step 4 — Use the development loop normally**
+
+From here, the workflow is the same: implement → review → test → deploy → docs.
+
+**Step 5 — Retroactive reviews (optional)**
+
+You can run reviews on existing code without the full planning cycle:
+
+> "review this PR" — for code about to be merged
+> "review the code in src/auth/" — for an existing directory you want audited
+
+---
+
+### Scenario C: New feature on an existing project
+
+You already have the pipeline adopted and want to add a new feature.
+
+**Option 1 — Full planning (recommended for large features)**
+
+> "plan this feature: add a billing module with Stripe integration, subscription management, and invoice generation"
+
+This runs the full planning chain but scoped to the new feature. It reads your existing `docs/architecture.md` and designs the feature to fit within your existing system.
+
+**Option 2 — Lightweight planning (for small features)**
+
+Skip formal planning and go straight to implementation with a clear description:
+
+> "implement this: add a GET /api/users/:id/activity endpoint that returns the last 50 activity events for a user, following our existing API patterns in src/routes/"
+
+The Developer Agent (Agent 5) will follow the coding standards even without formal planning docs. Then review and test as normal.
+
+**Which to choose?**
+
+| Feature size | Approach |
+|-------------|----------|
+| Touches 1-2 files, simple logic | Option 2 — implement directly |
+| Touches 3+ files, new API endpoints | Option 1 — plan first |
+| New component, new data models | Option 1 — definitely plan first |
+| New integration (payment, email, etc.) | Option 1 — plan first, security review will trigger |
+
+---
+
+### Scenario D: Bug fix or small change
+
+Not every change needs the full pipeline. Here's how to handle lightweight work.
+
+**Simple bug fix**
+```
+"fix this bug: the /api/tasks endpoint returns 500 when the user has no tasks. 
+It should return an empty array with 200."
+```
+The coding standards from `AGENTS.md` apply automatically — error handling, input validation, and test quality are enforced even without invoking any skill.
+
+**Quick refactor**
+```
+"refactor the authentication middleware to use the new token validation library. 
+Don't change any behaviour, just swap the implementation."
+```
+
+**When to add reviews**
+
+| Change type | Review? | Test? | Deploy? | Docs? |
+|-------------|---------|-------|---------|-------|
+| One-line bug fix | Skip | Skip | Skip | Skip |
+| Bug fix touching auth/payments | Review ✅ | Optional | Skip | Skip |
+| Refactor (no behaviour change) | Optional | Test ✅ (verify no regression) | Skip | Skip |
+| Config/env change | Skip | Skip | Deploy ✅ | Docs ✅ |
+| New API endpoint | Review ✅ | Test ✅ | Deploy ✅ | Docs ✅ |
+
+---
+
+### Scenario E: Team workflow
+
+When multiple developers use the pipeline on the same project.
+
+**Branch strategy**
+```
+main
+├── feature/TASK-001-user-auth      ← one branch per task
+├── feature/TASK-002-database-setup
+└── feature/TASK-003-api-endpoints
+```
+
+**Per-developer workflow**
+1. Pick a task from `docs/tasks.md`
+2. Create a feature branch
+3. Run: `"implement TASK-NNN"` → `"review TASK-NNN"` → `"test TASK-NNN"`
+4. Push and create a PR
+5. Run: `"review this PR"` (or have another team member trigger it)
+6. Merge
+
+**Keeping docs/ in sync**
+- `docs/` lives in version control — it's the shared source of truth
+- Each task updates its own files: `docs/handoffs/TASK-NNN.md`, `docs/reviews/TASK-NNN-*.md`
+- `docs/tasks.md` is updated when a task is marked done — merge conflicts here are expected and easy to resolve
+- `docs/architecture.md` should only be changed through the planning pipeline or explicit architecture discussions — not by individual task implementations
+
+**PR review workflow**
+```
+Developer pushes PR
+    ↓
+Reviewer (human or AI) says: "review this PR" or "review PR #47"
+    ↓
+PR Review agent runs three layers:
+  Layer 1: Mechanical checks (bugs, security, hygiene)
+  Layer 2: Engineering reasoning (concurrency, resilience, caching)
+  Layer 3: System judgment (architecture, scale, blast radius)
+    ↓
+Verdict: Approved / Approved with comments / Request changes / Escalate
+    ↓
+Large PRs (20+ files): "triage this PR" first to split into reviewable segments
+```
+
+**Parallel task execution**
+- Tasks declare dependencies in `docs/tasks.md` — respect the `Depends on` field
+- Independent tasks can be worked in parallel by different developers
+- The pipeline prevents implementing a task whose dependencies aren't done
+
+---
+
+### Quick reference: what to say for each scenario
+
+| I want to... | Say this |
+|-------------|---------|
+| Start a new project | "plan my project: [your idea]" |
+| Add the pipeline to existing code | Copy `.agents/` + `prompts/`, then "document my existing project" |
+| Plan a new feature | "plan this feature: [feature description]" |
+| Implement a task | "implement TASK-NNN" |
+| Review code | "review TASK-NNN" |
+| Generate tests | "test TASK-NNN" |
+| Generate deployment artifacts | "deploy TASK-NNN" |
+| Generate documentation | "document TASK-NNN" |
+| Review a PR | "review this PR" or "review PR #NNN" |
+| Triage a large PR | "triage this PR" |
+| Fix a bug | Just describe the bug — coding standards apply automatically |
 
 ---
 
@@ -201,3 +411,4 @@ Prompts are the source of truth — skills reference them. To update agent behav
 - **The review agents are optional for simple tasks** — skip them for trivial changes
 - **Keep docs/ in version control** — they provide context for future development
 - **Prompts are the source of truth** — edit `prompts/` to change agent behaviour; skills reference them automatically
+- **Start light, add rigour as needed** — for a quick fix, just describe it; for a large feature, run the full pipeline
