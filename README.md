@@ -124,24 +124,43 @@ After the chain completes, you review the full plan and approve or refine.
 
 ---
 
-## Agent personas
+## The Complete Software Team (Agent personas)
 
+The 14 agents map directly to a cross-functional real-world software team, covering every phase of the SDLC.
+
+### 1. Product & Strategy
 | # | Agent | Real-world role | Prompt |
 |---|-------|----------------|--------|
 | 0 | Product Strategist | Product Manager | `prompts/00-product-strategist.md` |
 | 1 | Requirements Analyst | Business Analyst | `prompts/01-requirements-analyst.md` |
 | 2 | User Story Writer | BA / Product Owner | `prompts/02-user-story-writer.md` |
+
+### 2. Engineering Leadership & Architecture
+| # | Agent | Real-world role | Prompt |
+|---|-------|----------------|--------|
 | 3 | Architect | Solution Architect | `prompts/03-architect.md` |
 | 4 | Task Planner | Tech Lead | `prompts/04-task-planner.md` |
+
+### 3. Core Development
+| # | Agent | Real-world role | Prompt |
+|---|-------|----------------|--------|
 | 5 | Developer | Software Developer | `prompts/05-developer.md` |
+
+### 4. Quality & Review (The Gatekeepers)
+| # | Agent | Real-world role | Prompt |
+|---|-------|----------------|--------|
 | 6 | Code Reviewer | Senior Developer | `prompts/06-code-reviewer.md` |
 | 7 | Security Reviewer | Security Engineer | `prompts/07-security-reviewer.md` |
+| 13| UX & Accessibility Reviewer | UX Engineer | `prompts/13-ux-accessibility-reviewer.md` |
 | 8 | Test Generator | QA / SDET | `prompts/08-test-generator.md` |
+
+### 5. Release & Operations
+| # | Agent | Real-world role | Prompt |
+|---|-------|----------------|--------|
 | 9 | PR Reviewer | Senior Developer (merge gate) | `prompts/09-pr-reviewer.md` |
-| 10 | Large PR Triage | Tech Lead (PR triage) | `prompts/10-large-pr-triage.md` |
-| 11 | DevOps Agent | DevOps / SRE | `prompts/11-devops-agent.md` |
-| 12 | Documentation Agent | Technical Writer | `prompts/12-documentation-agent.md` |
-| 13 | UX & Accessibility Reviewer | UX Engineer | `prompts/13-ux-accessibility-reviewer.md` |
+| 10| Large PR Triage | Tech Lead (PR triage) | `prompts/10-large-pr-triage.md` |
+| 11| DevOps Agent | DevOps / SRE | `prompts/11-devops-agent.md` |
+| 12| Documentation Agent | Technical Writer | `prompts/12-documentation-agent.md` |
 
 ## Skills reference
 
