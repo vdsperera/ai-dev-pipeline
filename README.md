@@ -25,6 +25,16 @@ API docs + README update + changelog
     ↓ repeat for next task
 ```
 
+## Scope: The Engineering Pillar
+
+This pipeline focuses strictly on the **Software Development Life Cycle (SDLC)**. It is an engineering factory that turns an idea into working, tested, and deployable code.
+
+It does **not** cover the other two pillars of creating a successful product:
+1. **Business & Go-To-Market:** Market research, customer discovery, marketing, legal, or pricing.
+2. **Operations & Support:** Customer support, community management, or analytics.
+
+If you are looking to build the technical foundation of your product, this pipeline handles it end-to-end.
+
 ## Folder structure
 
 ```

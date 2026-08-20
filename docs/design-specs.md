@@ -6,20 +6,20 @@ _Last updated: [date]_
 
 ## 1. Design System
 
-<!-- Agent 14 fills this section — colour palette, typography, spacing, radii, shadows, breakpoints -->
+<!-- Agent 4 fills this section — colour palette, typography, spacing, radii, shadows, breakpoints -->
 
 ## 2. Page / View Specifications
 
-<!-- Agent 14 fills this section — one block per page/view -->
+<!-- Agent 4 fills this section — one block per page/view -->
 
 ## 3. Component Specifications
 
-<!-- Agent 14 fills this section — one block per reusable component with all states -->
+<!-- Agent 4 fills this section — one block per reusable component with all states -->
 
 ## 4. User Flow Maps
 
-<!-- Agent 14 fills this section — step-by-step flows mapped to user stories -->
+<!-- Agent 4 fills this section — step-by-step flows mapped to user stories -->
 
 ## 5. Navigation Structure
 
-<!-- Agent 14 fills this section — navigation hierarchy and mobile adaptation -->
+<!-- Agent 4 fills this section — navigation hierarchy and mobile adaptation -->
