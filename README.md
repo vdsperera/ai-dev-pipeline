@@ -30,44 +30,44 @@ API docs + README update + changelog
 ```
 .
 ├── .agents/                            # Antigravity customization root
-│   ├── AGENTS.md                       # Always-on coding standards (Agent 5)
+│   ├── AGENTS.md                       # Always-on coding standards (Agent 6)
 │   └── skills/
-│       ├── sdlc-plan/SKILL.md          # Planning chain (Agents 0→1→2→3→4)
-│       ├── sdlc-develop/SKILL.md       # Task implementation (Agent 5)
-│       ├── sdlc-review/SKILL.md        # Code + Security + UX review (Agents 6→7→13)
-│       ├── sdlc-test/SKILL.md          # Test generation (Agent 8)
-│       ├── sdlc-deploy/SKILL.md        # DevOps review & artifacts (Agent 11)
-│       ├── sdlc-docs/SKILL.md          # Documentation generation (Agent 12)
-│       ├── pr-review/SKILL.md          # PR review at merge gate (Agent 9)
-│       └── pr-triage/SKILL.md          # Large PR triage (Agent 10)
+│       ├── sdlc-plan/SKILL.md          # Planning chain (Agents 0→1→2→3→4→5)
+│       ├── sdlc-develop/SKILL.md       # Task implementation (Agent 6)
+│       ├── sdlc-review/SKILL.md        # Code + Security + UX review (Agents 7→8→9)
+│       ├── sdlc-test/SKILL.md          # Test generation (Agent 10)
+│       ├── sdlc-deploy/SKILL.md        # DevOps review & artifacts (Agent 13)
+│       ├── sdlc-docs/SKILL.md          # Documentation generation (Agent 14)
+│       ├── pr-review/SKILL.md          # PR review at merge gate (Agent 11)
+│       └── pr-triage/SKILL.md          # Large PR triage (Agent 12)
 ├── prompts/                            # Source of truth for all agent instructions
 │   ├── 00-product-strategist.md       # Business thinking, MVP scope
 │   ├── 01-requirements-analyst.md
 │   ├── 02-user-story-writer.md
 │   ├── 03-architect.md
-│   ├── 04-task-planner.md
-│   ├── 05-developer.md
-│   ├── 06-code-reviewer.md            # Includes Data & Schema review
-│   ├── 07-security-reviewer.md        # Includes Regulatory Compliance
-│   ├── 08-test-generator.md           # Enhanced performance testing
-│   ├── 09-pr-reviewer.md
-│   ├── 10-large-pr-triage.md
-│   ├── 11-devops-agent.md             # Dockerfile, CI/CD, IaC
-│   ├── 12-documentation-agent.md      # API docs, README, changelog
-│   ├── 13-ux-accessibility-reviewer.md # WCAG 2.1 AA, responsive, UX
-│   └── 14-ux-designer.md             # Design system, component specs, user flows
+│   ├── 04-ux-designer.md             # Design system, component specs, user flows
+│   ├── 05-task-planner.md
+│   ├── 06-developer.md
+│   ├── 07-code-reviewer.md            # Includes Data & Schema review
+│   ├── 08-security-reviewer.md        # Includes Regulatory Compliance
+│   ├── 09-ux-accessibility-reviewer.md # WCAG 2.1 AA, responsive, UX
+│   ├── 10-test-generator.md           # Enhanced performance testing
+│   ├── 11-pr-reviewer.md
+│   ├── 12-large-pr-triage.md
+│   ├── 13-devops-agent.md             # Dockerfile, CI/CD, IaC
+│   └── 14-documentation-agent.md      # API docs, README, changelog
 └── docs/                               # Living project documents (pipeline outputs)
     ├── product-brief.md                 # Agent 0 output
     ├── requirements.md                  # Agent 1 output
     ├── user-stories.md                  # Agent 2 output
     ├── architecture.md                  # Agent 3 output
-    ├── design-specs.md                  # Agent 14 output (conditional — UI projects only)
-    ├── tasks.md                         # Agent 4 output — your task backlog
-    ├── handoffs/                        # Agent 5 handoff notes per task
-    ├── reviews/                         # Agent 6+7+13 review reports per task
-    ├── test-reports/                    # Agent 8 test reports per task
-    ├── deploy/                          # Agent 11 deployment reports per task
-    └── documentation/                   # Agent 12 documentation reports per task
+    ├── design-specs.md                  # Agent 4 output (conditional — UI projects only)
+    ├── tasks.md                         # Agent 5 output — your task backlog
+    ├── handoffs/                        # Agent 6 handoff notes per task
+    ├── reviews/                         # Agent 7+8+9 review reports per task
+    ├── test-reports/                    # Agent 10 test reports per task
+    ├── deploy/                          # Agent 13 deployment reports per task
+    └── documentation/                   # Agent 14 documentation reports per task
 ```
 
 ---
@@ -103,8 +103,8 @@ The `sdlc-plan` skill chains up to six agents automatically:
 | 1 | Requirements Analyst | Product brief | `docs/requirements.md` |
 | 2 | User Story Writer | Requirements | `docs/user-stories.md` |
 | 3 | Architect | User stories | `docs/architecture.md` |
-| 3.5 | UI/UX Designer *(conditional)* | Architecture + stories + requirements | `docs/design-specs.md` |
-| 4 | Task Planner | Architecture + stories (+ design specs) | `docs/tasks.md` |
+| 4 | UI/UX Designer *(conditional)* | Architecture + stories + requirements | `docs/design-specs.md` |
+| 5 | Task Planner | Architecture + stories (+ design specs) | `docs/tasks.md` |
 
 After the chain completes, you review the full plan and approve or refine.
 
@@ -143,40 +143,36 @@ The 15 agents map directly to a cross-functional real-world software team, cover
 ### 2. Design
 | # | Agent | Real-world role | Prompt |
 |---|-------|----------------|--------|
-| 14 | UI/UX Designer *(conditional)* | UI/UX Designer | `prompts/14-ux-designer.md` |
-
-### 3. Engineering Leadership & Architecture
-| # | Agent | Real-world role | Prompt |
-|---|-------|----------------|--------|
 | 3 | Architect | Solution Architect | `prompts/03-architect.md` |
-| 4 | Task Planner | Tech Lead | `prompts/04-task-planner.md` |
+| 4 | UI/UX Designer *(conditional)* | UI/UX Designer | `prompts/04-ux-designer.md` |
+| 5 | Task Planner | Tech Lead | `prompts/05-task-planner.md` |
 
-### 4. Core Development
+### 3. Core Development
 | # | Agent | Real-world role | Prompt |
 |---|-------|----------------|--------|
-| 5 | Developer | Software Developer | `prompts/05-developer.md` |
+| 6 | Developer | Software Developer | `prompts/06-developer.md` |
 
-### 5. Quality & Review (The Gatekeepers)
+### 4. Quality & Review (The Gatekeepers)
 | # | Agent | Real-world role | Prompt |
 |---|-------|----------------|--------|
-| 6 | Code Reviewer | Senior Developer | `prompts/06-code-reviewer.md` |
-| 7 | Security Reviewer | Security Engineer | `prompts/07-security-reviewer.md` |
-| 13| UX & Accessibility Reviewer | UX Engineer | `prompts/13-ux-accessibility-reviewer.md` |
-| 8 | Test Generator | QA / SDET | `prompts/08-test-generator.md` |
+| 7 | Code Reviewer | Senior Developer | `prompts/07-code-reviewer.md` |
+| 8 | Security Reviewer | Security Engineer | `prompts/08-security-reviewer.md` |
+| 9 | UX & Accessibility Reviewer | UX Engineer | `prompts/09-ux-accessibility-reviewer.md` |
+| 10| Test Generator | QA / SDET | `prompts/10-test-generator.md` |
 
-### 6. Release & Operations
+### 5. Release & Operations
 | # | Agent | Real-world role | Prompt |
 |---|-------|----------------|--------|
-| 9 | PR Reviewer | Senior Developer (merge gate) | `prompts/09-pr-reviewer.md` |
-| 10| Large PR Triage | Tech Lead (PR triage) | `prompts/10-large-pr-triage.md` |
-| 11| DevOps Agent | DevOps / SRE | `prompts/11-devops-agent.md` |
-| 12| Documentation Agent | Technical Writer | `prompts/12-documentation-agent.md` |
+| 11| PR Reviewer | Senior Developer (merge gate) | `prompts/11-pr-reviewer.md` |
+| 12| Large PR Triage | Tech Lead (PR triage) | `prompts/12-large-pr-triage.md` |
+| 13| DevOps Agent | DevOps / SRE | `prompts/13-devops-agent.md` |
+| 14| Documentation Agent | Technical Writer | `prompts/14-documentation-agent.md` |
 
 ## Skills reference
 
 | Skill | Trigger phrases | What it does |
 |-------|----------------|--------------|
-| `sdlc-plan` | "plan my project", "start new project", "create requirements" | Chains Agents 0→1→2→3→(14)→4, writes all docs |
+| `sdlc-plan` | "plan my project", "start new project", "create requirements" | Chains Agents 0→1→2→3→(4)→5, writes all docs |
 | `sdlc-develop` | "implement TASK-NNN", "build TASK-NNN" | Implements one task with self-review checklist |
 | `sdlc-review` | "review TASK-NNN", "code review TASK-NNN" | Code review + conditional security review + conditional UX review |
 | `sdlc-test` | "test TASK-NNN", "generate tests" | Full test suite + coverage matrix |
@@ -189,7 +185,7 @@ The 15 agents map directly to a cross-functional real-world software team, cover
 
 ## Always-on rules
 
-The coding standards from Agent 5 (Developer) are installed as `AGENTS.md` — they apply to **every** coding interaction in the workspace, not just when pipeline skills are active. This covers:
+The coding standards from Agent 6 (Developer) are installed as `AGENTS.md` — they apply to **every** coding interaction in the workspace, not just when pipeline skills are active. This covers:
 
 - Naming & readability conventions
 - Error handling requirements
@@ -317,7 +313,7 @@ Skip formal planning and go straight to implementation with a clear description:
 
 > "implement this: add a GET /api/users/:id/activity endpoint that returns the last 50 activity events for a user, following our existing API patterns in src/routes/"
 
-The Developer Agent (Agent 5) will follow the coding standards even without formal planning docs. Then review and test as normal.
+The Developer Agent (Agent 6) will follow the coding standards even without formal planning docs. Then review and test as normal.
 
 **Which to choose?**
 

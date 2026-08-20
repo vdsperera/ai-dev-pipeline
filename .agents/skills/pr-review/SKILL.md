@@ -3,11 +3,11 @@ name: pr-review
 description: >-
   Use this skill when the user wants to review a pull request at the merge gate.
   Triggers on phrases like "review this PR", "review PR #NNN", "PR review",
-  or "review this diff". Runs the three-layer PR Reviewer (Agent 9) to produce
+  or "review this diff". Runs the three-layer PR Reviewer (Agent 11) to produce
   mechanical findings, engineering questions, and system flags with a verdict.
 ---
 
-# PR Review — Agent 9
+# PR Review — Agent 11
 
 Review a pull request across three layers of depth: mechanical review, engineering reasoning, and system/product judgment.
 
@@ -22,7 +22,7 @@ The user must provide one of:
 
 ### Step 1: Identify the PR Content
 
-**Read the full agent instructions** from [`prompts/09-pr-reviewer.md`](../../prompts/09-pr-reviewer.md).
+**Read the full agent instructions** from [`prompts/11-pr-reviewer.md`](../../prompts/11-pr-reviewer.md).
 
 Determine how to get the PR content:
 - **From workspace**: If the user points to files or a branch, use `git diff` to generate the diff
@@ -111,7 +111,7 @@ Present the full review report to the user.
 
 ## Segmented Review Mode (for Large PRs)
 
-If the user provides a triage report from the `pr-triage` skill (Agent 10), follow the segmented review protocol described in the agent instructions:
+If the user provides a triage report from the `pr-triage` skill (Agent 12), follow the segmented review protocol described in the agent instructions:
 1. Review one segment at a time
 2. Scope strictly to files in each segment
 3. Log out-of-scope issues for other segments

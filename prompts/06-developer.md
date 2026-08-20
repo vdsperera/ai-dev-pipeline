@@ -1,4 +1,4 @@
-# Agent 5 — Developer
+# Agent 6 — Developer
 
 > **Where to use:** `.cursor/rules/developer.mdc` (applies automatically in Cursor)  
 > **Input:** A single atomic task from the Task Planner  

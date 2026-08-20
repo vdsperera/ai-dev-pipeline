@@ -1,4 +1,4 @@
-# Agent 13 — UX & Accessibility Reviewer
+# Agent 9 — UX & Accessibility Reviewer
 
 > **Where to use:** Antigravity IDE → `sdlc-review` skill (conditional layer)  
 > **Input:** UI code + task definition + linked user stories + architecture  

@@ -4,7 +4,7 @@ description: >-
   Use this skill when the user wants to generate or update documentation for a
   completed task. Triggers on phrases like "document TASK-NNN", "generate docs",
   "update README", "write API docs", or "generate changelog". Runs the Documentation
-  Agent (Agent 12) to produce API docs, README updates, changelog entries, and
+  Agent (Agent 14) to produce API docs, README updates, changelog entries, and
   staleness reports.
 ---
 
@@ -36,7 +36,7 @@ Generate and review documentation for a task. Can be run after implementation, a
 
 ### Step 2: Determine What to Document
 
-**Read the full agent instructions** from [`prompts/12-documentation-agent.md`](../../prompts/12-documentation-agent.md).
+**Read the full agent instructions** from [`prompts/14-documentation-agent.md`](../../prompts/14-documentation-agent.md).
 
 **Role**: You are now a Documentation Agent.
 

@@ -3,14 +3,14 @@ name: sdlc-review
 description: >-
   Use this skill when the user wants to review code for a completed task.
   Triggers on phrases like "review TASK-NNN", "code review TASK-NNN",
-  "check TASK-NNN", or "review the code". Chains the Code Reviewer (Agent 6),
-  optionally the Security Reviewer (Agent 7), and optionally the UX &
-  Accessibility Reviewer (Agent 13) on the implemented code.
+  "check TASK-NNN", or "review the code". Chains the Code Reviewer (Agent 7),
+  optionally the Security Reviewer (Agent 8), and optionally the UX &
+  Accessibility Reviewer (Agent 9) on the implemented code.
 ---
 
 # SDLC Review — Code Review, Security Review & UX Review
 
-Review implemented code for a task through up to three review layers: Code Review (Agent 6), Security Review (Agent 7) when applicable, and UX & Accessibility Review (Agent 13) when applicable.
+Review implemented code for a task through up to three review layers: Code Review (Agent 7), Security Review (Agent 8) when applicable, and UX & Accessibility Review (Agent 9) when applicable.
 
 ## Prerequisites
 
@@ -29,9 +29,9 @@ Review implemented code for a task through up to three review layers: Code Revie
 5. Identify all files created or modified for this task (from the handoff note and git status)
 6. Read all the implementation code and test files
 
-### Step 2: Code Review (Agent 6)
+### Step 2: Code Review (Agent 7)
 
-**Read the full agent instructions** from [`prompts/06-code-reviewer.md`](../../prompts/06-code-reviewer.md).
+**Read the full agent instructions** from [`prompts/07-code-reviewer.md`](../../prompts/07-code-reviewer.md).
 
 **Role**: You are now a Code Reviewer. Review the implementation against the task definition, linked stories, and coding standards.
 
@@ -68,7 +68,7 @@ Write the review report to `docs/reviews/TASK-NNN-code-review.md`.
 
 **If verdict is Rework or Escalate** — stop here. Present the findings and tell the user what to fix. Do not proceed to Security Review.
 
-### Step 3: Security Review (Agent 7) — Conditional
+### Step 3: Security Review (Agent 8) — Conditional
 
 **Only run this step if the code touches any of**:
 - Authentication or authorization logic
@@ -80,7 +80,7 @@ Write the review report to `docs/reviews/TASK-NNN-code-review.md`.
 
 If none of these apply, skip to Step 4.
 
-**Read the full agent instructions** from [`prompts/07-security-reviewer.md`](../../prompts/07-security-reviewer.md).
+**Read the full agent instructions** from [`prompts/08-security-reviewer.md`](../../prompts/08-security-reviewer.md).
 
 **Role**: You are now a Security Reviewer. Your input is the code, task definition, architecture, and the Code Review approved report.
 
@@ -115,7 +115,7 @@ Write the security review report to `docs/reviews/TASK-NNN-security-review.md`.
 
 **If verdict is Remediate or Escalate** — stop here. Present the findings.
 
-### Step 3.5: UX & Accessibility Review (Agent 13) — Conditional
+### Step 3.5: UX & Accessibility Review (Agent 9) — Conditional
 
 **Only run this step if the code touches any of**:
 - UI components, templates, or views
@@ -126,7 +126,7 @@ Write the security review report to `docs/reviews/TASK-NNN-security-review.md`.
 
 If none of these apply, skip to Step 4.
 
-**Read the full agent instructions** from [`prompts/13-ux-accessibility-reviewer.md`](../../prompts/13-ux-accessibility-reviewer.md).
+**Read the full agent instructions** from [`prompts/09-ux-accessibility-reviewer.md`](../../prompts/09-ux-accessibility-reviewer.md).
 
 **Role**: You are now a UX & Accessibility Reviewer. Your input is the UI code, task definition, linked user stories, and the architecture document.
 

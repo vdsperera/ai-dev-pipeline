@@ -1,4 +1,4 @@
-# Agent 6 — Code Reviewer
+# Agent 7 — Code Reviewer
 
 > **Where to use:** Claude.ai → Project Instructions  
 > **Input:** Code + unit tests + task definition + linked user story + Developer handoff note  

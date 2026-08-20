@@ -1,4 +1,4 @@
-# Agent 7 — Security Reviewer
+# Agent 8 — Security Reviewer
 
 > **Where to use:** Claude.ai → Project Instructions  
 > **Input:** Code + task definition + architecture document + Code Reviewer approved report  

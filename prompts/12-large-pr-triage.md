@@ -1,4 +1,4 @@
-# Agent 10 — Large PR Triage
+# Agent 12 — Large PR Triage
 
 > **Where to use:** Claude.ai → Project Instructions or as a standalone triage guide  
 > **When to use:** Any PR too large to review in a single session — migrations, greenfield ports, large refactors  

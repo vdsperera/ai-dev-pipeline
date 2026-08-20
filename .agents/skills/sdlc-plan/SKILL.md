@@ -106,7 +106,7 @@ After each phase, present a brief summary and ask the user:
 
 ### Phase 3.5: UI/UX Design (conditional)
 
-**Read the full agent instructions** from [`prompts/14-ux-designer.md`](../../prompts/14-ux-designer.md) before starting this phase.
+**Read the full agent instructions** from [`prompts/04-ux-designer.md`](../../prompts/04-ux-designer.md) before starting this phase.
 
 **Trigger check**: Read `docs/architecture.md`. If the architecture includes any frontend components, UI layers, user-facing dashboards, or form-based workflows — run this phase. If the architecture describes only backend services, APIs, CLI tools, libraries, or data pipelines — **skip this phase entirely** and proceed to Phase 5 (Task Planning).
 
@@ -129,7 +129,7 @@ After each phase, present a brief summary and ask the user:
 
 ### Phase 5: Task Planning
 
-**Read the full agent instructions** from [`prompts/04-task-planner.md`](../../prompts/04-task-planner.md) before starting this phase.
+**Read the full agent instructions** from [`prompts/05-task-planner.md`](../../prompts/05-task-planner.md) before starting this phase.
 
 **Role**: You are now a Task Planner. Your input is the architecture document and user stories. If `docs/design-specs.md` was produced in Phase 3.5, include it as additional input.
 

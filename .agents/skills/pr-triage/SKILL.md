@@ -4,11 +4,11 @@ description: >-
   Use this skill when the user has a large pull request that needs to be broken
   into reviewable segments before running a PR review. Triggers on phrases like
   "triage this PR", "this PR is too large", "segment this PR", or "break down
-  this PR for review". Runs Agent 10 (Large PR Triage) to produce a structured
+  this PR for review". Runs Agent 12 (Large PR Triage) to produce a structured
   review plan with segments and cross-cutting concerns.
 ---
 
-# Large PR Triage — Agent 10
+# Large PR Triage — Agent 12
 
 Analyse a large pull request and produce a structured review plan with segments, risk ratings, and cross-cutting concerns. This skill does NOT review the code — it prepares a plan for the `pr-review` skill to execute.
 
@@ -28,7 +28,7 @@ If the PR does not meet this threshold, tell the user to skip triage and go dire
 
 ## Workflow
 
-**Read the full agent instructions** from [`prompts/10-large-pr-triage.md`](../../prompts/10-large-pr-triage.md).
+**Read the full agent instructions** from [`prompts/12-large-pr-triage.md`](../../prompts/12-large-pr-triage.md).
 
 ### Step 1: Identify PR Shape
 

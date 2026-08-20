@@ -4,7 +4,7 @@ description: >-
   Use this skill when the user wants to implement a specific task from the backlog.
   Triggers on phrases like "implement TASK-NNN", "develop TASK-NNN", "build TASK-NNN",
   "work on TASK-NNN", or "start task NNN". Reads the task definition, linked stories,
-  and architecture, then implements the code following Agent 5 (Developer) standards.
+  and architecture, then implements the code following Agent 6 (Developer) standards.
 ---
 
 # SDLC Developer — Implement a Task
@@ -31,7 +31,7 @@ If any dependency is not marked done, **stop and tell the user** which tasks mus
 
 ### Step 2: Validate Input
 
-**Read the full agent instructions** from [`prompts/05-developer.md`](../../prompts/05-developer.md).
+**Read the full agent instructions** from [`prompts/06-developer.md`](../../prompts/06-developer.md).
 
 Check the input contract:
 - Is the task definition complete (all required fields present)?

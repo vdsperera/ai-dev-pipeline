@@ -1,6 +1,6 @@
 # AI Dev Pipeline — Coding Standards
 
-These standards apply to all code written in this workspace. They are extracted from the Developer Agent (Agent 5) and enforced as baseline quality expectations.
+These standards apply to all code written in this workspace. They are extracted from the Developer Agent (Agent 6) and enforced as baseline quality expectations.
 
 ## Naming & Readability
 

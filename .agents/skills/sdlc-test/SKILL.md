@@ -3,11 +3,11 @@ name: sdlc-test
 description: >-
   Use this skill when the user wants to generate a comprehensive test suite for a completed task.
   Triggers on phrases like "test TASK-NNN", "generate tests for TASK-NNN", "write tests for TASK-NNN",
-  or "create test suite". Runs the Test Generator (Agent 8) to produce unit, integration, E2E,
+  or "create test suite". Runs the Test Generator (Agent 10) to produce unit, integration, E2E,
   and performance tests based on linked stories, architecture, and review reports.
 ---
 
-# SDLC Test Generation — Agent 8
+# SDLC Test Generation — Agent 10
 
 Generate a complete, runnable test suite for a task that has passed code review (and security review if applicable).
 
@@ -31,7 +31,7 @@ Generate a complete, runnable test suite for a task that has passed code review 
 
 ### Step 2: Generate Test Suite
 
-**Read the full agent instructions** from [`prompts/08-test-generator.md`](../../prompts/08-test-generator.md).
+**Read the full agent instructions** from [`prompts/10-test-generator.md`](../../prompts/10-test-generator.md).
 
 **Role**: You are a Test Generator. Produce a complete, runnable test suite.
 

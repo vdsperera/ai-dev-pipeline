@@ -1,4 +1,4 @@
-# Agent 4 — Task Planner
+# Agent 5 — Task Planner
 
 > **Where to use:** Claude.ai → Project Instructions  
 > **Input:** Architecture document + user stories (Agent 3 + Agent 2 output)  

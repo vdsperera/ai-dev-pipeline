@@ -1,4 +1,4 @@
-# Agent 14 — UI/UX Designer
+# Agent 4 — UI/UX Designer
 
 > **Where to use:** Antigravity IDE → `sdlc-plan` skill (conditional Phase 3.5, between Architecture and Task Planning)  
 > **Input:** Architecture document + user stories + requirements  
