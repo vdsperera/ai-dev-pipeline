@@ -3,14 +3,14 @@ name: sdlc-plan
 description: >-
   Use this skill when the user wants to plan a new project or feature from scratch.
   Triggers on phrases like "plan my project", "start a new project", "create requirements",
-  "plan this feature", or "run the planning pipeline". Chains five agents in sequence:
-  Product Strategist → Requirements Analyst → User Story Writer → Architect → Task Planner. Each agent's
-  output is written to docs/ and fed into the next agent.
+  "plan this feature", or "run the planning pipeline". Chains up to six agents in sequence:
+  Product Strategist → Requirements Analyst → User Story Writer → Architect → UI/UX Designer (conditional) → Task Planner.
+  Each agent's output is written to docs/ and fed into the next agent.
 ---
 
 # SDLC Planning Pipeline
 
-Run five planning agents in sequence to go from a raw idea to an actionable task backlog.
+Run up to six planning agents in sequence to go from a raw idea to an actionable task backlog. The UI/UX Designer phase runs only when the project has a frontend — it is skipped for API-only, CLI, or backend projects.
 
 ## Prerequisites
 
@@ -104,18 +104,42 @@ After each phase, present a brief summary and ask the user:
 
 ---
 
-### Phase 4: Task Planning
+### Phase 3.5: UI/UX Design (conditional)
+
+**Read the full agent instructions** from [`prompts/14-ux-designer.md`](../../prompts/14-ux-designer.md) before starting this phase.
+
+**Trigger check**: Read `docs/architecture.md`. If the architecture includes any frontend components, UI layers, user-facing dashboards, or form-based workflows — run this phase. If the architecture describes only backend services, APIs, CLI tools, libraries, or data pipelines — **skip this phase entirely** and proceed to Phase 5 (Task Planning).
+
+**Role**: You are a UI/UX Designer. Your input is the architecture document, user stories, and requirements. You produce a design specification that gives the Developer concrete UI guidance.
+
+**Process**:
+1. Read the agent instructions from the prompts file
+2. Read `docs/architecture.md`, `docs/user-stories.md`, and `docs/requirements.md` as your input
+3. Define the design system (colours, typography, spacing, radii, shadows, breakpoints)
+4. Specify page layouts for every view in the architecture
+5. Define component specifications with all interactive states
+6. Map user flows end-to-end for each UI-related user story
+7. Define the navigation structure
+
+**Output**: Write the complete output to `docs/design-specs.md`
+
+**⏸️ Checkpoint 3.5**: Present a brief summary: design system overview, number of pages specified, number of components defined, number of user flows mapped. Ask the user to review, give feedback, or continue.
+
+---
+
+### Phase 5: Task Planning
 
 **Read the full agent instructions** from [`prompts/04-task-planner.md`](../../prompts/04-task-planner.md) before starting this phase.
 
-**Role**: You are now a Task Planner. Your input is the architecture document and user stories.
+**Role**: You are now a Task Planner. Your input is the architecture document and user stories. If `docs/design-specs.md` was produced in Phase 3.5, include it as additional input.
 
 **Process**:
 1. Read the agent instructions from the prompts file
 2. Read `docs/architecture.md` and `docs/user-stories.md` as your input
-3. Produce the ordered atomic task list following the layer sequence (Infrastructure → Data → APIs → Logic → UI → Hardening)
-4. Verify traceability: every story and every component must appear in at least one task
-5. Produce the coverage matrix
+3. If `docs/design-specs.md` exists, read it as additional input — UI tasks should reference design specs
+4. Produce the ordered atomic task list following the layer sequence (Infrastructure → Data → APIs → Logic → UI → Hardening)
+5. Verify traceability: every story and every component must appear in at least one task
+6. Produce the coverage matrix
 
 **Output**: Write the complete output to `docs/tasks.md`
 
@@ -123,13 +147,14 @@ After each phase, present a brief summary and ask the user:
 
 ## Final Presentation
 
-After all five phases complete, present a summary to the user:
+After all phases complete, present a summary to the user:
 
 1. **Product Strategy**: MVP scope defined, key risks identified, go/no-go recommendation
 2. **Requirements**: Number of issues found, number of items needing clarification
 3. **User Stories**: Number of stories produced, MoSCoW breakdown
 4. **Architecture**: Number of components, key technology choices, number of ADRs, number of risk flags
-5. **Tasks**: Total task count, layer breakdown, critical path, estimated effort distribution
+5. **UI/UX Design** (if run): Design system defined, number of pages specified, number of components defined, number of user flows mapped
+6. **Tasks**: Total task count, layer breakdown, critical path, estimated effort distribution
 
 Tell the user: *"Your planning pipeline is complete. All outputs are in the `docs/` directory. You can now start implementing tasks by asking me to implement a specific TASK-NNN."*
 

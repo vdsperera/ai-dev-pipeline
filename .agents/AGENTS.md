@@ -80,10 +80,11 @@ These standards apply to all code written in this workspace. They are extracted 
 
 ## Pipeline Context
 
-This workspace uses an SDLC pipeline with 13 specialised agent personas packaged as 8 skills. Pipeline docs live in `docs/`:
+This workspace uses an SDLC pipeline with 15 specialised agent personas packaged as 8 skills. Pipeline docs live in `docs/`:
 - `docs/requirements.md` — refined requirements
 - `docs/user-stories.md` — user stories with Gherkin acceptance criteria
 - `docs/architecture.md` — system design document
+- `docs/design-specs.md` — UI/UX design specifications (when project has a frontend)
 - `docs/tasks.md` — ordered task backlog
 - `docs/handoffs/` — developer handoff notes per task
 - `docs/reviews/` — code review, security review, and UX review reports per task
