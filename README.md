@@ -453,3 +453,13 @@ Prompts are the source of truth — skills reference them. To update agent behav
 - **Keep docs/ in version control** — they provide context for future development
 - **Prompts are the source of truth** — edit `prompts/` to change agent behaviour; skills reference them automatically
 - **Start light, add rigour as needed** — for a quick fix, just describe it; for a large feature, run the full pipeline
+
+---
+
+## Related Projects
+
+This pipeline is part of a larger suite of AI tools designed to automate an entire software business. 
+
+*   [**ai-dev-pipeline**](https://github.com/vdsperera/ai-dev-pipeline) (This repo): The Engineering Pillar (SDLC).
+*   **ai-gtm-pipeline** *(Coming Soon)*: The Business & Go-To-Market Pillar. Automates marketing, campaign strategy, pricing, and SEO.
+*   **ai-ops-pipeline** *(Coming Soon)*: The Operations & Support Pillar. Automates customer support triage, bug reporting, and churn analysis.
