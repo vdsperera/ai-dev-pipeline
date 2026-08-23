@@ -151,6 +151,40 @@ Each planning phase is also available as a **standalone skill** for individual u
 - You're adopting just one agent persona into a different project
 - You want faster iteration without re-running the entire pipeline
 
+```mermaid
+graph TD
+    classDef orchestrator fill:#2d3748,stroke:#4a5568,color:#fff,stroke-width:2px;
+    classDef skill fill:#2b6cb0,stroke:#4299e1,color:#fff,stroke-width:1px,rx:5px,ry:5px;
+    classDef doc fill:#2f855a,stroke:#48bb78,color:#fff,stroke-width:1px;
+
+    PLAN[sdlc-plan<br/>Master Orchestrator]:::orchestrator
+    
+    PLAN --> A & B & C & D & E & F
+
+    subgraph "Standalone Persona Skills"
+    A[sdlc-strategy]:::skill
+    B[sdlc-requirements]:::skill
+    C[sdlc-stories]:::skill
+    D[sdlc-architect]:::skill
+    E[sdlc-ux]:::skill
+    F[sdlc-tasks]:::skill
+    end
+
+    A --> DOC1[docs/product-brief.md]:::doc
+    B --> DOC2[docs/requirements.md]:::doc
+    C --> DOC3[docs/user-stories.md]:::doc
+    D --> DOC4[docs/architecture.md]:::doc
+    E --> DOC5[docs/design-specs.md]:::doc
+    F --> DOC6[docs/tasks.md]:::doc
+
+    DOC1 -.-> B
+    DOC2 -.-> C
+    DOC3 -.-> D
+    DOC4 -.-> E & F
+    DOC5 -.-> F
+```
+
+
 | I want to... | Use this standalone skill |
 |-------------|--------------------------|
 | Define MVP scope and business risks | `sdlc-strategy` |
