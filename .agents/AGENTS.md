@@ -98,3 +98,20 @@ When implementing code, always check these docs for context. The architecture do
 
 - When the user asks for a quick, ad-hoc code change or bug fix without using a formal skill, you must fix the code and then **proactively ask** if they would like you to document the change (e.g., generate a handoff note or update the changelog).
 - Do not generate the documentation automatically for ad-hoc fixes; wait for the user's confirmation.
+
+## Git & Commit Standards
+
+- Use Conventional Commits for all commit messages (e.g., `feat:`, `fix:`, `docs:`, `refactor:`).
+- Keep commits atomic — group related changes into a single commit rather than splitting a logical fix across multiple messy commits.
+- Always write a clear, descriptive commit message body if the change is non-trivial.
+
+## Task Tracking Discipline
+
+- When finishing work on a task from the backlog, you must proactively update `docs/tasks.md` to mark the task as complete (changing `[ ]` or `[/]` to `[x]`).
+- Never leave a task marked as in-progress if the implementation and testing are complete.
+
+## Dependency Management
+
+- Never add new third-party dependencies or packages without explicit user approval.
+- Never arbitrarily upgrade existing package versions in `package.json`, `requirements.txt`, etc., to solve an issue unless instructed to do so.
+- Always use the exact versions specified in the project's dependency files.
