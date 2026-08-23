@@ -522,6 +522,66 @@ Prompts are the source of truth — skills reference them. To update agent behav
 
 ---
 
+## Under the Hood: Antigravity Architecture
+
+If you want to customize this pipeline (add new agents, change the rules, or integrate external tools), you need to understand how the underlying Antigravity architecture processes a request.
+
+It works like a funnel: your request comes in, gets shaped by Hooks and Rules, gets routed to a Skill (which loads a Prompt), and then uses MCP tools to execute the actual work.
+
+```mermaid
+graph TD
+    classDef user fill:#805ad5,stroke:#553c9a,color:#fff,stroke-width:2px;
+    classDef hook fill:#dd6b20,stroke:#c05621,color:#fff,stroke-width:1px;
+    classDef rule fill:#e53e3e,stroke:#c53030,color:#fff,stroke-width:1px;
+    classDef skill fill:#3182ce,stroke:#2b6cb0,color:#fff,stroke-width:2px;
+    classDef prompt fill:#38a169,stroke:#2f855a,color:#fff,stroke-width:1px;
+    classDef mcp fill:#d69e2e,stroke:#b7791f,color:#fff,stroke-width:1px;
+
+    USER(["👤 User types: 'plan my project'"]):::user
+    
+    subgraph "1. Interception Layer"
+        HOOKS[Hooks<br>Intercepts message]:::hook
+    end
+    
+    subgraph "2. Context Layer (Always-On)"
+        RULES[Rules / AGENTS.md<br>Global constraints applied to AI memory]:::rule
+    end
+
+    subgraph "3. Routing & Logic Layer"
+        SKILL[SKILL.md<br>Trigger matched! Sets workflow & routing]:::skill
+        PROMPT[prompts/*.md<br>Persona instructions loaded by Skill]:::prompt
+        SKILL -->|Reads persona from| PROMPT
+    end
+
+    subgraph "4. Execution Layer"
+        MCP[MCP Servers<br>External tools: GitHub, Postgres, Puppeteer]:::mcp
+    end
+
+    USER --> HOOKS
+    HOOKS --> RULES
+    RULES --> SKILL
+    SKILL -->|AI executes task using| MCP
+```
+
+### The Role of Each Component:
+
+**1. Hooks (`hooks.json`) — The Interceptors**
+Hooks act as triggers on specific system events. For example, a `pre_message` hook can intercept your text before the AI sees it (to format it or add context), or a hook can run a script every time a file is saved. 
+
+**2. Rules (`.agents/AGENTS.md`) — The Subconscious Constraints**
+Before the AI even thinks about your request, these are loaded into its memory. It is the "always-on" layer. It guarantees that no matter what the AI does next, it will obey your coding standards, commit formatting, and security rules.
+
+**3. Skills (`.agents/skills/*/SKILL.md`) — The Workflow Manager**
+The system checks the "triggers" inside every `SKILL.md` to see if your request matches one. If it does, the AI abandons its default chat mode and enters **Skill Mode**. The `SKILL.md` gives the AI a strict checklist: what files to read first, what order to do things in, and where to save the output.
+
+**4. Prompts (`prompts/*.md`) — The Persona's Brain**
+The `SKILL.md` usually says, *"Go read this specific prompt file to learn how to do your job."* This is where the deep, specialized instructions live (like exactly how the Architect should design a database). By separating this from the Skill, multiple skills can share the same persona.
+
+**5. MCP Servers (`.agents/mcp_config.json`) — The Hands & Senses**
+While executing the skill, the AI might need to look outside its normal boundaries. MCP (Model Context Protocol) servers grant the AI specific external tools. If the Architect needs to read a GitHub repo to understand an existing API, it uses the GitHub MCP.
+
+---
+
 ## Related Projects
 
 This pipeline is part of a larger suite of AI tools designed to automate an entire software business. 
