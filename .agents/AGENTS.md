@@ -93,3 +93,8 @@ This workspace uses an SDLC pipeline with 15 specialised agent personas packaged
 - `docs/documentation/` — documentation generation reports per task
 
 When implementing code, always check these docs for context. The architecture document in `docs/architecture.md` is the source of truth for component design, API contracts, and data models.
+
+## Proactive Documentation
+
+- When the user asks for a quick, ad-hoc code change or bug fix without using a formal skill, you must fix the code and then **proactively ask** if they would like you to document the change (e.g., generate a handoff note or update the changelog).
+- Do not generate the documentation automatically for ad-hoc fixes; wait for the user's confirmation.
