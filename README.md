@@ -4,7 +4,7 @@ A structured AI-assisted development pipeline that covers the full SDLC — from
 
 ## How it works
 
-The pipeline has **15 specialised agent personas** packaged as 8 skills and 1 always-on rule. Instead of copy-pasting between separate AI chat windows, you invoke skills by name and the agent chains through the SDLC phases automatically.
+The pipeline has **15 specialised agent personas** packaged as **14 skills** and 1 always-on rule. The 6 planning agents can be invoked individually as standalone skills or chained together via `sdlc-plan`. Instead of copy-pasting between separate AI chat windows, you invoke skills by name and the agent runs automatically.
 
 ```
 Your idea
@@ -43,6 +43,12 @@ If you are looking to build the technical foundation of your product, this pipel
 │   ├── AGENTS.md                       # Always-on coding standards (Agent 6)
 │   └── skills/
 │       ├── sdlc-plan/SKILL.md          # Planning chain (Agents 0→1→2→3→4→5)
+│       ├── sdlc-strategy/SKILL.md      # Product strategy (Agent 0) — standalone
+│       ├── sdlc-requirements/SKILL.md  # Requirements analysis (Agent 1) — standalone
+│       ├── sdlc-stories/SKILL.md       # User story writing (Agent 2) — standalone
+│       ├── sdlc-architect/SKILL.md     # Architecture design (Agent 3) — standalone
+│       ├── sdlc-ux/SKILL.md            # UI/UX design (Agent 4) — standalone
+│       ├── sdlc-tasks/SKILL.md         # Task planning (Agent 5) — standalone
 │       ├── sdlc-develop/SKILL.md       # Task implementation (Agent 6)
 │       ├── sdlc-review/SKILL.md        # Code + Security + UX review (Agents 7→8→9)
 │       ├── sdlc-test/SKILL.md          # Test generation (Agent 10)
@@ -137,6 +143,26 @@ After the chain completes, you review the full plan and approve or refine.
 | Normal PR | "review this PR" or "review PR #47" |
 | Large PR (20+ files) | "triage this PR" first, then "review segment 1", "review segment 2", etc. |
 
+### Modular usage: standalone planning skills
+
+Each planning phase is also available as a **standalone skill** for individual use. This is useful when:
+
+- You want to update only one planning artifact (e.g., regenerate UI specs for a new feature)
+- You're adopting just one agent persona into a different project
+- You want faster iteration without re-running the entire pipeline
+
+| I want to... | Use this standalone skill |
+|-------------|--------------------------|
+| Define MVP scope and business risks | `sdlc-strategy` |
+| Analyse and refine requirements | `sdlc-requirements` |
+| Write user stories with Gherkin criteria | `sdlc-stories` |
+| Design system architecture | `sdlc-architect` |
+| Create UI/UX design specifications | `sdlc-ux` |
+| Generate the task backlog | `sdlc-tasks` |
+| Run the full end-to-end pipeline | `sdlc-plan` (orchestrates all of the above) |
+
+**Portability**: To use any standalone skill in another project, copy its `.agents/skills/<skill-name>/` folder and the referenced prompt file from `prompts/` into your target project.
+
 ---
 
 ## The Complete Software Team (Agent personas)
@@ -183,6 +209,12 @@ The 15 agents map directly to a cross-functional real-world software team, cover
 | Skill | Trigger phrases | What it does |
 |-------|----------------|--------------|
 | `sdlc-plan` | "plan my project", "start new project", "create requirements" | Chains Agents 0→1→2→3→(4)→5, writes all docs |
+| `sdlc-strategy` | "define product strategy", "create product brief", "MVP scope" | Runs Agent 0 standalone → `docs/product-brief.md` |
+| `sdlc-requirements` | "analyse requirements", "refine requirements" | Runs Agent 1 standalone → `docs/requirements.md` |
+| `sdlc-stories` | "write user stories", "create stories", "generate acceptance criteria" | Runs Agent 2 standalone → `docs/user-stories.md` |
+| `sdlc-architect` | "design architecture", "system design", "API contracts" | Runs Agent 3 standalone → `docs/architecture.md` |
+| `sdlc-ux` | "design UI", "create design specs", "UX design" | Runs Agent 4 standalone → `docs/design-specs.md` |
+| `sdlc-tasks` | "plan tasks", "create task backlog", "break down tasks" | Runs Agent 5 standalone → `docs/tasks.md` |
 | `sdlc-develop` | "implement TASK-NNN", "build TASK-NNN" | Implements one task with self-review checklist |
 | `sdlc-review` | "review TASK-NNN", "code review TASK-NNN" | Code review + conditional security review + conditional UX review |
 | `sdlc-test` | "test TASK-NNN", "generate tests" | Full test suite + coverage matrix |

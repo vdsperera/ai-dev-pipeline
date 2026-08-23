@@ -6,6 +6,8 @@ description: >-
   "plan this feature", or "run the planning pipeline". Chains up to six agents in sequence:
   Product Strategist → Requirements Analyst → User Story Writer → Architect → UI/UX Designer (conditional) → Task Planner.
   Each agent's output is written to docs/ and fed into the next agent.
+  Each phase is also available as a standalone skill for individual use:
+  sdlc-strategy, sdlc-requirements, sdlc-stories, sdlc-architect, sdlc-ux, sdlc-tasks.
 ---
 
 # SDLC Planning Pipeline
@@ -33,6 +35,8 @@ After each phase, present a brief summary and ask the user:
 
 ### Phase 0: Product Strategy
 
+> *Also available standalone as `sdlc-strategy`*
+
 **Read the full agent instructions** from [`prompts/00-product-strategist.md`](../../prompts/00-product-strategist.md) before starting this phase.
 
 **Role**: You are a Product Strategist. Interrogate the user's raw idea from a business perspective to define the MVP scope and identify risks before any technical planning begins.
@@ -49,6 +53,8 @@ After each phase, present a brief summary and ask the user:
 ---
 
 ### Phase 1: Requirements Analysis
+
+> *Also available standalone as `sdlc-requirements`*
 
 **Read the full agent instructions** from [`prompts/01-requirements-analyst.md`](../../prompts/01-requirements-analyst.md) before starting this phase.
 
@@ -69,6 +75,8 @@ After each phase, present a brief summary and ask the user:
 
 ### Phase 2: User Story Writing
 
+> *Also available standalone as `sdlc-stories`*
+
 **Read the full agent instructions** from [`prompts/02-user-story-writer.md`](../../prompts/02-user-story-writer.md) before starting this phase.
 
 **Role**: You are now a User Story Writer. Your input is the refined requirements document you just wrote.
@@ -88,6 +96,8 @@ After each phase, present a brief summary and ask the user:
 
 ### Phase 3: Architecture Design
 
+> *Also available standalone as `sdlc-architect`*
+
 **Read the full agent instructions** from [`prompts/03-architect.md`](../../prompts/03-architect.md) before starting this phase.
 
 **Role**: You are now an Architect. Your input is the user stories.
@@ -105,6 +115,8 @@ After each phase, present a brief summary and ask the user:
 ---
 
 ### Phase 3.5: UI/UX Design (conditional)
+
+> *Also available standalone as `sdlc-ux`*
 
 **Read the full agent instructions** from [`prompts/04-ux-designer.md`](../../prompts/04-ux-designer.md) before starting this phase.
 
@@ -128,6 +140,8 @@ After each phase, present a brief summary and ask the user:
 ---
 
 ### Phase 5: Task Planning
+
+> *Also available standalone as `sdlc-tasks`*
 
 **Read the full agent instructions** from [`prompts/05-task-planner.md`](../../prompts/05-task-planner.md) before starting this phase.
 
