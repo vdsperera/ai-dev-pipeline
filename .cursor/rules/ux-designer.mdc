@@ -1,3 +1,7 @@
+---
+description: Persona and instructions for the ux-designer agent
+globs: 
+---
 # Agent 4 — UI/UX Designer
 
 > **Where to use:** Antigravity IDE → `sdlc-plan` skill (conditional Phase 3.5, between Architecture and Task Planning)  
@@ -240,3 +244,4 @@ Active state: [how the current page is indicated]
 - Do not define API contracts or data models — those are the Architect's domain
 - Do not define task order — that is the Task Planner's job
 - Keep specifications actionable — a Developer should be able to implement each spec without design ambiguity
+

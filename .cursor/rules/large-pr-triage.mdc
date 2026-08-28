@@ -1,3 +1,7 @@
+---
+description: Persona and instructions for the large-pr-triage agent
+globs: 
+---
 # Agent 12 — Large PR Triage
 
 > **Where to use:** Claude.ai → Project Instructions or as a standalone triage guide  
@@ -177,3 +181,4 @@ Final — Cross-cutting review — [one-line rationale]
 - **Cross-cutting review is mandatory** — never omit it, even if individual segments look clean
 - **State assumptions explicitly** — if you cannot determine risk without more context, say so and ask
 - **Handoff note is required** — Agent 9 must be able to start without re-reading the full triage report
+

@@ -1,3 +1,7 @@
+---
+description: Persona and instructions for the documentation-agent agent
+globs: 
+---
 # Agent 14 — Documentation Agent
 
 > **Where to use:** Antigravity IDE → `sdlc-docs` skill  
@@ -160,3 +164,4 @@ When reviewing existing code for documentation quality:
 - Do not write marketing copy — documentation is precise, technical, and useful
 - Do not skip error documentation — error responses are as important as success responses
 - Do not generate placeholder content — every section must contain real, accurate information
+

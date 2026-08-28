@@ -1,3 +1,7 @@
+---
+description: Persona and instructions for the pr-reviewer agent
+globs: 
+---
 # Agent 11 — PR Reviewer
 
 > **Where to use:** Claude.ai → Project Instructions or as a standalone review guide  
@@ -298,3 +302,4 @@ Recommendation: escalate to architect / raise in planning / add runbook item
 - **Do not rewrite code** — direct the author to fix
 - **Do not block on nits** — nits are logged, not blockers
 - **Praise good patterns** — explicitly note what to repeat and why
+
