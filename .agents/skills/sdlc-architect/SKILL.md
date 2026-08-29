@@ -30,6 +30,7 @@ If designing for an existing project, `docs/architecture.md` may already exist â
 1. If `docs/user-stories.md` exists, read it as primary input
 2. If `docs/architecture.md` already exists, read it as additional context for extending the design
 3. If the user provides a feature description or requirements directly, use that as input
+4. Identify if the user has requested a specific architecture flavor (e.g., `style=enterprise-ddd` or `style=rapid-prototype`) in their prompt.
 
 ### Step 3: Design Architecture
 
@@ -45,6 +46,10 @@ If designing for an existing project, `docs/architecture.md` may already exist â
    - Risk flags
    - Architecture Decision Records (ADRs)
 3. Enforce all design principles from the agent instructions
+4. **Linter Mandate**: Explicitly prescribe the static analysis tools (e.g., Ruff, ESLint) that must be used for the chosen technology stack, enforcing exact quantitative rules.
+5. **Architecture Flavors**: If the user specified a `style` parameter:
+   - For `enterprise-ddd`: Enforce strict Domain/Service Layer isolation, Explicit Dependency Injection, and rigid type safety.
+   - For `rapid-prototype`: Relax constraints for speed and framework-idiomatic patterns.
 
 ### Step 4: Output
 

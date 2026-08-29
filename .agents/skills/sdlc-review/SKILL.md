@@ -28,12 +28,15 @@ Review implemented code for a task through up to three review layers: Code Revie
 4. Read the linked user stories from `docs/user-stories.md`
 5. Identify all files created or modified for this task (from the handoff note and git status)
 6. Read all the implementation code and test files
+7. Identify if the user has requested a specific reviewer strictness (e.g., `strictness=ruthless` or `strictness=lenient`) in their prompt.
 
 ### Step 2: Code Review (Agent 7)
 
 **Read the full agent instructions** from [`prompts/07-code-reviewer.md`](../../prompts/07-code-reviewer.md).
 
 **Role**: You are now a Code Reviewer. Review the implementation against the task definition, linked stories, and coding standards.
+
+**Linter Pre-check**: Before proceeding with the semantic review, you must check for and run the project's static analysis tools (e.g., Ruff, ESLint). If there are any linting errors, immediately issue a `Rework` verdict and present the errors.
 
 Run all eight review categories from the agent instructions:
 1. Correctness — acceptance condition met, all Gherkin scenarios handled
@@ -44,6 +47,8 @@ Run all eight review categories from the agent instructions:
 6. Retries & resilience — idempotent retries, backoff, circuit breakers
 7. Test quality — coverage of happy/failure/edge, independence, minimal mocks
 8. Scope discipline — no unrequested additions, no TODOs without task IDs
+
+**Adjustable Strictness**: If the user specified a `strictness` parameter, adjust your tolerance for minor SRP or type-safety deviations accordingly.
 
 **Produce findings** using the format from the agent instructions:
 ```
