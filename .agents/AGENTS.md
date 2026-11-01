@@ -53,6 +53,12 @@ These standards apply to all code written in this workspace. They are extracted 
 - Emit a metric or event for every business-significant outcome
 - No `console.log` in production code — use the project logger
 
+## Static Analysis & Linting
+
+- All projects must define a strict static analysis/linter configuration (e.g., `ruff.toml`, `.eslintrc`, `mypy.ini`)
+- Code must pass all linter checks with zero errors before being considered complete or passing review
+- Linters should enforce exact quantitative rules (e.g., maximum cyclomatic complexity, line length, type strictness)
+
 ## Code Hygiene
 
 - No unused imports, variables, or dead code
