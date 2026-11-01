@@ -38,8 +38,9 @@ The following documents should be available as input:
 1. Read the agent instructions from the prompts file
 2. Produce the ordered atomic task list following the layer sequence:
    - Infrastructure → Data models & migrations → API contracts & interfaces → Business logic & services → UI & integration → Hardening & observability
-3. Verify traceability: every story and every component must appear in at least one task
-4. Produce the coverage matrix
+3. **Project & Toolchain Bootstrap (`TASK-001`)**: If the repository does not yet have its project skeleton, test runner, or static analysis/linter configurations initialized, always generate `TASK-001` in the `Infrastructure` layer as **"Project & Toolchain Bootstrap"** to initialize the exact linters, type-checkers, and test harness prescribed in `docs/architecture.md`.
+4. Verify traceability: every story and every component must appear in at least one task
+5. Produce the coverage matrix
 
 ### Step 4: Output
 

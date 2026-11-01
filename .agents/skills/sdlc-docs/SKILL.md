@@ -50,6 +50,7 @@ Based on the task and code changes, determine what documentation is needed:
 | Any completed task | Add changelog entry to `CHANGELOG.md` |
 | New environment variable | Update README configuration section |
 | Architecture decision revealed during implementation | Append ADR to `docs/architecture.md` |
+| Contract, data model, or component boundary changed (Architecture Drift) | Sync and update `docs/architecture.md` sections to match actual code |
 
 ### Step 3: Generate Documentation
 
@@ -59,7 +60,7 @@ For each documentation item identified:
 3. Document error responses with the same thoroughness as success responses
 4. Reference architecture decisions rather than restating them
 
-### Step 4: Staleness Check
+### Step 4: Staleness & Architecture Drift Check
 
 Run the staleness detection checklist from the agent instructions against all existing documentation:
 
@@ -68,6 +69,7 @@ Run the staleness detection checklist from the agent instructions against all ex
 3. Compare documented function signatures against actual signatures
 4. Verify environment variables in docs match what code reads
 5. Check that architecture diagrams reflect current component structure
+6. **Architecture Drift Sync**: Check `docs/handoffs/TASK-NNN.md` (`Architecture drift check`) and compare `docs/architecture.md` against actual implemented routes, schemas, and components — automatically update `docs/architecture.md` if any contract or model drifted during implementation
 
 Produce findings for any staleness detected.
 
