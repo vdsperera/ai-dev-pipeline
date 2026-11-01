@@ -1,6 +1,6 @@
 # AI Dev Pipeline Roadmap & Architectural Principles
 
-This document serves as a persistent record of the philosophical principles underlying the AI Dev Pipeline and outlines the roadmap for future architectural upgrades and quality controls.
+This document serves as a persistent record of the philosophical principles underlying the AI Dev Pipeline and outlines the roadmap for architectural upgrades, quality controls, and full-lifecycle engineering workflows.
 
 ## Principles Over Rigid Rules
 
@@ -36,3 +36,27 @@ The following advanced quality controls have been integrated into the pipeline t
 ### 3. Adjustable Reviewer Strictness
 - **Concept**: Contextualizing how ruthless the Code Reviewer should be based on the project's criticality.
 - **Implementation**: The `sdlc-review` skill accepts a `strictness` parameter (e.g., `ruthless` or `lenient`). This adjusts the AI's tolerance for minor deviations from principles like SRP (Single Responsibility Principle) or strict type safety.
+
+## Full-Lifecycle & Non-Greenfield Capabilities
+
+To cover 100% of real-world software engineering without causing "skill bloat", the pipeline uses a **hybrid design**: 2 standalone entry-point skills for distinct workflows and 3 automatic upgrades baked directly into existing skills.
+
+### 1. Brownfield Codebase Onboarding (`sdlc-onboard` — Agent 15)
+- **Concept**: Enabling the pipeline to work immediately on existing ("brownfield") repositories that do not yet have `docs/architecture.md`.
+- **Implementation**: Standalone `sdlc-onboard` skill (`prompts/15-codebase-onboarder.md`) scans directory structures, dependency manifests, entry points, and data models to reverse-engineer a baseline `docs/architecture.md` and identify existing architectural risks.
+
+### 2. Bug Triage & Root-Cause Analysis (`sdlc-debug` — Agent 16)
+- **Concept**: Providing a rigorous scientific workflow for bugs, regressions, and production errors without requiring the full 6-agent feature planning pipeline.
+- **Implementation**: Standalone `sdlc-debug` skill (`prompts/16-bug-investigator.md`) enforces a strict loop: formulate hypotheses, write a **failing reproduction test first**, isolate the root cause, apply a minimal fix, verify linters/tests pass, and document the RCA in `docs/handoffs/BUG-NNN.md`.
+
+### 3. Project & Toolchain Bootstrap (Built into `sdlc-tasks`)
+- **Concept**: Ensuring new projects start with working linters, type-checkers, and test runners from the very first task.
+- **Implementation**: Upgraded `sdlc-tasks` so that on greenfield repositories lacking linter/test configurations, `TASK-001` in the `Infrastructure` layer is automatically generated as "Project & Toolchain Bootstrap" based on `docs/architecture.md`.
+
+### 4. Technical Refactoring Mode (Built into `sdlc-develop`)
+- **Concept**: Supporting pure engineering and tech-debt tasks that do not have user-facing Gherkin stories while guaranteeing behavior preservation.
+- **Implementation**: Upgraded `sdlc-develop` so tasks tagged `[REFACTOR]` (or lacking Gherkin user stories) switch to **Behavior-Preservation Mode**: verifying or writing characterization tests *before* modifying code structure and ensuring zero external contract regressions.
+
+### 5. Architecture Drift Detection & Sync (Built into `sdlc-develop` & `sdlc-docs`)
+- **Concept**: Preventing documentation rot when implementation realities cause APIs, schemas, or component boundaries to evolve during development.
+- **Implementation**: `sdlc-develop` includes an explicit `Architecture drift check` section in every task handoff note (`docs/handoffs/TASK-NNN.md`), and `sdlc-docs` automatically syncs any contract, data model, or component changes back into `docs/architecture.md`.

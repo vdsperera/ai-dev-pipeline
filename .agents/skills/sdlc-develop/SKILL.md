@@ -9,12 +9,12 @@ description: >-
 
 # SDLC Developer — Implement a Task
 
-Implement a single atomic task from the backlog following Developer Agent (Agent 5) standards.
+Implement a single atomic task from the backlog following Developer Agent (Agent 6) standards.
 
 ## Prerequisites
 
 - `docs/tasks.md` must exist with the task backlog
-- `docs/user-stories.md` must exist with linked user stories
+- `docs/user-stories.md` must exist with linked user stories (unless task is tagged `[REFACTOR]` or infrastructure bootstrap)
 - `docs/architecture.md` must exist with the system design
 - The user must specify which TASK-NNN to implement
 
@@ -23,7 +23,7 @@ Implement a single atomic task from the backlog following Developer Agent (Agent
 ### Step 1: Gather Context
 
 1. Read `docs/tasks.md` and locate the specified task
-2. Read the task's linked user stories from `docs/user-stories.md`
+2. Read the task's linked user stories from `docs/user-stories.md` (if applicable)
 3. Read the task's linked component from `docs/architecture.md`
 4. Check the task's dependencies — verify all `Depends on` tasks are marked done
 
@@ -54,12 +54,16 @@ Following the coding standards from the developer agent instructions:
 
 1. Create or modify the files needed for this task
 2. Implement exactly the task scope — nothing more, nothing less
-3. Follow all naming, error handling, validation, security, and logging standards
-4. Write unit tests alongside the implementation:
+3. **Refactoring Mode (Behavior Preservation)**: If the task is tagged `[REFACTOR]` or is a technical migration without user-facing Gherkin stories:
+   - Verify or write characterization/snapshot tests covering existing observable behaviour **before** modifying code structure
+   - Execute incremental structural changes without altering external API contracts or behaviour
+   - Verify all characterization tests and linters pass with zero regressions
+4. Follow all naming, error handling, validation, security, and logging standards
+5. Write unit tests alongside the implementation:
    - Happy path
    - At least one failure path
    - At least one boundary/edge case
-5. Tests must be runnable and independent
+6. Tests must be runnable and independent
 
 ### Step 4: Self-Review Checklist
 
@@ -72,6 +76,7 @@ Run this checklist before completing. Every item must pass:
 - [ ] All retryable operations use backoff with a termination condition
 - [ ] Auth enforced at function level, not only at route
 - [ ] Unit tests cover happy path, failure path, and one edge case
+- [ ] Project static analysis / linters pass with zero errors
 - [ ] Acceptance condition from the task is verifiably met
 - [ ] No logic added beyond the task scope
 - [ ] Handoff note written
@@ -88,6 +93,9 @@ Create a handoff note summarising what was built. Present it to the user and wri
 
 ## Files changed
 [List of files created or modified]
+
+## Architecture drift check
+[State "None" or explicitly list any API contracts, data models, or component boundaries that evolved from `docs/architecture.md`]
 
 ## Reviewer focus areas
 [What the reviewer should pay attention to]
