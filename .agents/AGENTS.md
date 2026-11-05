@@ -86,7 +86,9 @@ These standards apply to all code written in this workspace. They are extracted 
 
 ## Pipeline Context
 
-This workspace uses an SDLC pipeline with 15 specialised agent personas packaged as 8 skills. Pipeline docs live in `docs/`:
+This workspace uses an SDLC pipeline with 17 specialised agent personas packaged as 16 skills. Pipeline docs live in `docs/`:
+- `docs/pipeline-roadmap.md` — architectural principles and quality control roadmap
+- `docs/product-brief.md` — product strategy and MVP scope
 - `docs/requirements.md` — refined requirements
 - `docs/user-stories.md` — user stories with Gherkin acceptance criteria
 - `docs/architecture.md` — system design document
