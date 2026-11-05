@@ -39,6 +39,17 @@ It does **not** cover the other two pillars of creating a successful product:
 
 If you are looking to build the technical foundation of your product, this pipeline handles it end-to-end.
 
+## Why Architecture & Traceability Matter (The "Black-Box AI" Solution)
+
+Modern AI coding assistants can generate code in seconds, but they introduce a critical liability: **code without context**. Developers end up with thousands of lines of generated code where nobody understands the design trade-offs, scaling limits, or failure modes. When technical leaders, clients, or auditors evaluate such projects, the lack of explainable reasoning is immediately evident.
+
+The AI Dev Pipeline solves this by positioning the developer as the **Lead Architect** and the AI agents as a disciplined engineering team:
+
+* **Every architectural decision is defensible:** Architecture Decision Records (ADRs in `docs/architecture.md`) explicitly capture why an approach was chosen, what alternatives were evaluated, and what trade-offs were accepted.
+* **Full paper trail per task:** Developer handoff notes (`docs/handoffs/`), Gherkin acceptance criteria (`docs/user-stories.md`), and automated drift checks guarantee you can always explain and defend *how* and *why* your system functions.
+* **Instant brownfield visibility (`sdlc-onboard`):** Reverse-engineer any legacy or existing codebase to surface architectural risks, dependency bottlenecks, and tech debt before touching a line of code.
+* **Scientific debugging (`sdlc-debug`):** Enforce root-cause analysis with automated failing reproduction tests before applying fixes—preventing "guess-and-check" hallucinated patches.
+
 ## Folder structure
 
 ```
