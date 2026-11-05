@@ -50,6 +50,28 @@ The AI Dev Pipeline solves this by positioning the developer as the **Lead Archi
 * **Instant brownfield visibility (`sdlc-onboard`):** Reverse-engineer any legacy or existing codebase to surface architectural risks, dependency bottlenecks, and tech debt before touching a line of code.
 * **Scientific debugging (`sdlc-debug`):** Enforce root-cause analysis with automated failing reproduction tests before applying fixes—preventing "guess-and-check" hallucinated patches.
 
+### Interrogating & Defending Your Architecture
+
+A resilient architecture is one you can explain and defend under scrutiny. You can use the AI assistant to conduct **Architecture Defense & Stress-Testing sessions** before presenting your project to an Architecture Review Board (ARB), technical lead, or auditor:
+
+#### Workflow A: For projects built with this pipeline
+If you built the project using the pipeline, your design reasoning is already recorded in `docs/architecture.md` and `docs/handoffs/`. You can immediately run the stress-test prompts below.
+
+#### Workflow B: For projects built WITHOUT this pipeline (legacy or external code)
+If you are working with an existing codebase that has no documentation:
+1. Run: `"onboard this repo"` (`sdlc-onboard`).
+2. The agent scans the code and reverse-engineers a baseline `docs/architecture.md` with component maps, implicit ADRs, and risk flags.
+3. Once generated, run the stress-test prompts below to interrogate the codebase.
+
+#### Architecture Defense Prompts
+
+| To stress-test... | Say this to the assistant |
+|-------------------|---------------------------|
+| **Technology Trade-Offs** | *"Review `docs/architecture.md` and challenge me on our tech stack choices. What alternatives could we have chosen and what are the trade-offs?"* |
+| **Scaling Bottlenecks** | *"If this system experiences a 10x surge in traffic, which component or query breaks first and why?"* |
+| **Failure Modes & Resilience** | *"Walk me through what happens when [External Dependency / Database] fails or times out. How does our error handling prevent cascading failure?"* |
+| **Simulated Technical Defense** | *"Act as a Principal Systems Architect reviewing this project. Grill me on our data ownership and boundary isolation, asking one challenging question at a time."* |
+
 ## Folder structure
 
 ```
