@@ -4,26 +4,30 @@ A structured AI-assisted development pipeline that covers the full SDLC — from
 
 ## How it works
 
-The pipeline has **15 specialised agent personas** packaged as **14 skills** and 1 always-on rule. The 6 planning agents can be invoked individually as standalone skills or chained together via `sdlc-plan`. Instead of copy-pasting between separate AI chat windows, you invoke skills by name and the agent runs automatically.
+The pipeline has **17 specialised agent personas** packaged as **16 skills** and 1 always-on rule. The 6 planning agents can be invoked individually as standalone skills or chained together via `sdlc-plan`. Instead of copy-pasting between separate AI chat windows, you invoke skills by name and the agent runs automatically.
 
 ```
 Your idea
     ↓ "plan my project: [idea]"
 product-brief.md → requirements.md → user-stories.md → architecture.md
     ↓ (has UI?) → design-specs.md
-    ↓ → tasks.md
+    ↓ → tasks.md (auto-bootstraps TASK-001 for linters/toolchain)
     ↓ "implement TASK-001"
-Code + unit tests + handoff note
+Code + unit tests + handoff note (supports [REFACTOR] mode & drift tracking)
     ↓ "review TASK-001"
-Code review → Security review (if applicable) → UX review (if applicable)
+Linter pre-check → Code review → Security review (if applicable) → UX review (if applicable)
     ↓ "test TASK-001"
 Full test suite + coverage matrix → task marked done
     ↓ "deploy TASK-001" (optional)
 Dockerfile + CI/CD + deployment review
     ↓ "document TASK-001" (optional)
-API docs + README update + changelog
+API docs + README update + changelog + architecture drift sync
     ↓ repeat for next task
 ```
+
+For existing codebases or runtime issues, the pipeline provides specialized lifecycle entry points:
+- **Brownfield onboarding:** `"onboard this repo"` → scans existing code and reverse-engineers `docs/architecture.md`.
+- **Bug investigation:** `"debug this: [error]"` → scientific RCA, failing reproduction test first, minimal fix.
 
 ## Scope: The Engineering Pillar
 
@@ -40,20 +44,22 @@ If you are looking to build the technical foundation of your product, this pipel
 ```
 .
 ├── .agents/                            # Antigravity customization root
-│   ├── AGENTS.md                       # Always-on coding standards (Agent 6)
+│   ├── AGENTS.md                       # Always-on coding standards & static analysis (Agent 6)
 │   └── skills/
 │       ├── sdlc-plan/SKILL.md          # Planning chain (Agents 0→1→2→3→4→5)
 │       ├── sdlc-strategy/SKILL.md      # Product strategy (Agent 0) — standalone
 │       ├── sdlc-requirements/SKILL.md  # Requirements analysis (Agent 1) — standalone
 │       ├── sdlc-stories/SKILL.md       # User story writing (Agent 2) — standalone
-│       ├── sdlc-architect/SKILL.md     # Architecture design (Agent 3) — standalone
+│       ├── sdlc-architect/SKILL.md     # Architecture design & flavors (Agent 3) — standalone
 │       ├── sdlc-ux/SKILL.md            # UI/UX design (Agent 4) — standalone
-│       ├── sdlc-tasks/SKILL.md         # Task planning (Agent 5) — standalone
-│       ├── sdlc-develop/SKILL.md       # Task implementation (Agent 6)
-│       ├── sdlc-review/SKILL.md        # Code + Security + UX review (Agents 7→8→9)
+│       ├── sdlc-tasks/SKILL.md         # Task planning & toolchain bootstrap (Agent 5) — standalone
+│       ├── sdlc-develop/SKILL.md       # Task implementation & refactor mode (Agent 6)
+│       ├── sdlc-review/SKILL.md        # Code + Security + UX review & strictness (Agents 7→8→9)
 │       ├── sdlc-test/SKILL.md          # Test generation (Agent 10)
 │       ├── sdlc-deploy/SKILL.md        # DevOps review & artifacts (Agent 13)
-│       ├── sdlc-docs/SKILL.md          # Documentation generation (Agent 14)
+│       ├── sdlc-docs/SKILL.md          # Documentation generation & drift sync (Agent 14)
+│       ├── sdlc-onboard/SKILL.md       # Brownfield codebase onboarding (Agent 15)
+│       ├── sdlc-debug/SKILL.md         # Root-cause analysis & bug fixing (Agent 16)
 │       ├── pr-review/SKILL.md          # PR review at merge gate (Agent 11)
 │       └── pr-triage/SKILL.md          # Large PR triage (Agent 12)
 ├── prompts/                            # Source of truth for all agent instructions
@@ -71,8 +77,11 @@ If you are looking to build the technical foundation of your product, this pipel
 │   ├── 11-pr-reviewer.md
 │   ├── 12-large-pr-triage.md
 │   ├── 13-devops-agent.md             # Dockerfile, CI/CD, IaC
-│   └── 14-documentation-agent.md      # API docs, README, changelog
+│   ├── 14-documentation-agent.md      # API docs, README, changelog
+│   ├── 15-codebase-onboarder.md       # Reverse-engineer architecture from code
+│   └── 16-bug-investigator.md         # Scientific RCA, reproduction test first
 └── docs/                               # Living project documents (pipeline outputs)
+    ├── pipeline-roadmap.md              # Architectural principles, quality controls & roadmap
     ├── product-brief.md                 # Agent 0 output
     ├── requirements.md                  # Agent 1 output
     ├── user-stories.md                  # Agent 2 output
@@ -127,12 +136,12 @@ After the chain completes, you review the full plan and approve or refine.
 ### Phase 2: Per-task development loop (repeat per task)
 
 ```
-1. "implement TASK-NNN"     → sdlc-develop skill writes code + tests + handoff
-2. "review TASK-NNN"        → sdlc-review skill runs code review (+ security + UX if needed)
+1. "implement TASK-NNN"     → sdlc-develop skill writes code + tests + handoff (supports [REFACTOR] mode)
+2. "review TASK-NNN"        → sdlc-review skill runs linter checks + code review (+ security + UX if needed)
 3. Fix any review findings   → re-run "review TASK-NNN"
 4. "test TASK-NNN"          → sdlc-test skill generates test suite + marks task done
 5. "deploy TASK-NNN"        → sdlc-deploy skill generates deployment artifacts (optional)
-6. "document TASK-NNN"      → sdlc-docs skill generates/updates documentation (optional)
+6. "document TASK-NNN"      → sdlc-docs skill generates/updates documentation & syncs architecture drift (optional)
 7. Pick next task            → repeat
 ```
 
@@ -184,16 +193,17 @@ graph TD
     DOC5 -.-> F
 ```
 
-
 | I want to... | Use this standalone skill |
 |-------------|--------------------------|
 | Define MVP scope and business risks | `sdlc-strategy` |
 | Analyse and refine requirements | `sdlc-requirements` |
 | Write user stories with Gherkin criteria | `sdlc-stories` |
-| Design system architecture | `sdlc-architect` |
+| Design system architecture | `sdlc-architect` (supports `style=enterprise-ddd` / `style=rapid-prototype`) |
 | Create UI/UX design specifications | `sdlc-ux` |
-| Generate the task backlog | `sdlc-tasks` |
-| Run the full end-to-end pipeline | `sdlc-plan` (orchestrates all of the above) |
+| Generate the task backlog | `sdlc-tasks` (auto-bootstraps `TASK-001` for toolchain setup) |
+| Onboard an existing codebase | `sdlc-onboard` |
+| Diagnose and fix a bug scientifically | `sdlc-debug` |
+| Run the full end-to-end pipeline | `sdlc-plan` (orchestrates all planning steps) |
 
 **Portability**: To use any standalone skill in another project, copy its `.agents/skills/<skill-name>/` folder and the referenced prompt file from `prompts/` into your target project.
 
@@ -201,7 +211,7 @@ graph TD
 
 ## The Complete Software Team (Agent personas)
 
-The 15 agents map directly to a cross-functional real-world software team, covering every phase of the SDLC.
+The 17 agents map directly to a cross-functional real-world software team, covering every phase of the SDLC.
 
 ### 1. Product & Strategy
 | # | Agent | Real-world role | Prompt |
@@ -238,6 +248,12 @@ The 15 agents map directly to a cross-functional real-world software team, cover
 | 13| DevOps Agent | DevOps / SRE | `prompts/13-devops-agent.md` |
 | 14| Documentation Agent | Technical Writer | `prompts/14-documentation-agent.md` |
 
+### 6. Maintenance, Discovery & Reliability
+| # | Agent | Real-world role | Prompt |
+|---|-------|----------------|--------|
+| 15| Codebase Onboarder | Reverse Engineer / Solution Architect | `prompts/15-codebase-onboarder.md` |
+| 16| Bug Investigator & RCA Specialist | Debugger / Reliability Engineer | `prompts/16-bug-investigator.md` |
+
 ## Skills reference
 
 | Skill | Trigger phrases | What it does |
@@ -246,14 +262,16 @@ The 15 agents map directly to a cross-functional real-world software team, cover
 | `sdlc-strategy` | "define product strategy", "create product brief", "MVP scope" | Runs Agent 0 standalone → `docs/product-brief.md` |
 | `sdlc-requirements` | "analyse requirements", "refine requirements" | Runs Agent 1 standalone → `docs/requirements.md` |
 | `sdlc-stories` | "write user stories", "create stories", "generate acceptance criteria" | Runs Agent 2 standalone → `docs/user-stories.md` |
-| `sdlc-architect` | "design architecture", "system design", "API contracts" | Runs Agent 3 standalone → `docs/architecture.md` |
+| `sdlc-architect` | "design architecture", "system design", "API contracts" | Runs Agent 3 standalone → `docs/architecture.md`. Supports `style=enterprise-ddd` / `style=rapid-prototype` and mandates linters |
 | `sdlc-ux` | "design UI", "create design specs", "UX design" | Runs Agent 4 standalone → `docs/design-specs.md` |
-| `sdlc-tasks` | "plan tasks", "create task backlog", "break down tasks" | Runs Agent 5 standalone → `docs/tasks.md` |
-| `sdlc-develop` | "implement TASK-NNN", "build TASK-NNN" | Implements one task with self-review checklist |
-| `sdlc-review` | "review TASK-NNN", "code review TASK-NNN" | Code review + conditional security review + conditional UX review |
+| `sdlc-tasks` | "plan tasks", "create task backlog", "break down tasks" | Runs Agent 5 standalone → `docs/tasks.md`. Auto-generates `TASK-001` for toolchain & linter setup |
+| `sdlc-develop` | "implement TASK-NNN", "build TASK-NNN" | Implements one task with self-review checklist. Supports `[REFACTOR]` mode and flags architecture drift |
+| `sdlc-review` | "review TASK-NNN", "code review TASK-NNN" | Enforces linter pre-checks. Code review + conditional security + UX review. Supports `strictness=ruthless` / `strictness=lenient` |
 | `sdlc-test` | "test TASK-NNN", "generate tests" | Full test suite + coverage matrix |
 | `sdlc-deploy` | "deploy TASK-NNN", "generate Dockerfile", "create CI/CD" | Deployment artifacts + review |
-| `sdlc-docs` | "document TASK-NNN", "generate docs", "update README" | API docs, README, changelog |
+| `sdlc-docs` | "document TASK-NNN", "generate docs", "update README" | API docs, README, changelog. Auto-syncs architecture drift back to `docs/architecture.md` |
+| `sdlc-onboard` | "onboard this repo", "reverse engineer architecture", "scan existing codebase" | Scans brownfield code, reverse-engineers tech stack and writes baseline `docs/architecture.md` |
+| `sdlc-debug` | "debug this", "fix bug", "investigate error", "root cause analysis", "hotfix" | Scientific RCA: failing test first → minimal fix → linters/tests → `docs/handoffs/BUG-NNN.md` |
 | `pr-review` | "review this PR", "review PR #47" | Three-layer PR review with verdict |
 | `pr-triage` | "triage this PR", "this PR is too large" | Segments large PRs for reviewable chunks |
 
@@ -269,8 +287,11 @@ The coding standards from Agent 6 (Developer) are installed as `AGENTS.md` — t
 - Retry & resilience patterns
 - Security practices
 - Logging & observability standards
+- Static analysis & linting configuration and zero-error enforcement
 - Data & schema standards
 - Unit test requirements
+
+See [`docs/pipeline-roadmap.md`](docs/pipeline-roadmap.md) for the philosophy behind contextual enforcement (principles over rigid global rules) and architectural upgrades.
 
 ---
 
@@ -303,9 +324,9 @@ The planning pipeline runs up to six agents in sequence:
 1. **Product Strategist** → defines MVP scope, business model, and risk in `docs/product-brief.md`
 2. **Requirements Analyst** → analyses your idea, finds gaps, writes `docs/requirements.md`
 3. **User Story Writer** → creates user stories with Gherkin acceptance criteria in `docs/user-stories.md`
-4. **Architect** → designs components, APIs, data models in `docs/architecture.md`
+4. **Architect** → designs components, APIs, data models in `docs/architecture.md` (and prescribes static analysis tools)
 5. **UI/UX Designer** *(conditional)* → defines design system, page layouts, component specs in `docs/design-specs.md`
-6. **Task Planner** → breaks everything into ordered atomic tasks in `docs/tasks.md`
+6. **Task Planner** → breaks everything into ordered atomic tasks in `docs/tasks.md` (with `TASK-001` bootstrapping toolchain & linters)
 
 Each phase pauses for your review. Say "continue" to proceed or give feedback to refine.
 
@@ -314,13 +335,12 @@ Each phase pauses for your review. Say "continue" to proceed or give feedback to
 Once planning is complete, work through tasks in order:
 
 ```
-"implement TASK-001"     → Agent writes code + unit tests + handoff note
-"review TASK-001"        → Code review (+ security + UX review if applicable)
-"test TASK-001"          → Full test suite generated, task marked done
-"deploy TASK-001"        → Dockerfile + CI/CD generated (when ready to deploy)
-"document TASK-001"      → API docs + README updated (when ready to document)
-
-"implement TASK-002"     → next task...
+"implement TASK-001"     → Agent initializes toolchain/linter configurations
+"implement TASK-002"     → Agent writes code + unit tests + handoff note
+"review TASK-002"        → Linter pre-check + code review (+ security + UX review if applicable)
+"test TASK-002"          → Full test suite generated, task marked done
+"deploy TASK-002"        → Dockerfile + CI/CD generated (when ready to deploy)
+"document TASK-002"      → API docs + README updated + architecture drift synced
 ```
 
 **Step 4 — Merge and repeat**
@@ -342,15 +362,13 @@ You have a working project and want to add the pipeline for future development.
 # Do NOT copy docs/ — you'll generate fresh docs for your codebase
 ```
 
-**Step 2 — Generate baseline docs from your existing code**
+**Step 2 — Onboard your existing code**
 
-You don't need to re-plan your whole project. Instead, generate documentation for what already exists:
+You don't need to manually re-plan your whole project or reverse-engineer your architecture by hand. Run the onboarding agent:
 
-> "document my existing project — scan the codebase and generate docs/architecture.md with the current component map, API contracts, and data models"
+> "onboard this repo"
 
-This gives the pipeline context about your existing system. You can also manually create or refine:
-- `docs/architecture.md` — describe your current system design
-- `docs/requirements.md` — document your current requirements (even briefly)
+The Codebase Onboarder (Agent 15) inspects your manifests, routes, schemas, and linters, generating a baseline `docs/architecture.md` and flagging any architectural risks or missing toolchains.
 
 **Step 3 — Plan only new work**
 
@@ -368,8 +386,8 @@ From here, the workflow is the same: implement → review → test → deploy �
 
 You can run reviews on existing code without the full planning cycle:
 
-> "review this PR" — for code about to be merged
-> "review the code in src/auth/" — for an existing directory you want audited
+> "review this PR" — for code about to be merged  
+> "review the code in src/auth/" — for an existing directory you want audited  
 
 ---
 
@@ -381,7 +399,7 @@ You already have the pipeline adopted and want to add a new feature.
 
 > "plan this feature: add a billing module with Stripe integration, subscription management, and invoice generation"
 
-This runs the full planning chain but scoped to the new feature. It reads your existing `docs/architecture.md` and designs the feature to fit within your existing system.
+This runs the full planning chain but scoped to the new feature. It reads your existing `docs/architecture.md` and designs the feature to fit within your existing system. You can specify architectural styles if needed (e.g., `style=enterprise-ddd`).
 
 **Option 2 — Lightweight planning (for small features)**
 
@@ -402,21 +420,35 @@ The Developer Agent (Agent 6) will follow the coding standards even without form
 
 ---
 
-### Scenario D: Bug fix or small change
+### Scenario D: Bug fix, refactor, or hotfix
 
-Not every change needs the full pipeline. Here's how to handle lightweight work.
+Not every change is a planned feature from a user story.
 
-**Simple bug fix**
+**1. Scientific Bug Fix (`sdlc-debug`)**
+For non-trivial bugs, stack traces, or regressions, run the dedicated debugging skill:
 ```
-"fix this bug: the /api/tasks endpoint returns 500 when the user has no tasks. 
-It should return an empty array with 200."
+"debug this: the /api/tasks endpoint returns 500 when the user has no tasks.
+Stack trace: [paste error]"
 ```
-The coding standards from `AGENTS.md` apply automatically — error handling, input validation, and test quality are enforced even without invoking any skill.
+Agent 16 (Bug Investigator) follows a strict scientific loop:
+1. Isolates the true root cause (not just surface symptoms)
+2. Writes a failing unit/integration reproduction test **first** (Red phase)
+3. Applies the minimal scoped fix and confirms the test passes (Green phase)
+4. Verifies linters and test suites pass with zero regressions
+5. Writes an RCA report to `docs/handoffs/BUG-NNN.md`
 
-**Quick refactor**
+**2. Technical Refactoring (`[REFACTOR]`)**
+For technical debt or internal restructuring, tag the task as `[REFACTOR]` or describe it:
 ```
-"refactor the authentication middleware to use the new token validation library. 
-Don't change any behaviour, just swap the implementation."
+"refactor the authentication middleware to use the new token validation library.
+Don't change any external behavior, just swap the implementation."
+```
+The Developer Agent engages **Behavior-Preservation Mode**: writing/verifying characterization tests before altering code structure and ensuring all linters and existing tests pass with zero regressions.
+
+**3. Simple typo / quick fix**
+For trivial 1-line changes:
+```
+"fix typo in button label in src/components/Header.tsx"
 ```
 
 **When to add reviews**
@@ -438,8 +470,8 @@ When multiple developers use the pipeline on the same project.
 **Branch strategy**
 ```
 main
-├── feature/TASK-001-user-auth      ← one branch per task
-├── feature/TASK-002-database-setup
+├── feature/TASK-001-toolchain-bootstrap
+├── feature/TASK-002-user-auth
 └── feature/TASK-003-api-endpoints
 ```
 
@@ -451,11 +483,12 @@ main
 5. Run: `"review this PR"` (or have another team member trigger it)
 6. Merge
 
-**Keeping docs/ in sync**
+**Keeping docs/ in sync & preventing drift**
 - `docs/` lives in version control — it's the shared source of truth
 - Each task updates its own files: `docs/handoffs/TASK-NNN.md`, `docs/reviews/TASK-NNN-*.md`
+- Every handoff note includes an explicit `Architecture drift check`
+- Running `sdlc-docs` automatically synchronizes any contract, data model, or schema changes back into `docs/architecture.md`
 - `docs/tasks.md` is updated when a task is marked done — merge conflicts here are expected and easy to resolve
-- `docs/architecture.md` should only be changed through the planning pipeline or explicit architecture discussions — not by individual task implementations
 
 **PR review workflow**
 ```
@@ -464,7 +497,7 @@ Developer pushes PR
 Reviewer (human or AI) says: "review this PR" or "review PR #47"
     ↓
 PR Review agent runs three layers:
-  Layer 1: Mechanical checks (bugs, security, hygiene)
+  Layer 1: Mechanical checks (bugs, security, hygiene, linter compliance)
   Layer 2: Engineering reasoning (concurrency, resilience, caching)
   Layer 3: System judgment (architecture, scale, blast radius)
     ↓
@@ -485,16 +518,17 @@ Large PRs (20+ files): "triage this PR" first to split into reviewable segments
 | I want to... | Say this |
 |-------------|---------|
 | Start a new project | "plan my project: [your idea]" |
-| Add the pipeline to existing code | Copy `.agents/` + `prompts/`, then "document my existing project" |
+| Onboard an existing codebase | "onboard this repo" |
 | Plan a new feature | "plan this feature: [feature description]" |
 | Implement a task | "implement TASK-NNN" |
-| Review code | "review TASK-NNN" |
+| Refactor tech debt | "implement TASK-NNN" (with `[REFACTOR]` tag) |
+| Review code | "review TASK-NNN" (optional: `strictness=ruthless`) |
 | Generate tests | "test TASK-NNN" |
+| Investigate and fix a bug (RCA) | "debug this: [error or stack trace]" |
 | Generate deployment artifacts | "deploy TASK-NNN" |
-| Generate documentation | "document TASK-NNN" |
+| Generate documentation & sync drift | "document TASK-NNN" |
 | Review a PR | "review this PR" or "review PR #NNN" |
 | Triage a large PR | "triage this PR" |
-| Fix a bug | Just describe the bug — coding standards apply automatically |
 
 ---
 
@@ -569,7 +603,7 @@ graph TD
 Hooks act as triggers on specific system events. For example, a `pre_message` hook can intercept your text before the AI sees it (to format it or add context), or a hook can run a script every time a file is saved. 
 
 **2. Rules (`.agents/AGENTS.md`) — The Subconscious Constraints**
-Before the AI even thinks about your request, these are loaded into its memory. It is the "always-on" layer. It guarantees that no matter what the AI does next, it will obey your coding standards, commit formatting, and security rules.
+Before the AI even thinks about your request, these are loaded into its memory. It is the "always-on" layer. It guarantees that no matter what the AI does next, it will obey your coding standards, commit formatting, static analysis requirements, and security rules.
 
 **3. Skills (`.agents/skills/*/SKILL.md`) — The Workflow Manager**
 The system checks the "triggers" inside every `SKILL.md` to see if your request matches one. If it does, the AI abandons its default chat mode and enters **Skill Mode**. The `SKILL.md` gives the AI a strict checklist: what files to read first, what order to do things in, and where to save the output.
