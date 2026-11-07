@@ -113,6 +113,11 @@ If you are working with an existing codebase that has no documentation:
 │   ├── 14-documentation-agent.md      # API docs, README, changelog
 │   ├── 15-codebase-onboarder.md       # Reverse-engineer architecture from code
 │   └── 16-bug-investigator.md         # Scientific RCA, reproduction test first
+├── scripts/                            # Automation & cross-tool synchronizers
+│   ├── sync-tools.js                  # Syncs AGENTS.md → CLAUDE.md & .cursorrules
+│   └── sync-tools.ps1                 # PowerShell synchronizer
+├── CLAUDE.md                           # Generated for Claude Code (via sync-tools)
+├── .cursorrules                        # Generated for Cursor (via sync-tools)
 └── docs/                               # Living project documents (pipeline outputs)
     ├── pipeline-roadmap.md              # Architectural principles, quality controls & roadmap
     ├── anti-patterns.md                 # Lessons learned & recurring AI mistakes to avoid
@@ -133,18 +138,75 @@ If you are working with an existing codebase that has no documentation:
 
 ## Setup
 
-### Antigravity IDE (recommended)
+The AI Dev Pipeline supports two setup models depending on your workflow:
+1. **Global Setup (Recommended for personal workflow)** — Install once on your machine; available across all projects automatically.
+2. **Per-Project Setup (Recommended for teams & open-source)** — Commit configuration files to the repository root so anyone who clones it gets instant AI governance.
 
-1. Copy this entire folder into your project root (or clone it)
-2. Open the project in Antigravity IDE
-3. The `.agents/` directory is discovered automatically — skills appear immediately
-4. Start a conversation and say: `"plan my project: [your idea]"`
+### Quick Setup Matrix
 
-That's it. No Claude.ai Projects to configure, no API keys, no separate tools.
+| Tool | Option 1: Global Setup (All projects on your machine) | Option 2: Per-Project Setup (This repository) |
+|---|---|---|
+| **Google Antigravity** | Install into `~/.gemini/config/plugins/ai-dev-pipeline/` | Keep `.agents/` in project root |
+| **Cursor** | Paste `AGENTS.md` into **Cursor Settings → Rules for AI** | Keep `.cursorrules` / `.cursor/rules/` in project root |
+| **Claude Code** | Copy `CLAUDE.md` to `~/.claude/CLAUDE.md` | Keep `CLAUDE.md` in project root |
 
-### Antigravity CLI (`agy`)
+---
 
-Works the same way — the `.agents/` directory is discovered automatically when you run `agy` from the project root.
+### Option 1: Global Setup (Install Once, Available Everywhere)
+
+Use this method if you want the 17 agents, 16 skills, and coding standards available across **every folder and project** you open without copying files into each repository:
+
+#### For Google Antigravity:
+1. Clone or copy this repository into your global plugins directory:
+   ```bash
+   # Windows:
+   git clone https://github.com/vdsperera/ai-dev-pipeline.git "$env:USERPROFILE\.gemini\config\plugins\ai-dev-pipeline"
+
+   # macOS / Linux:
+   git clone https://github.com/vdsperera/ai-dev-pipeline.git ~/.gemini/config/plugins/ai-dev-pipeline
+   ```
+2. Antigravity discovers the plugin automatically. All 16 skills are immediately available in any workspace you open.
+
+#### For Cursor:
+1. Open Cursor Settings (`Ctrl+Shift+J` or `Cmd+Shift+J`) → **General** → **Rules for AI**.
+2. Paste the contents of `.agents/AGENTS.md` into the global user rules box.
+3. Cursor's Composer and inline completion will enforce these standards in all projects.
+
+#### For Claude Code:
+1. Copy the generated `CLAUDE.md` to your global Claude configuration:
+   ```bash
+   # macOS / Linux:
+   cp CLAUDE.md ~/.claude/CLAUDE.md
+
+   # Windows (PowerShell):
+   Copy-Item CLAUDE.md "$env:USERPROFILE\.claude\CLAUDE.md"
+   ```
+2. Claude Code will automatically obey these engineering standards across all CLI sessions.
+
+---
+
+### Option 2: Per-Project Setup (Team & Open-Source Repositories)
+
+Use this method when distributing a repository to other developers or collaborating in a team so that **anyone who clones the project gets instant AI governance with zero configuration**:
+
+1. Clone or copy this repository into your project root:
+   ```bash
+   git clone https://github.com/vdsperera/ai-dev-pipeline.git my-new-project
+   cd my-new-project
+   ```
+2. Run the cross-tool synchronizer once to generate the native configurations:
+   ```bash
+   # Using Node.js:
+   node scripts/sync-tools.js
+
+   # Or using PowerShell:
+   .\scripts\sync-tools.ps1
+   ```
+3. Commit the generated files to git:
+   - **Antigravity users:** Will automatically discover `.agents/` and skills.
+   - **Cursor users:** Will automatically read `.cursorrules` and `.cursor/rules/agents.mdc`.
+   - **Claude Code users:** Will automatically read `CLAUDE.md`.
+4. Run `node scripts/sync-tools.js --check` in CI or pre-commit hooks to guarantee rule parity across all tools.
 
 ---
 

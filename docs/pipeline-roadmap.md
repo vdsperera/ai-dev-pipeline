@@ -67,3 +67,11 @@ To cover 100% of real-world software engineering without causing "skill bloat", 
   - **Global Rules (`AGENTS.md`)**: Instructs agents to proactively record developer corrections and lessons learned.
   - **Project Registry (`docs/anti-patterns.md`)**: Stores concrete mistakes, corrections, and permanent invariants for that codebase.
   - **Enforcement Gate**: `sdlc-develop` reads anti-patterns before writing code, `sdlc-review` checks against them, and `sdlc-debug` logs root causes to prevent recurrence.
+
+### 7. Cross-Tool Portability & Rule Sync (Cursor, Claude Code, Antigravity)
+- **Concept**: Preventing tool lock-in and eliminating manual duplication of rules and workflows across multiple AI IDEs and CLI tools.
+- **Implementation**: Automated cross-tool synchronizers (`scripts/sync-tools.js` and `scripts/sync-tools.ps1`):
+  - Uses `.agents/AGENTS.md` as the single source of truth for all coding standards and quality gates.
+  - Generates `CLAUDE.md` for Claude Code with workflow cheat sheets.
+  - Generates `.cursorrules` and `.cursor/rules/agents.mdc` for Cursor (Composer & Chat).
+  - Includes `--check` mode for CI/pre-commit verification to prevent configuration drift.
