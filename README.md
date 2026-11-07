@@ -113,6 +113,11 @@ If you are working with an existing codebase that has no documentation:
 │   ├── 14-documentation-agent.md      # API docs, README, changelog
 │   ├── 15-codebase-onboarder.md       # Reverse-engineer architecture from code
 │   └── 16-bug-investigator.md         # Scientific RCA, reproduction test first
+├── scripts/                            # Automation & cross-tool synchronizers
+│   ├── sync-tools.js                  # Syncs AGENTS.md → CLAUDE.md & .cursorrules
+│   └── sync-tools.ps1                 # PowerShell synchronizer
+├── CLAUDE.md                           # Generated for Claude Code (via sync-tools)
+├── .cursorrules                        # Generated for Cursor (via sync-tools)
 └── docs/                               # Living project documents (pipeline outputs)
     ├── pipeline-roadmap.md              # Architectural principles, quality controls & roadmap
     ├── anti-patterns.md                 # Lessons learned & recurring AI mistakes to avoid
@@ -145,6 +150,23 @@ That's it. No Claude.ai Projects to configure, no API keys, no separate tools.
 ### Antigravity CLI (`agy`)
 
 Works the same way — the `.agents/` directory is discovered automatically when you run `agy` from the project root.
+
+### Cursor & Claude Code Synchronization
+
+The pipeline is tool-agnostic. While built natively for Antigravity, you can instantly export your coding standards, quality gates, and anti-pattern rules to **Claude Code** and **Cursor** using the sync script:
+
+```bash
+# Using Node.js:
+node scripts/sync-tools.js
+
+# Or using PowerShell:
+.\scripts\sync-tools.ps1
+```
+
+This automatically generates and updates:
+- **`CLAUDE.md`** — project configuration and workflow reference for Claude Code.
+- **`.cursorrules` & `.cursor/rules/agents.mdc`** — always-on rules for Cursor Composer and Chat.
+- Run with `--check` in CI or pre-commit hooks to verify rule parity across tools.
 
 ---
 
