@@ -137,3 +137,4 @@ if ($Check) {
     }
     Write-Host "`nYour AI coding standards are now active across Antigravity, Cursor, and Claude Code." -ForegroundColor Cyan
 }
+
