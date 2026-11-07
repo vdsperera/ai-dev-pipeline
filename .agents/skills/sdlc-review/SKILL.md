@@ -29,6 +29,7 @@ Review implemented code for a task through up to three review layers: Code Revie
 5. Identify all files created or modified for this task (from the handoff note and git status)
 6. Read all the implementation code and test files
 7. Identify if the user has requested a specific reviewer strictness (e.g., `strictness=ruthless` or `strictness=lenient`) in their prompt.
+8. Read `docs/anti-patterns.md` (if it exists) to check against known project pitfalls and anti-patterns.
 
 ### Step 2: Code Review (Agent 7)
 
@@ -47,6 +48,7 @@ Run all eight review categories from the agent instructions:
 6. Retries & resilience — idempotent retries, backoff, circuit breakers
 7. Test quality — coverage of happy/failure/edge, independence, minimal mocks
 8. Scope discipline — no unrequested additions, no TODOs without task IDs
+9. Anti-pattern compliance — no recurrence of mistakes or pitfalls documented in `docs/anti-patterns.md`
 
 **Adjustable Strictness**: If the user specified a `strictness` parameter, adjust your tolerance for minor SRP or type-safety deviations accordingly.
 

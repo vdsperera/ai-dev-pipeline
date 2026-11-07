@@ -26,6 +26,7 @@ Implement a single atomic task from the backlog following Developer Agent (Agent
 2. Read the task's linked user stories from `docs/user-stories.md` (if applicable)
 3. Read the task's linked component from `docs/architecture.md`
 4. Check the task's dependencies — verify all `Depends on` tasks are marked done
+5. Read `docs/anti-patterns.md` (if it exists) to identify any previously recorded mistakes or invariants to avoid
 
 If any dependency is not marked done, **stop and tell the user** which tasks must be completed first.
 
@@ -77,6 +78,7 @@ Run this checklist before completing. Every item must pass:
 - [ ] Auth enforced at function level, not only at route
 - [ ] Unit tests cover happy path, failure path, and one edge case
 - [ ] Project static analysis / linters pass with zero errors
+- [ ] Code complies with all rules in docs/anti-patterns.md (zero repeated mistakes)
 - [ ] Acceptance condition from the task is verifiably met
 - [ ] No logic added beyond the task scope
 - [ ] Handoff note written

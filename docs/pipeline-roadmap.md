@@ -60,3 +60,10 @@ To cover 100% of real-world software engineering without causing "skill bloat", 
 ### 5. Architecture Drift Detection & Sync (Built into `sdlc-develop` & `sdlc-docs`)
 - **Concept**: Preventing documentation rot when implementation realities cause APIs, schemas, or component boundaries to evolve during development.
 - **Implementation**: `sdlc-develop` includes an explicit `Architecture drift check` section in every task handoff note (`docs/handoffs/TASK-NNN.md`), and `sdlc-docs` automatically syncs any contract, data model, or component changes back into `docs/architecture.md`.
+
+### 6. Continuous Learning & Anti-Patterns Loop (`docs/anti-patterns.md`)
+- **Concept**: Eliminating recurring AI mistakes, deprecated API usage, and domain traps across sessions without bloating global instructions.
+- **Implementation**: A hybrid continuous improvement loop:
+  - **Global Rules (`AGENTS.md`)**: Instructs agents to proactively record developer corrections and lessons learned.
+  - **Project Registry (`docs/anti-patterns.md`)**: Stores concrete mistakes, corrections, and permanent invariants for that codebase.
+  - **Enforcement Gate**: `sdlc-develop` reads anti-patterns before writing code, `sdlc-review` checks against them, and `sdlc-debug` logs root causes to prevent recurrence.

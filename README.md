@@ -115,6 +115,7 @@ If you are working with an existing codebase that has no documentation:
 │   └── 16-bug-investigator.md         # Scientific RCA, reproduction test first
 └── docs/                               # Living project documents (pipeline outputs)
     ├── pipeline-roadmap.md              # Architectural principles, quality controls & roadmap
+    ├── anti-patterns.md                 # Lessons learned & recurring AI mistakes to avoid
     ├── product-brief.md                 # Agent 0 output
     ├── requirements.md                  # Agent 1 output
     ├── user-stories.md                  # Agent 2 output
@@ -321,6 +322,7 @@ The coding standards from Agent 6 (Developer) are installed as `AGENTS.md` — t
 - Security practices
 - Logging & observability standards
 - Static analysis & linting configuration and zero-error enforcement
+- Continuous learning & anti-patterns: capturing corrections into `docs/anti-patterns.md`
 - Data & schema standards
 - Unit test requirements
 

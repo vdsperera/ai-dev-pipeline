@@ -65,6 +65,9 @@ Write the RCA and handoff report to `docs/handoffs/BUG-NNN.md`:
 
 ## Blast Radius & Architecture Drift Check
 [Impact on other components and whether `docs/architecture.md` needs updating]
+
+## Anti-Pattern Prevention
+[If this bug stemmed from a recurring pitfall or flawed pattern, note whether `docs/anti-patterns.md` was updated]
 ```
 
 ### Step 6: Next Steps
@@ -78,5 +81,6 @@ Tell the user:
 - Always write a failing reproduction test before applying the fix
 - Keep the fix minimal and scoped strictly to the defect
 - Run project linters and test suites before completing
+- If the bug stemmed from a recurring pitfall or flawed pattern, log it in `docs/anti-patterns.md` to prevent future recurrence
 - Never swallow exceptions or add silent null checks that mask deeper data corruption
 
