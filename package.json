@@ -29,11 +29,14 @@
   "homepage": "https://github.com/vdsperera/ai-dev-pipeline#readme",
   "scripts": {
     "sync-tools": "node scripts/sync-tools.js",
-    "test": "node bin/cli.js status"
+    "eval": "node scripts/eval-harness.js",
+    "benchmark": "node scripts/eval-harness.js --benchmark",
+    "test": "node scripts/eval-harness.js --benchmark && node bin/cli.js status"
   },
   "files": [
     "bin",
     "scripts",
+    "eval",
     ".agents",
     "prompts",
     "docs",

@@ -75,3 +75,13 @@ To cover 100% of real-world software engineering without causing "skill bloat", 
   - Generates `CLAUDE.md` for Claude Code with workflow cheat sheets.
   - Generates `.cursorrules` and `.cursor/rules/agents.mdc` for Cursor (Composer & Chat).
   - Includes `--check` mode for CI/pre-commit verification to prevent configuration drift.
+
+### 8. Automated Stage Evaluation Harness (`npx ai-dev-pipeline eval`)
+- **Concept**: Transforming the pipeline from a passive prompt collection into an independently evaluated, verifiable engineering harness with objective reliability scoring.
+- **Implementation**: Zero-dependency evaluation engine (`scripts/eval-harness.js`) that scores agent stages from 0 to 100% across four core dimensions:
+  1. **Architecture Conformance (30%)**: Compares code to `docs/architecture.md` contracts and flags layer boundary leaks.
+  2. **Deterministic Code Quality (25%)**: Validates static analysis, cyclomatic nesting depth (≤ 5), and file sizes (≤ 450 lines).
+  3. **Anti-Pattern Invariants (25%)**: Scans against `AGENTS.md` and `docs/anti-patterns.md` for error swallowing, SQL concatenation, and hardcoded secrets.
+  4. **Traceability & Handoffs (20%)**: Audits task completion tracking, handoff completeness in `docs/handoffs/`, and Conventional Commits.
+  - Generates persistent audit reports in `docs/eval-reports/EVAL-[DATE]-[TASK].md` and supports CI failure thresholds (`--threshold 90`).
+  - Includes benchmark verification suites (`eval/benchmarks/`) comparing compliant vs. drifting implementations.
