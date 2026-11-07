@@ -76,6 +76,8 @@ If you are working with an existing codebase that has no documentation:
 
 ```
 .
+├── bin/                                # CLI executables
+│   └── cli.js                          # npx ai-dev-pipeline entry point
 ├── .agents/                            # Antigravity customization root
 │   ├── AGENTS.md                       # Always-on coding standards & static analysis (Agent 6)
 │   └── skills/
@@ -114,8 +116,9 @@ If you are working with an existing codebase that has no documentation:
 │   ├── 15-codebase-onboarder.md       # Reverse-engineer architecture from code
 │   └── 16-bug-investigator.md         # Scientific RCA, reproduction test first
 ├── scripts/                            # Automation & cross-tool synchronizers
-│   ├── sync-tools.js                  # Syncs AGENTS.md → CLAUDE.md & .cursorrules
+│   ├── sync-tools.js                  # Syncs AGENTS.md → CLAUDE.md, .cursorrules & Copilot
 │   └── sync-tools.ps1                 # PowerShell synchronizer
+├── package.json                        # CLI package manifest & bin definition
 ├── CLAUDE.md                           # Generated for Claude Code (via sync-tools)
 ├── .cursorrules                        # Generated for Cursor (via sync-tools)
 └── docs/                               # Living project documents (pipeline outputs)
@@ -136,19 +139,43 @@ If you are working with an existing codebase that has no documentation:
 
 ---
 
-## Setup
+## Setup & Quickstart
 
-The AI Dev Pipeline supports two setup models depending on your workflow:
-1. **Global Setup (Recommended for personal workflow)** — Install once on your machine; available across all projects automatically.
-2. **Per-Project Setup (Recommended for teams & open-source)** — Commit configuration files to the repository root so anyone who clones it gets instant AI governance.
+The AI Dev Pipeline can be installed via a **one-line CLI scaffolder** or configured manually:
 
-### Quick Setup Matrix
+### ⚡ Instant Setup: One-Line CLI Scaffolder (Recommended)
 
-| Tool | Option 1: Global Setup (All projects on your machine) | Option 2: Per-Project Setup (This repository) |
-|---|---|---|
-| **Google Antigravity** | Install into `~/.gemini/config/plugins/ai-dev-pipeline/` | Keep `.agents/` in project root |
-| **Cursor** | Paste `AGENTS.md` into **Cursor Settings → Rules for AI** | Keep `.cursorrules` / `.cursor/rules/` in project root |
-| **Claude Code** | Copy `CLAUDE.md` to `~/.claude/CLAUDE.md` | Keep `CLAUDE.md` in project root |
+Inject the complete AI Dev Pipeline into any existing or new project in seconds without cloning:
+
+```bash
+# Interactive wizard (prompts for your AI editors, project type & architecture style):
+npx ai-dev-pipeline init
+
+# Or zero-config instant install with sensible defaults:
+npx ai-dev-pipeline init -y
+```
+
+This scaffolds the 17 agent personas, 16 skills, docs roadmap, anti-patterns memory, and native configuration files tailored to your selected AI tools (**Antigravity**, **Cursor**, **Claude Code**, and **GitHub Copilot**).
+
+#### Built-in CLI Utilities:
+```bash
+# Check pipeline health, installed personas, and tool rule status:
+npx ai-dev-pipeline status
+
+# Re-synchronize rules across all editors after updating .agents/AGENTS.md:
+npx ai-dev-pipeline sync
+```
+
+---
+
+### Setup Options Matrix
+
+| Tool | Option 1: One-Line Scaffolder (Fastest) | Option 2: Global Setup (All projects) | Option 3: Per-Project Git Clone |
+|---|---|---|---|
+| **Google Antigravity** | `npx ai-dev-pipeline init` | Clone into `~/.gemini/config/plugins/ai-dev-pipeline/` | Keep `.agents/` in project root |
+| **Cursor** | `npx ai-dev-pipeline init` | Paste `AGENTS.md` into **Settings → Rules for AI** | Keep `.cursorrules` / `.cursor/rules/` in root |
+| **Claude Code** | `npx ai-dev-pipeline init` | Copy `CLAUDE.md` to `~/.claude/CLAUDE.md` | Keep `CLAUDE.md` in project root |
+| **GitHub Copilot** | `npx ai-dev-pipeline init` | Set in VS Code user instructions | Keep `.github/copilot-instructions.md` in root |
 
 ---
 

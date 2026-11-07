@@ -1,0 +1,47 @@
+{
+  "name": "ai-dev-pipeline",
+  "version": "1.0.0",
+  "description": "Zero-friction, cross-tool SDLC harness with 17 specialized agent personas and 16 skills for Antigravity, Cursor, Claude Code, and Copilot.",
+  "main": "bin/cli.js",
+  "bin": {
+    "ai-dev-pipeline": "./bin/cli.js"
+  },
+  "keywords": [
+    "ai",
+    "sdlc",
+    "agents",
+    "antigravity",
+    "cursor",
+    "claude-code",
+    "copilot",
+    "prompt-engineering",
+    "developer-tools"
+  ],
+  "author": "Vidumini Sulochana Perera",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/vdsperera/ai-dev-pipeline.git"
+  },
+  "bugs": {
+    "url": "https://github.com/vdsperera/ai-dev-pipeline/issues"
+  },
+  "homepage": "https://github.com/vdsperera/ai-dev-pipeline#readme",
+  "scripts": {
+    "sync-tools": "node scripts/sync-tools.js",
+    "test": "node bin/cli.js status"
+  },
+  "files": [
+    "bin",
+    "scripts",
+    ".agents",
+    "prompts",
+    "docs",
+    "CLAUDE.md",
+    ".cursorrules",
+    ".cursor"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
