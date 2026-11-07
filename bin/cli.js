@@ -64,6 +64,7 @@ function printHelp() {
   console.log(`  npx ai-dev-pipeline [command] [options]\n`);
   console.log(`${c.bold}COMMANDS:${c.reset}`);
   console.log(`  ${c.cyan}init${c.reset}                  Scaffold AI Dev Pipeline into current repository`);
+  console.log(`  ${c.cyan}eval${c.reset}                  Audit stage outputs for architectural drift and anti-patterns`);
   console.log(`  ${c.cyan}sync${c.reset}                  Synchronize cross-tool rule configs from .agents/AGENTS.md`);
   console.log(`  ${c.cyan}status${c.reset}                Check pipeline health and active tool configs`);
   console.log(`  ${c.cyan}help, --help, -h${c.reset}      Show this help message`);
@@ -74,11 +75,18 @@ function printHelp() {
   console.log(`  ${c.green}--preset <name>${c.reset}       Architecture preset: enterprise-ddd, rapid-prototype, standard`);
   console.log(`  ${c.green}--type <type>${c.reset}         Project type: greenfield, brownfield`);
   console.log(`  ${c.green}--force${c.reset}               Overwrite existing files without prompting\n`);
+  console.log(`${c.bold}EVALUATION OPTIONS:${c.reset}`);
+  console.log(`  ${c.green}--threshold <score>${c.reset}   Minimum passing reliability score for CI (default: 80)`);
+  console.log(`  ${c.green}--task <id>${c.reset}           Target task ID to evaluate (e.g. TASK-001)`);
+  console.log(`  ${c.green}--benchmark${c.reset}           Run built-in benchmark test scenarios`);
+  console.log(`  ${c.green}--json${c.reset}                Emit machine-readable JSON evaluation report\n`);
   console.log(`${c.bold}EXAMPLES:${c.reset}`);
   console.log(`  ${c.dim}# Interactive setup wizard in current directory:${c.reset}`);
   console.log(`  npx ai-dev-pipeline init\n`);
-  console.log(`  ${c.dim}# Zero-config instant install for Cursor & Claude Code:${c.reset}`);
-  console.log(`  npx ai-dev-pipeline init --tools cursor,claude -y\n`);
+  console.log(`  ${c.dim}# Evaluate current repository against architecture & anti-patterns:${c.reset}`);
+  console.log(`  npx ai-dev-pipeline eval\n`);
+  console.log(`  ${c.dim}# Run CI quality gate on task with strict threshold:${c.reset}`);
+  console.log(`  npx ai-dev-pipeline eval --task TASK-001 --threshold 90\n`);
   console.log(`  ${c.dim}# Update cross-tool configs after editing AGENTS.md:${c.reset}`);
   console.log(`  npx ai-dev-pipeline sync\n`);
 }
@@ -385,7 +393,7 @@ async function commandInit(flags) {
     createdFiles.push(...syncResults);
   }
 
-  // 6. Project Helper Scripts (scripts/sync-tools.js)
+  // 6. Project Helper Scripts (scripts/sync-tools.js & scripts/eval-harness.js)
   const targetScriptsDir = path.join(TARGET_DIR, 'scripts');
   ensureDir(targetScriptsDir);
   const srcSyncScript = path.join(PACKAGE_ROOT, 'scripts', 'sync-tools.js');
@@ -395,16 +403,31 @@ async function commandInit(flags) {
     createdFiles.push('scripts/sync-tools.js');
   }
 
+  const srcEvalScript = path.join(PACKAGE_ROOT, 'scripts', 'eval-harness.js');
+  const destEvalScript = path.join(targetScriptsDir, 'eval-harness.js');
+  if (fs.existsSync(srcEvalScript)) {
+    fs.copyFileSync(srcEvalScript, destEvalScript);
+    createdFiles.push('scripts/eval-harness.js');
+  }
+
   // 7. Update target project package.json if present
   const targetPkgPath = path.join(TARGET_DIR, 'package.json');
   if (fs.existsSync(targetPkgPath)) {
     try {
       const targetPkg = JSON.parse(fs.readFileSync(targetPkgPath, 'utf8'));
       targetPkg.scripts = targetPkg.scripts || {};
+      let modifiedPkg = false;
       if (!targetPkg.scripts['sync-tools']) {
         targetPkg.scripts['sync-tools'] = 'node scripts/sync-tools.js';
+        modifiedPkg = true;
+      }
+      if (!targetPkg.scripts['eval']) {
+        targetPkg.scripts['eval'] = 'node scripts/eval-harness.js';
+        modifiedPkg = true;
+      }
+      if (modifiedPkg) {
         fs.writeFileSync(targetPkgPath, JSON.stringify(targetPkg, null, 2) + '\n', 'utf8');
-        createdFiles.push('package.json (added "sync-tools" script)');
+        createdFiles.push('package.json (configured "sync-tools" & "eval" scripts)');
       }
     } catch {
       // Ignore if user package.json is invalid JSON
@@ -508,6 +531,11 @@ async function main() {
   }
 
   switch (flags.command) {
+    case 'eval': {
+      const { main: evalMain } = require(path.join(PACKAGE_ROOT, 'scripts', 'eval-harness.js'));
+      evalMain();
+      break;
+    }
     case 'sync':
       commandSync();
       break;
