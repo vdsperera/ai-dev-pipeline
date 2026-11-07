@@ -88,6 +88,7 @@ These standards apply to all code written in this workspace. They are extracted 
 
 This workspace uses an SDLC pipeline with 17 specialised agent personas packaged as 16 skills. Pipeline docs live in `docs/`:
 - `docs/pipeline-roadmap.md` — architectural principles and quality control roadmap
+- `docs/anti-patterns.md` — project lessons learned & recurring AI mistakes to avoid
 - `docs/product-brief.md` — product strategy and MVP scope
 - `docs/requirements.md` — refined requirements
 - `docs/user-stories.md` — user stories with Gherkin acceptance criteria
@@ -106,6 +107,16 @@ When implementing code, always check these docs for context. The architecture do
 
 - When the user asks for a quick, ad-hoc code change or bug fix without using a formal skill, you must fix the code and then **proactively ask** if they would like you to document the change (e.g., generate a handoff note or update the changelog).
 - Do not generate the documentation automatically for ad-hoc fixes; wait for the user's confirmation.
+
+## Continuous Learning & Anti-Patterns
+
+- When a developer corrects an AI mistake, invalid assumption, deprecated API usage, or recurring defect, proactively capture the rule in `docs/anti-patterns.md`.
+- Anti-patterns must follow the format:
+  - **ID & Title**: `### AP-NNN: [Descriptive Title]`
+  - **Mistake**: What went wrong or was incorrectly assumed
+  - **Correction**: The correct approach, pattern, or API to use
+  - **Rule**: The permanent invariant agents must follow in this codebase
+- Before implementing any task or fixing a bug, agents must read `docs/anti-patterns.md` (if it exists) to guarantee previously identified mistakes are never repeated.
 
 ## Git & Commit Standards
 
