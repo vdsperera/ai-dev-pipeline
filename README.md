@@ -162,6 +162,15 @@ This scaffolds the 17 agent personas, 16 skills, docs roadmap, anti-patterns mem
 # Check pipeline health, installed personas, and tool rule status:
 npx ai-dev-pipeline status
 
+# Evaluate stage outputs for architectural drift and anti-pattern regressions:
+npx ai-dev-pipeline eval
+
+# Run strict CI quality gate on specific task (fails if score < 90%):
+npx ai-dev-pipeline eval --task TASK-001 --threshold 90
+
+# Run built-in benchmark verification suite:
+npx ai-dev-pipeline eval --benchmark
+
 # Re-synchronize rules across all editors after updating .agents/AGENTS.md:
 npx ai-dev-pipeline sync
 ```
@@ -416,6 +425,31 @@ The coding standards from Agent 6 (Developer) are installed as `AGENTS.md` — t
 - Unit test requirements
 
 See [`docs/pipeline-roadmap.md`](docs/pipeline-roadmap.md) for the philosophy behind contextual enforcement (principles over rigid global rules) and architectural upgrades.
+
+---
+
+## Automated Stage Evaluation Layer (`npx ai-dev-pipeline eval`)
+
+The evaluation harness is the deterministic verification layer that ensures coding agents do not drift from architecture contracts, degrade code quality, or repeat known anti-patterns.
+
+```bash
+# Run evaluation on current workspace:
+npx ai-dev-pipeline eval
+
+# Run strict CI gate for a specific task (fails if score < 90%):
+npx ai-dev-pipeline eval --task TASK-001 --threshold 90
+
+# Run built-in benchmark test scenarios:
+npx ai-dev-pipeline eval --benchmark
+```
+
+### The 4 Evaluation Dimensions:
+1. **Architecture Conformance (Weight: 30%)**: Compares code to `docs/architecture.md`. Flags layer violations (e.g., presentation querying databases directly) and unapproved dependencies.
+2. **Deterministic Code Quality (Weight: 25%)**: Validates zero-error static analysis, cyclomatic nesting depth (≤ 5 levels), and file sizes (≤ 450 lines).
+3. **Anti-Pattern Invariants (Weight: 25%)**: Scans against `AGENTS.md` and `docs/anti-patterns.md` for bare `catch` blocks, SQL concatenation, hardcoded secrets, and `console.log` in production paths.
+4. **Traceability & Handoffs (Weight: 20%)**: Verifies `docs/tasks.md` marked status, validates completeness of `docs/handoffs/TASK-NNN.md` (Summary, Files Changed, Architecture Alignment, Verification), and checks Conventional Commit standards.
+
+Evaluation reports are persistently generated in `docs/eval-reports/EVAL-[DATE]-[TASK].md`.
 
 ---
 
