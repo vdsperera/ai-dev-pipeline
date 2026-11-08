@@ -1,5 +1,10 @@
 # AI Dev Pipeline
 
+[![npm version](https://img.shields.io/npm/v/@kadvsperera/ai-dev-pipeline.svg?color=cb3837)](https://www.npmjs.com/package/@kadvsperera/ai-dev-pipeline)
+[![npm downloads](https://img.shields.io/npm/dt/@kadvsperera/ai-dev-pipeline.svg)](https://www.npmjs.com/package/@kadvsperera/ai-dev-pipeline)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![Node: >=18](https://img.shields.io/badge/Node->=18.0.0-green.svg)](https://nodejs.org/)
+
 A structured AI-assisted development pipeline that covers the full SDLC — from a raw idea to PR review. Built as **Antigravity IDE skills** so the entire workflow runs natively inside your editor.
 
 ## How it works
