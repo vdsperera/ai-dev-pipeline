@@ -149,10 +149,10 @@ Inject the complete AI Dev Pipeline into any existing or new project in seconds 
 
 ```bash
 # Interactive wizard (prompts for your AI editors, project type & architecture style):
-npx ai-dev-pipeline init
+npx @kadvsperera/ai-dev-pipeline init
 
 # Or zero-config instant install with sensible defaults:
-npx ai-dev-pipeline init -y
+npx @kadvsperera/ai-dev-pipeline init -y
 ```
 
 This scaffolds the 17 agent personas, 16 skills, docs roadmap, anti-patterns memory, and native configuration files tailored to your selected AI tools (**Antigravity**, **Cursor**, **Claude Code**, and **GitHub Copilot**).
@@ -160,19 +160,19 @@ This scaffolds the 17 agent personas, 16 skills, docs roadmap, anti-patterns mem
 #### Built-in CLI Utilities:
 ```bash
 # Check pipeline health, installed personas, and tool rule status:
-npx ai-dev-pipeline status
+npx @kadvsperera/ai-dev-pipeline status
 
 # Evaluate stage outputs for architectural drift and anti-pattern regressions:
-npx ai-dev-pipeline eval
+npx @kadvsperera/ai-dev-pipeline eval
 
 # Run strict CI quality gate on specific task (fails if score < 90%):
-npx ai-dev-pipeline eval --task TASK-001 --threshold 90
+npx @kadvsperera/ai-dev-pipeline eval --task TASK-001 --threshold 90
 
 # Run built-in benchmark verification suite:
-npx ai-dev-pipeline eval --benchmark
+npx @kadvsperera/ai-dev-pipeline eval --benchmark
 
 # Re-synchronize rules across all editors after updating .agents/AGENTS.md:
-npx ai-dev-pipeline sync
+npx @kadvsperera/ai-dev-pipeline sync
 ```
 
 ---
@@ -181,10 +181,10 @@ npx ai-dev-pipeline sync
 
 | Tool | Option 1: One-Line Scaffolder (Fastest) | Option 2: Global Setup (All projects) | Option 3: Per-Project Git Clone |
 |---|---|---|---|
-| **Google Antigravity** | `npx ai-dev-pipeline init` | Clone into `~/.gemini/config/plugins/ai-dev-pipeline/` | Keep `.agents/` in project root |
-| **Cursor** | `npx ai-dev-pipeline init` | Paste `AGENTS.md` into **Settings → Rules for AI** | Keep `.cursorrules` / `.cursor/rules/` in root |
-| **Claude Code** | `npx ai-dev-pipeline init` | Copy `CLAUDE.md` to `~/.claude/CLAUDE.md` | Keep `CLAUDE.md` in project root |
-| **GitHub Copilot** | `npx ai-dev-pipeline init` | Set in VS Code user instructions | Keep `.github/copilot-instructions.md` in root |
+| **Google Antigravity** | `npx @kadvsperera/ai-dev-pipeline init` | Clone into `~/.gemini/config/plugins/ai-dev-pipeline/` | Keep `.agents/` in project root |
+| **Cursor** | `npx @kadvsperera/ai-dev-pipeline init` | Paste `AGENTS.md` into **Settings → Rules for AI** | Keep `.cursorrules` / `.cursor/rules/` in root |
+| **Claude Code** | `npx @kadvsperera/ai-dev-pipeline init` | Copy `CLAUDE.md` to `~/.claude/CLAUDE.md` | Keep `CLAUDE.md` in project root |
+| **GitHub Copilot** | `npx @kadvsperera/ai-dev-pipeline init` | Set in VS Code user instructions | Keep `.github/copilot-instructions.md` in root |
 
 ---
 
@@ -428,19 +428,19 @@ See [`docs/pipeline-roadmap.md`](docs/pipeline-roadmap.md) for the philosophy be
 
 ---
 
-## Automated Stage Evaluation Layer (`npx ai-dev-pipeline eval`)
+## Automated Stage Evaluation Layer (`npx @kadvsperera/ai-dev-pipeline eval`)
 
 The evaluation harness is the deterministic verification layer that ensures coding agents do not drift from architecture contracts, degrade code quality, or repeat known anti-patterns.
 
 ```bash
 # Run evaluation on current workspace:
-npx ai-dev-pipeline eval
+npx @kadvsperera/ai-dev-pipeline eval
 
 # Run strict CI gate for a specific task (fails if score < 90%):
-npx ai-dev-pipeline eval --task TASK-001 --threshold 90
+npx @kadvsperera/ai-dev-pipeline eval --task TASK-001 --threshold 90
 
 # Run built-in benchmark test scenarios:
-npx ai-dev-pipeline eval --benchmark
+npx @kadvsperera/ai-dev-pipeline eval --benchmark
 ```
 
 ### The 4 Evaluation Dimensions:

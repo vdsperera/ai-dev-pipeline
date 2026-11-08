@@ -61,7 +61,7 @@ function printHelp() {
   console.log(BANNER);
   console.log(`${c.bold}VERSION:${c.reset} ${getPkgVersion()}\n`);
   console.log(`${c.bold}USAGE:${c.reset}`);
-  console.log(`  npx ai-dev-pipeline [command] [options]\n`);
+  console.log(`  npx @kadvsperera/ai-dev-pipeline [command] [options]\n`);
   console.log(`${c.bold}COMMANDS:${c.reset}`);
   console.log(`  ${c.cyan}init${c.reset}                  Scaffold AI Dev Pipeline into current repository`);
   console.log(`  ${c.cyan}eval${c.reset}                  Audit stage outputs for architectural drift and anti-patterns`);
@@ -82,13 +82,13 @@ function printHelp() {
   console.log(`  ${c.green}--json${c.reset}                Emit machine-readable JSON evaluation report\n`);
   console.log(`${c.bold}EXAMPLES:${c.reset}`);
   console.log(`  ${c.dim}# Interactive setup wizard in current directory:${c.reset}`);
-  console.log(`  npx ai-dev-pipeline init\n`);
+  console.log(`  npx @kadvsperera/ai-dev-pipeline init\n`);
   console.log(`  ${c.dim}# Evaluate current repository against architecture & anti-patterns:${c.reset}`);
-  console.log(`  npx ai-dev-pipeline eval\n`);
+  console.log(`  npx @kadvsperera/ai-dev-pipeline eval\n`);
   console.log(`  ${c.dim}# Run CI quality gate on task with strict threshold:${c.reset}`);
-  console.log(`  npx ai-dev-pipeline eval --task TASK-001 --threshold 90\n`);
+  console.log(`  npx @kadvsperera/ai-dev-pipeline eval --task TASK-001 --threshold 90\n`);
   console.log(`  ${c.dim}# Update cross-tool configs after editing AGENTS.md:${c.reset}`);
-  console.log(`  npx ai-dev-pipeline sync\n`);
+  console.log(`  npx @kadvsperera/ai-dev-pipeline sync\n`);
 }
 
 function parseArgs(args) {
@@ -451,7 +451,7 @@ async function commandInit(flags) {
   }
 
   console.log(`\n${c.dim}Need to re-sync rules across tools later? Run:${c.reset}`);
-  console.log(`   ${c.cyan}npx ai-dev-pipeline sync${c.reset}  or  ${c.cyan}npm run sync-tools${c.reset}\n`);
+  console.log(`   ${c.cyan}npx @kadvsperera/ai-dev-pipeline sync${c.reset}  or  ${c.cyan}npm run sync-tools${c.reset}\n`);
 }
 
 // Subcommand: SYNC
@@ -510,7 +510,7 @@ function commandStatus() {
   console.log(`\n${c.bold}Pipeline Health Score:${c.reset} ${score === 100 ? c.green : c.yellow}${score}%${c.reset}`);
 
   if (score < 100) {
-    console.log(`\n${c.dim}Run ${c.cyan}npx ai-dev-pipeline init${c.dim} to install missing components.${c.reset}\n`);
+    console.log(`\n${c.dim}Run ${c.cyan}npx @kadvsperera/ai-dev-pipeline init${c.dim} to install missing components.${c.reset}\n`);
   } else {
     console.log(`${c.green}✔ All systems operational across supported AI editors.${c.reset}\n`);
   }

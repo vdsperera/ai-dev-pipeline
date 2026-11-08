@@ -1,10 +1,10 @@
 {
-  "name": "ai-dev-pipeline",
+  "name": "@kadvsperera/ai-dev-pipeline",
   "version": "1.0.0",
   "description": "Zero-friction, cross-tool SDLC harness with 17 specialized agent personas and 16 skills for Antigravity, Cursor, Claude Code, and Copilot.",
   "main": "bin/cli.js",
   "bin": {
-    "ai-dev-pipeline": "./bin/cli.js"
+    "ai-dev-pipeline": "bin/cli.js"
   },
   "keywords": [
     "ai",
@@ -21,7 +21,7 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/vdsperera/ai-dev-pipeline.git"
+    "url": "git+https://github.com/vdsperera/ai-dev-pipeline.git"
   },
   "bugs": {
     "url": "https://github.com/vdsperera/ai-dev-pipeline/issues"
