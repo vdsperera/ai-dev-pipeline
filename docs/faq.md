@@ -4,23 +4,22 @@ This document addresses common questions from senior software engineers, tech le
 
 ---
 
-## 1. Why wasn't this built before? If it's so useful, why didn't someone else create it?
+## 1. Why has this file-based governance pattern become practical only recently?
 
-In software engineering, when a seemingly obvious solution hasn't been widely built yet, there are usually three specific explanations:
+The software engineering principles behind `ai-dev-pipeline` (Architecture Decision Records, behavior-driven acceptance criteria, strict linter gates, and blameless post-mortem learning) are not new. Enterprise software engineering teams have practiced and refined them for decades.
 
-### A. The Context Window Timeline (Technical Feasibility)
-Two years ago, `ai-dev-pipeline` was technically impossible.
-* In the era of GPT-3.5 and early GPT-4 (2022–2023), context windows were constrained to 4,000–8,000 tokens.
-* Passing a living architectural contract (`docs/architecture.md`), a 17-role prompt library, an anti-pattern registry, and thousands of lines of source code into an LLM simultaneously caused immediate context exhaustion or severe hallucinations.
-* It is only with the recent arrival of reliable, high-capacity models with 128k to 1M+ token context windows (Claude 3.5 Sonnet, Gemini 1.5/2.0, GPT-4o) that an entire software engineering governance harness can fit comfortably in active memory.
+What has changed is model capability and practical delivery:
 
-### B. Misaligned Startup Incentives (The VC Subscription Model)
-Startups that raised venture capital during the GenAI boom were pressured to justify \$20M–\$100M valuations.
-* To achieve that, they built **proprietary IDEs** (to charge \$20/month per developer seat) or **cloud virtual machines** (to bill for hours of cloud GPU compute like Devin).
-* A venture capitalist would not fund a zero-dependency, open-source CLI and Markdown harness that runs 100% locally on a developer's machine with no cloud lock-in.
+### A. Context Window Evolution
+Early LLMs in 2022–2023 were constrained by 4,000–8,000 token context windows.
+* It was practically impossible to pass an architectural design contract (`docs/architecture.md`), task backlog, anti-pattern registry, and full source code files to the model simultaneously without exhausting memory or causing severe hallucinations.
+* The arrival of reliable models with 128k to 1M+ token context windows (Claude 3.5 Sonnet, Gemini 1.5/2.0, GPT-4o) finally makes it practical to maintain an entire project's architectural context in active memory alongside code.
 
-### C. Big Tech Kept It Internal
-Companies like Google, Meta, and Amazon *did* build internal agent review systems, mandatory design doc workflows, and automated linter gates. However, those tools are deeply welded to their proprietary monorepo infrastructure (e.g., Google Piper and Critique) and cannot be exported as a standard `npx` package.
+### B. Industry Focus: Closed SaaS vs. Open Local Governance
+The commercial AI wave initially prioritized proprietary subscription products:
+* Most commercial startups focused on building closed IDE forks to sell \$20/month seat licenses, or autonomous cloud VMs billing by compute hours.
+* Meanwhile, big tech firms developed internal compliance harnesses welded to their proprietary monorepos (e.g., Google Piper and Critique).
+* `ai-dev-pipeline` takes those battle-tested enterprise governance habits and packages them as an open-source, zero-dependency local harness that runs directly inside everyday developer editors.
 
 ---
 
@@ -76,3 +75,4 @@ It is the exact same trade-off as **automated testing and CI/CD**: spending 5 mi
    * Generates a living `docs/architecture.md` with visual Mermaid diagrams reverse-engineered from your actual code.
 3. Use `sdlc-debug` (Agent 16) for bug investigations, ensuring failing reproduction tests are written before any code is modified.
 4. As bugs or AI mistakes are identified, document them in `docs/anti-patterns.md` so the AI never repeats them.
+

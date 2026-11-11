@@ -135,7 +135,7 @@ To understand where `ai-dev-pipeline` sits in the software industry, it helps to
 | **Engineering teams & serious solo devs** who need living architecture contracts, zero-linter gates, and persistent defect memory. | **Trivial single-file edits** where quick inline completion (Tab in Cursor/Copilot) is sufficient. |
 
 > [!TIP]
-> For a deep dive into our engineering philosophy, why this wasn't built before, and comparisons against BMAD and multi-agent debate frameworks, read our [Frequently Asked Questions (FAQ)](docs/faq.md).
+> For a deep dive into our engineering philosophy, why this pattern became practical now, and comparisons against BMAD and multi-agent debate frameworks, read our [Frequently Asked Questions (FAQ)](docs/faq.md).
 
 ---
 
