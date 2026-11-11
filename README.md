@@ -88,6 +88,46 @@ If you are working with an existing codebase that has no documentation:
 | **Failure Modes & Resilience** | *"Walk me through what happens when [External Dependency / Database] fails or times out. How does our error handling prevent cascading failure?"* |
 | **Simulated Technical Defense** | *"Act as a Principal Systems Architect reviewing this project. Grill me on our data ownership and boundary isolation, asking one challenging question at a time."* |
 
+---
+
+## Where This Fits: The 3-Layer AI Coding Stack
+
+To understand where `ai-dev-pipeline` sits in the software industry, it helps to view the modern AI coding ecosystem as three distinct layers:
+
+```
+┌────────────────────────────────────────────────────────┐
+│  LAYER 3: GOVERNANCE & SDLC FRAMEWORK                  │
+│  👉 AI Dev Pipeline                                    │
+│  (17 specialized roles, architecture contracts, evals) │
+├────────────────────────────────────────────────────────┤
+│  LAYER 2: THE EDITOR / INTERFACE (The Hands)           │
+│  Cursor, Google Antigravity, Claude Code, Copilot      │
+├────────────────────────────────────────────────────────┤
+│  LAYER 1: THE FOUNDATION MODEL (The Brain)             │
+│  Claude 3.5 Sonnet, Gemini 2.0, GPT-4o                 │
+└────────────────────────────────────────────────────────┘
+```
+
+* **Layer 1 (The Brain)** provides raw model intelligence, but lacks persistent context of your team's engineering process or past mistakes.
+* **Layer 2 (The Hands)** gives the AI access to read files, edit code, and run terminals, but doesn't tell it *how* to build clean, maintainable software.
+* **Layer 3 (The Engineering System — AI Dev Pipeline)** organizes the hands and brains into a disciplined 17-role software engineering factory with living architecture contracts (`docs/architecture.md`), quality gates (`AGENTS.md`), continuous anti-pattern memory, and objective evaluations (`ai-dev-pipeline eval`).
+
+### Category Comparison
+
+| Category | Example Tools | How It Works | How AI Dev Pipeline Differs |
+|---|---|---|---|
+| **AI Editors / IDEs** | Cursor, Antigravity, VS Code | Provides file editing and inline completion in your editor. | We are the **operating system of rules, roles, and workflows** that runs *inside* those editors. |
+| **Toy Agent Simulators** | ChatDev, MetaGPT | Autonomous agents chatting in a loop to build toy sandbox games. | Built for **real-world, multi-thousand-line brownfield codebases** with human-in-the-loop approvals. |
+| **Autonomous Cloud Coders** | Devin, OpenHands | Cloud VMs attempting to solve GitHub issues with zero supervision. | Lightweight, **in-editor pair programming harness** with deterministic evaluations and zero cloud lock-in. |
+| **Agentic SDLC Governance** | **AI Dev Pipeline** | **End-to-end engineering harness: Architecture contracts, quality gates, anti-pattern memory & evals.** | **This is our exact category.** |
+
+### Division of Responsibility (Human-in-the-Loop)
+
+* **What the Pipeline Handles**: Reverse-engineering unknown code, drawing visual Mermaid diagrams, enforcing typed errors & zero-linter gates, preventing SQL injection, generating test suites, and scoring code reliability.
+* **What You (the Human) Own**: Business context & domain priorities, credentials/secrets configuration, and final production deployment sign-off.
+
+---
+
 ## Folder structure
 
 ```
