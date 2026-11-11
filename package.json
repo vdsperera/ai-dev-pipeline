@@ -1,6 +1,6 @@
 {
   "name": "@kadvsperera/ai-dev-pipeline",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Zero-friction, cross-tool SDLC harness with 17 specialized agent personas and 16 skills for Antigravity, Cursor, Claude Code, and Copilot.",
   "main": "bin/cli.js",
   "bin": {

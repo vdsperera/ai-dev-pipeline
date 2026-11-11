@@ -34,6 +34,17 @@ For existing codebases or runtime issues, the pipeline provides specialized life
 - **Brownfield onboarding:** `"onboard this repo"` → scans existing code and reverse-engineers `docs/architecture.md`.
 - **Bug investigation:** `"debug this: [error]"` → scientific RCA, failing reproduction test first, minimal fix.
 
+### Mental Model: Skills (On-Demand) vs. Always-On Rules (`AGENTS.md`)
+
+To understand how the pipeline operates, think of the distinction between **the job** and **the law**:
+
+| Component | Nature | When It Triggers | What It Controls |
+|---|---|---|---|
+| **16 Skills** (`.agents/skills/`) | **On-Demand** | Triggered only when you say phrases like `"plan my project"`, `"implement TASK-001"`, or `"debug this"`. | **WHAT task to do**: Orchestrates multi-agent chains, creates task backlogs, runs code reviews, and writes reports into `docs/`. |
+| **Always-On Rules** (`.agents/AGENTS.md`) | **Always-On** | Injected automatically on **100% of interactions** (every prompt, every skill, and every ad-hoc question). | **HOW the code must be written**: Enforces baseline engineering law across all tools (typed error handling, parameterized SQL, no console.log, zero linter errors, and anti-pattern memory). |
+
+---
+
 ## Scope: The Engineering Pillar
 
 This pipeline focuses strictly on the **Software Development Life Cycle (SDLC)**. It is an engineering factory that turns an idea into working, tested, and deployable code.
@@ -517,40 +528,67 @@ When you're ready to merge a feature branch:
 
 ### Scenario B: Existing project (adopt the pipeline into an already-built codebase)
 
-You have a working project and want to add the pipeline for future development.
+You have an existing project built without the pipeline and want to adopt AI governance, add new features, or fix bugs without introducing regressions.
 
-**Step 1 — Copy the pipeline files**
 ```
-# Copy .agents/ and prompts/ into your existing project root
-# Do NOT copy docs/ — you'll generate fresh docs for your codebase
+                    BROWNFIELD LIFECYCLE
+                    
+[Existing Codebase]
+        ↓
+Step 1: ONBOARD      → "onboard this repo"      → Agent 15 writes docs/architecture.md
+        ↓
+Step 2: PLAN FEATURE → "plan this feature: ..." → Agents 1, 2, 3, 5 anchor to existing architecture
+        ↓
+Step 3: IMPLEMENT    → "implement TASK-NNN"     → Agent 6 enforces AGENTS.md & anti-pattern rules
+        ↓
+Step 4: REVIEW       → "review TASK-NNN"        → Agents 7, 8 enforce linter & OWASP gates
+        ↓
+Step 5: DEBUG (Bugs) → "debug this: [error]"    → Agent 16 writes failing test first + logs AP-NNN
+        ↓
+Step 6: EVAL AUDIT   → npx ... eval             → Deterministic scorecard (docs/eval-reports/)
+```
+
+**Step 1 — Inject the pipeline**
+```bash
+# Option A: One-line CLI scaffolder (instant):
+npx @kadvsperera/ai-dev-pipeline init
+# (Select "2) Brownfield" and pick your AI editors)
+
+# Option B: Global Antigravity plugin (zero files copied):
+# If installed globally in ~/.gemini/config/plugins/ai-dev-pipeline, skills are already active!
 ```
 
 **Step 2 — Onboard your existing code**
+Say to the assistant:
+> **"onboard this repo"**
 
-You don't need to manually re-plan your whole project or reverse-engineer your architecture by hand. Run the onboarding agent:
-
-> "onboard this repo"
-
-The Codebase Onboarder (Agent 15) inspects your manifests, routes, schemas, and linters, generating a baseline `docs/architecture.md` and flagging any architectural risks or missing toolchains.
+The Codebase Onboarder (Agent 15) inspects your manifests (`package.json`, `requirements.txt`), entry points, database models, and routes, generating a baseline `docs/architecture.md` and flagging any architectural risks or missing toolchains.
 
 **Step 3 — Plan only new work**
-
 When you need to add a feature, plan just that feature:
+> **"plan this feature: add real-time notifications using WebSocket"**
 
-> "plan this feature: add real-time notifications using WebSocket for the existing task management API"
+The planning agents will read your existing `docs/architecture.md` and anchor the new feature into your existing system — preventing conflicting dependencies or duplicate patterns.
 
-The planning agents will read your existing `docs/architecture.md` and plan the new feature within your existing system — they won't try to redesign what's already built.
+**Step 4 — Build & Refactor with strict safety**
+Work through the tasks generated in `docs/tasks.md`:
+* For normal feature implementation:
+  > **"implement TASK-001"** → Agent 6 writes code + unit tests + handoff note adhering to `AGENTS.md`.
+* For cleaning up legacy technical debt:
+  > **"implement TASK-002 [REFACTOR]"** → Switches to Behavior-Preservation Mode (verifies/writes characterization tests *before* refactoring).
 
-**Step 4 — Use the development loop normally**
+**Step 5 — Scientific bug fixing (no full planning needed)**
+When a bug or production issue occurs in the legacy code:
+> **"debug this: [paste stack trace or symptom]"**
 
-From here, the workflow is the same: implement → review → test → deploy → docs.
+Agent 16 (Bug Investigator) performs scientific RCA, writes a **failing reproduction test first**, applies a minimal fix, verifies all tests pass, and logs the root cause to `docs/anti-patterns.md` so the AI never repeats that mistake.
 
-**Step 5 — Retroactive reviews (optional)**
-
-You can run reviews on existing code without the full planning cycle:
-
-> "review this PR" — for code about to be merged  
-> "review the code in src/auth/" — for an existing directory you want audited  
+**Step 6 — Audit with the Evaluation Harness**
+Before merging, run the objective evaluation audit:
+```bash
+npx @kadvsperera/ai-dev-pipeline eval
+```
+Validates that new code didn't violate architecture layer boundaries (e.g., controllers executing raw SQL) and scores overall reliability from 0 to 100%.  
 
 ---
 
