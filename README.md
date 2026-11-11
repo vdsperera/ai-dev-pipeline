@@ -126,6 +126,17 @@ To understand where `ai-dev-pipeline` sits in the software industry, it helps to
 * **What the Pipeline Handles**: Reverse-engineering unknown code, drawing visual Mermaid diagrams, enforcing typed errors & zero-linter gates, preventing SQL injection, generating test suites, and scoring code reliability.
 * **What You (the Human) Own**: Business context & domain priorities, credentials/secrets configuration, and final production deployment sign-off.
 
+### When to Use (and When NOT to Use)
+
+| When to Use AI Dev Pipeline | When NOT to Use It |
+|---|---|
+| **Multi-thousand-line production repos** where regressions, silent bugs, and architectural drift break real features. | **50-line throwaway scripts** or weekend hackathon prototypes where architectural overhead is unnecessary. |
+| **Brownfield codebases** that need reverse-engineering (`sdlc-onboard`) before making safe modifications. | **Unsupervised "black box" cloud coding** where you expect an autonomous bot to write code while you sleep. |
+| **Engineering teams & serious solo devs** who need living architecture contracts, zero-linter gates, and persistent defect memory. | **Trivial single-file edits** where quick inline completion (Tab in Cursor/Copilot) is sufficient. |
+
+> [!TIP]
+> For a deep dive into our engineering philosophy, why this wasn't built before, and comparisons against BMAD and multi-agent debate frameworks, read our [Frequently Asked Questions (FAQ)](docs/faq.md).
+
 ---
 
 ## Folder structure
