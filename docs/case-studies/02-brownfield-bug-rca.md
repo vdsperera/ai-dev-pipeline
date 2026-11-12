@@ -1,10 +1,12 @@
-# Case Study 02: Brownfield Codebase & Bug RCA
+# Reference Scenario 02: Brownfield Codebase & Bug RCA
 ## Diagnosing a Production Connection Pool Leak in a 15,000-Line Legacy Codebase
 
-> **Context**: Legacy ("Brownfield") E-Commerce monolith with zero existing documentation  
-> **Tech Stack**: Node.js, Express, PostgreSQL (`pg`), Stripe SDK, Vitest  
-> **Symptom**: Intermittent production crashes under checkout surges with PostgreSQL error:  
-> `FATAL: remaining connection slots are reserved for non-replication superuser connections`
+> [!NOTE]
+> **Reference Debugging Walkthrough**: This document is an end-to-end reference scenario demonstrating how `sdlc-onboard` and `sdlc-debug` systematically reverse-engineer architecture, perform 5-Whys RCA, write failing reproduction tests first, and register permanent anti-pattern memories for realistic legacy codebases.
+
+* **Context**: Legacy ("Brownfield") E-Commerce monolith with zero existing documentation
+* **Tech Stack**: Node.js, Express, PostgreSQL (`pg`), Stripe SDK, Vitest
+* **Symptom**: Intermittent production crashes under checkout surges with PostgreSQL error: `FATAL: remaining connection slots are reserved for non-replication superuser connections`
 
 ---
 
@@ -188,3 +190,4 @@ From this day forward, whenever any agent implements a database task in this rep
 * **Code Churn**: Exactly 1 file modified, 8 lines added.
 * **Permanent Test Guard**: `BUG-042-pool-leak.test.ts` runs automatically in CI on every future Pull Request.
 * **Handoff Report**: Documented in `docs/handoffs/BUG-042.md` for team post-mortem review.
+

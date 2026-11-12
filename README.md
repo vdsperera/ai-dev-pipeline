@@ -167,13 +167,13 @@ To understand where `ai-dev-pipeline` sits in the software industry, it helps to
 
 ---
 
-## Real-World Case Studies
+## End-to-End Reference Walkthroughs
 
-See how the pipeline operates in practice across greenfield architecture and brownfield debugging:
+Explore realistic reference scenarios demonstrating how the pipeline governs greenfield microservices and brownfield bug investigations:
 
-| Case Study | Problem Domain | What It Demonstrates |
+| Reference Scenario | Problem Domain | What It Demonstrates |
 |---|---|---|
-| [**01: Greenfield Microservice**](docs/case-studies/01-greenfield-microservice.md) | Token Bucket Rate Limiter | End-to-end trace from raw idea to PR review: Redis Lua script atomicity, fail-open circuit breakers, Gherkin acceptance criteria, and zero magic numbers. |
+| [**01: Greenfield Microservice Design**](docs/case-studies/01-greenfield-microservice.md) | Distributed Token Bucket Rate Limiter | End-to-end trace from raw idea to PR review: Redis Lua script atomicity, fail-open circuit breakers, Gherkin acceptance criteria, and zero magic numbers. |
 | [**02: Brownfield Bug Investigation & RCA**](docs/case-studies/02-brownfield-bug-rca.md) | Legacy E-Commerce Connection Pool Leak | Reverse-engineering legacy architecture (`sdlc-onboard`), 5-Whys root cause analysis, writing a failing reproduction test first (`sdlc-debug`), surgical minimal fix, and registering permanent anti-pattern memory. |
 
 ---
