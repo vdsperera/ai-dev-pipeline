@@ -6,7 +6,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node: >=18](https://img.shields.io/badge/Node->=18.0.0-green.svg)](https://nodejs.org/)
 
-A structured AI-assisted development pipeline that covers the full SDLC — from a raw idea to PR review. Built as **Antigravity IDE skills** so the entire workflow runs natively inside your editor.
+> **The Agentic SDLC Governance Framework for AI Coding Agents.**  
+> Delivered through a zero-friction CLI (`npx @kadvsperera/ai-dev-pipeline init`) with native parity across **Google Antigravity**, **Cursor**, **Claude Code**, and **GitHub Copilot**.
+
+`ai-dev-pipeline` transforms AI from an erratic code generator into a disciplined, 17-role software engineering organization. It enforces living architecture contracts (`docs/architecture.md`), strict quality gates (`AGENTS.md`), persistent defect memory (`docs/anti-patterns.md`), and deterministic reliability scoring (`ai-dev-pipeline eval`) directly inside your daily code editor.
 
 ## How it works
 
