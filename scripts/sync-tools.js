@@ -117,13 +117,17 @@ function generateCopilotInstructions(agentsContent) {
   return output;
 }
 
+function normalizeLineEndings(str) {
+  return str ? str.replace(/\r\n/g, '\n').trim() : '';
+}
+
 function writeOrCheck(filePath, newContent, results) {
   const relativePath = path.relative(ROOT_DIR, filePath);
   const exists = fs.existsSync(filePath);
   const currentContent = exists ? fs.readFileSync(filePath, 'utf8') : null;
 
   if (isCheckMode) {
-    if (!exists || currentContent !== newContent) {
+    if (!exists || normalizeLineEndings(currentContent) !== normalizeLineEndings(newContent)) {
       results.outOfSync.push(relativePath);
     } else {
       results.upToDate.push(relativePath);
