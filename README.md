@@ -167,6 +167,17 @@ To understand where `ai-dev-pipeline` sits in the software industry, it helps to
 
 ---
 
+## End-to-End Reference Walkthroughs
+
+Explore realistic reference scenarios demonstrating how the pipeline governs greenfield microservices and brownfield bug investigations:
+
+| Reference Scenario | Problem Domain | What It Demonstrates |
+|---|---|---|
+| [**01: Greenfield Microservice Design**](docs/case-studies/01-greenfield-microservice.md) | Distributed Token Bucket Rate Limiter | End-to-end trace from raw idea to PR review: Redis Lua script atomicity, fail-open circuit breakers, Gherkin acceptance criteria, and zero magic numbers. |
+| [**02: Brownfield Bug Investigation & RCA**](docs/case-studies/02-brownfield-bug-rca.md) | Legacy E-Commerce Connection Pool Leak | Reverse-engineering legacy architecture (`sdlc-onboard`), 5-Whys root cause analysis, writing a failing reproduction test first (`sdlc-debug`), surgical minimal fix, and registering permanent anti-pattern memory. |
+
+---
+
 ## Folder structure
 
 ```
@@ -218,6 +229,7 @@ To understand where `ai-dev-pipeline` sits in the software industry, it helps to
 ├── CLAUDE.md                           # Generated for Claude Code (via sync-tools)
 ├── .cursorrules                        # Generated for Cursor (via sync-tools)
 └── docs/                               # Living project documents (pipeline outputs)
+    ├── case-studies/                    # Detailed end-to-end greenfield & brownfield walkthroughs
     ├── pipeline-roadmap.md              # Architectural principles, quality controls & roadmap
     ├── anti-patterns.md                 # Lessons learned & recurring AI mistakes to avoid
     ├── product-brief.md                 # Agent 0 output
