@@ -125,6 +125,13 @@ When implementing code, always check these docs for context. The architecture do
   - **Rule**: The permanent invariant agents must follow in this codebase
 - Before implementing any task or fixing a bug, agents must read `docs/anti-patterns.md` (if it exists) to guarantee previously identified mistakes are never repeated.
 
+## Bug Investigation & Human-in-the-Loop Governance
+
+- **Human-in-the-Loop by Default (Safe Mode)**: When investigating a bug, error log, or CI failure, agents must separate diagnosis from execution:
+  1. **Turn 1 (Diagnosis)**: Explain the root cause in plain English, identify the exact lines/files causing the issue, and propose the minimal fix. Stop and ask for confirmation.
+  2. **Turn 2 (Execution)**: Do NOT modify code, stage files, or push commits until the user explicitly confirms (e.g., "yes", "proceed").
+- **Autonomous Fix Mode (Opt-In)**: Agents may only diagnose and apply a fix in a single turn if the user explicitly commanded an autonomous fix (e.g., "auto-fix this error", "fix and push immediately").
+
 ## Git & Commit Standards
 
 - Use Conventional Commits for all commit messages (e.g., `feat:`, `fix:`, `docs:`, `refactor:`).
