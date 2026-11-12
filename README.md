@@ -138,8 +138,13 @@ To understand where `ai-dev-pipeline` sits in the software industry, it helps to
 | **Brownfield codebases** that need reverse-engineering (`sdlc-onboard`) before making safe modifications. | **Unsupervised "black box" cloud coding** where you expect an autonomous bot to write code while you sleep. |
 | **Engineering teams & serious solo devs** who need living architecture contracts, zero-linter gates, and persistent defect memory. | **Trivial single-file edits** where quick inline completion (Tab in Cursor/Copilot) is sufficient. |
 
+#### The Honest Engineering Trade-Offs
+* **Token & API Cost**: Loading contracts, anti-patterns, and chained personas uses **3x–5x more tokens** than raw prompts.
+* **Maintenance Discipline**: Living documents (`docs/architecture.md`, `docs/anti-patterns.md`) must be kept up to date or contracts will drift.
+* **Garbage-In, Garbage-Out**: A disciplined pipeline will implement a flawed architectural contract just as faithfully as a good one—human review at the architecture gate remains mandatory.
+
 > [!TIP]
-> For a deep dive into our engineering philosophy, why this pattern became practical now, and comparisons against BMAD and multi-agent debate frameworks, read our [Frequently Asked Questions (FAQ)](docs/faq.md).
+> For a deep dive into our engineering philosophy, honest trade-offs, and comparisons against BMAD and multi-agent debate frameworks, read our [Frequently Asked Questions (FAQ)](docs/faq.md).
 
 ---
 

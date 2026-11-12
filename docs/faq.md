@@ -76,3 +76,30 @@ It is the exact same trade-off as **automated testing and CI/CD**: spending 5 mi
 3. Use `sdlc-debug` (Agent 16) for bug investigations, ensuring failing reproduction tests are written before any code is modified.
 4. As bugs or AI mistakes are identified, document them in `docs/anti-patterns.md` so the AI never repeats them.
 
+---
+
+## 6. What are the honest downsides, costs, and trade-offs?
+
+No engineering framework is a silver bullet. Choosing `ai-dev-pipeline` introduces five real trade-offs that teams must weigh:
+
+### A. Higher Token Consumption & API Cost
+In raw "vibe coding", you send a one-sentence prompt and the AI generates code in a single API call.  
+In `ai-dev-pipeline`, the AI loads `AGENTS.md`, reads `docs/architecture.md`, inspects `docs/anti-patterns.md`, and validates against task specifications. In chained planning workflows (`sdlc-plan`), 6 agents execute sequentially.  
+* **The Cost**: You will consume **3x to 5x more tokens** per feature. If you pay for LLM APIs out-of-pocket, your token bill will be higher than with unguided prompts.
+
+### B. "Process Fatigue" on Trivial Edits
+Sometimes you just want to tweak a CSS button padding, rename an internal variable, or write a 5-line throwaway script.  
+* **The Cost**: Forcing tiny edits through a full SDLC pipeline (task IDs, acceptance criteria, eval scoring) is bureaucratic overhead. Developers must exercise judgment and bypass the pipeline for trivial one-liners.
+
+### C. "Garbage In, Garbage Out" Gets Amplified
+The pipeline operates sequentially: Strategy → Requirements → Architecture → Tasks → Code.  
+* **The Cost**: If the human reviewer approves an initial `docs/architecture.md` that contains a flawed technical assumption (e.g., wrong database choice, unscalable data model), the downstream agents will obediently and meticulously build out that flawed architecture with clean, well-tested code. A disciplined pipeline will implement the wrong design just as faithfully as the right one.
+
+### D. Living Contract Maintenance
+Living documents require human care.  
+* **The Cost**: If developers modify code at 2:00 AM without updating `docs/architecture.md`, the architectural contract drifts from the codebase. Future agents will generate code based on obsolete assumptions. Similarly, `docs/anti-patterns.md` must be actively curated to avoid prompt bloat.
+
+### E. Strictness During Early Exploratory Prototyping
+`AGENTS.md` forbids shortcuts: no `console.log`, mandatory typed errors, zero magic numbers, and zero-linter tolerances.  
+* **The Cost**: During early hackathons or messy spike solutions, you often want dirty hacks just to test if an API works. The pipeline actively resists dirty code, which can feel rigid during early exploratory prototyping.
+
