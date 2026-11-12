@@ -92,6 +92,25 @@ If you are working with an existing codebase that has no documentation:
 | **Failure Modes & Resilience** | *"Walk me through what happens when [External Dependency / Database] fails or times out. How does our error handling prevent cascading failure?"* |
 | **Simulated Technical Defense** | *"Act as a Principal Systems Architect reviewing this project. Grill me on our data ownership and boundary isolation, asking one challenging question at a time."* |
 
+### Tracking Ideas, Bugs & Optional GitHub Sync
+
+During development, you will inevitably discover new possibilities, non-blocking bugs, or postponed features. 
+
+* **The Local Default (Zero Setup & Offline)**:  
+  By default, `ai-dev-pipeline` tracks everything locally in your Git repository with zero external dependencies:
+  * **Tasks & Backlog**: Captured in `docs/tasks.md` under `## Deferred / Future Scope`.
+  * **Follow-ups & Limitations**: Documented in `docs/handoffs/TASK-NNN.md` when closing a task.
+  * **AI Mistakes & Defect Patterns**: Logged permanently in `docs/anti-patterns.md`.
+
+* **Optional: On-Demand GitHub Issue Sync (via MCP)**:  
+  If you have the **GitHub MCP Server** configured in your editor (or signed in via Antigravity/Cursor), you can trigger issue syncing on demand:
+  * *"Create a GitHub issue for the CSV export task we just deferred."*
+  * *"Import open GitHub issues into `docs/tasks.md` as new backlog tasks."*
+  * *"Add a comment to issue #12 with our RCA findings from `sdlc-debug`."*
+
+> [!NOTE]
+> GitHub sync is **strictly on-demand, never automatic**. The pipeline will never demand API tokens, send unsolicited network requests, or pester you to connect external accounts—local Markdown files remain the 100% offline source of truth.
+
 ---
 
 ## Where This Fits: The 3-Layer AI Coding Stack
@@ -156,6 +175,7 @@ To understand where `ai-dev-pipeline` sits in the software industry, it helps to
 │   └── cli.js                          # npx ai-dev-pipeline entry point
 ├── .agents/                            # Antigravity customization root
 │   ├── AGENTS.md                       # Always-on coding standards & static analysis (Agent 6)
+│   ├── mcp_config.json                 # Optional MCP integrations (GitHub, Postgres, etc.)
 │   └── skills/
 │       ├── sdlc-plan/SKILL.md          # Planning chain (Agents 0→1→2→3→4→5)
 │       ├── sdlc-strategy/SKILL.md      # Product strategy (Agent 0) — standalone
