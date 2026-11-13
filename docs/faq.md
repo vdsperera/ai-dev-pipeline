@@ -23,19 +23,33 @@ The commercial AI wave initially prioritized proprietary subscription products:
 
 ---
 
-## 2. How does this compare to BMAD and Multi-Agent Debate frameworks?
+## 2. How does this compare to BMAD-METHOD and other agentic SDLC frameworks?
 
-In academic research and early agent experiments, frameworks like **BMAD** (Benchmark for Multi-Agent Debate) explored having multiple LLMs argue with each other until reaching consensus.
+In the AI-assisted software engineering space, two primary paradigms have emerged: spec-driven/persona-driven pipeline frameworks, and early academic multi-agent debate simulators.
 
-While conceptually intriguing, probabilistic multi-agent debates suffer from major practical issues in real-world engineering:
+* **BMAD-METHOD** ("Breakthrough Method for Agile AI-Driven Development") is a mature, widely adopted persona-based SDLC framework. Like `ai-dev-pipeline`, it coordinates specialized roles (Product Strategist, Architect, Developer, QA) through sequential markdown artifacts checked into the repo, rejecting unconstrained conversational loops.
+* **GitHub Spec Kit** focuses on spec-driven development (Spec → Plan → Tasks) without deep multi-role persona specialization.
+* **ChatDev & Academic Multi-Agent Debate**: Early research frameworks had multiple LLMs argue in back-and-forth loops until reaching probabilistic consensus. Both `ai-dev-pipeline` and `BMAD-METHOD` avoid this approach due to high latency, uncontrolled token burn, and lack of deterministic engineering contracts.
 
-| Dimension | Multi-Agent Debate (e.g. BMAD / ChatDev) | AI Dev Pipeline |
-|---|---|---|
-| **Mechanism** | **Probabilistic Debate**: Agents argue back-and-forth in a loop to find consensus. | **Deterministic Contracts & Quality Gates**: Architecture docs (`docs/architecture.md`), zero-linter tolerance, and deterministic evals. |
-| **Token Cost & Latency** | **Extremely High**: Looping conversational debates burn tokens rapidly and risk unbounded loops. | **Predictable & Targeted**: Agents execute sequentially or on-demand at specific SDLC gates. |
-| **Runtime Environment** | Often standalone Python scripts or research sandboxes. | **IDE-Native**: Runs natively inside Antigravity, Cursor, Claude Code, and Copilot via Markdown and zero-dependency Node CLI. |
-| **Long-Term Memory** | Resets when the debate conversation ends. | **Persistent Memory Registry** (`docs/anti-patterns.md`) that accumulates permanent lessons across project history. |
-| **Verification** | Agents grade each other's opinions. | Objective evaluation harness (`ai-dev-pipeline eval`) scoring static analysis, boundary violations, and anti-pattern compliance. |
+### Comparison Matrix
+
+| Dimension | `ai-dev-pipeline` | BMAD-METHOD | GitHub Spec Kit |
+|---|---|---|---|
+| **Core Concept** | Role personas, phase-gated document artifacts | Role personas, phase-gated document artifacts | Spec → Plan → Tasks (no personas) |
+| **Footprint & Dependencies** | **~390 KB**, zero runtime dependencies (pure Node.js) | Large multi-runtime footprint (Node.js + Python / `uv`) | Python CLI |
+| **Editor / Skill Support** | Native Antigravity skills + universal rules across Cursor, Claude Code, and Copilot | Compiled generators across multiple IDE targets (`.claude/skills`, Cursor, etc.) | Custom prompt command files |
+| **Workflow Scalability** | Granular individual skills (`sdlc-architect`, `sdlc-debug`) or chained execution (`sdlc-plan`) | Distinct workflow tracks (Quick Flow, Method, Enterprise) | Single linear flow |
+| **Customization Model** | Direct markdown customization of `prompts/` and `AGENTS.md` | Layered TOML configuration overrides | Template and constitution edits |
+| **Hygiene Scorecard** | Built-in heuristic static evaluation harness (`ai-dev-pipeline eval`) | No static CLI scorecard (QA handled via Test Architect persona) | No built-in scorecard |
+| **Defect Memory** | Explicit, numbered invariant registry (`docs/anti-patterns.md`) | `project-context.md` and retrospective logs | Project constitution |
+| **Maturity & Scale** | Focused, lightweight local harness (v1.0) | Large open-source community, v6.12+ (~47k+ GitHub stars) | Backed by GitHub |
+
+### Where `ai-dev-pipeline` Fits Best
+
+1. **Zero-Dependency Lightweight Footprint**: Installs in seconds via `npx @kadvsperera/ai-dev-pipeline init` without requiring Python, `uv`, virtual environments, or external container setups.
+2. **First-Class Antigravity Native Skills**: Built specifically to leverage Antigravity's native skill and agent execution engine out of the box, with baseline rules shared across Cursor, Claude Code, and Copilot.
+3. **Local Hygiene Scorecard**: Includes a local CLI evaluation tool (`ai-dev-pipeline eval`) to check file sizing, boundary conventions, and architectural artifacts without spending tokens on extra LLM passes.
+4. **Structured Anti-Pattern Memory**: A first-class, numbered invariant registry (`docs/anti-patterns.md`) that prevents recurring AI defects and captures project-specific edge cases across sessions.
 
 ---
 

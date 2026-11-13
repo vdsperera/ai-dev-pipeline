@@ -163,7 +163,7 @@ To understand where `ai-dev-pipeline` sits in the software industry, it helps to
 * **Garbage-In, Garbage-Out**: A disciplined pipeline will implement a flawed architectural contract just as faithfully as a good one—human review at the architecture gate remains mandatory.
 
 > [!TIP]
-> For a deep dive into our engineering philosophy, honest trade-offs, and comparisons against BMAD and multi-agent debate frameworks, read our [Frequently Asked Questions (FAQ)](docs/faq.md).
+> For a deep dive into our engineering philosophy, honest trade-offs, and how we compare against BMAD-METHOD and GitHub Spec Kit, read our [Frequently Asked Questions (FAQ)](docs/faq.md).
 
 ---
 
