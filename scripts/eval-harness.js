@@ -3,9 +3,9 @@
 /**
  * eval-harness.js — AI Dev Pipeline Stage Evaluation Harness
  *
- * Deterministic audit and evaluation layer for coding agent outputs.
- * Detects architectural drift, linter/type failures, anti-pattern regressions,
- * and missing traceability. Produces actionable scorecards and markdown reports.
+ * Fast, zero-dependency static hygiene evaluator for coding agent outputs.
+ * Inspects layer boundaries, linter scripts, known anti-patterns, and task
+ * traceability. Produces actionable hygiene scorecards and markdown audit reports.
  *
  * Usage:
  *   node scripts/eval-harness.js                  # Evaluate current repository
@@ -29,10 +29,7 @@ const c = {
   cyan: supportsColor ? '\x1b[36m' : '',
   green: supportsColor ? '\x1b[32m' : '',
   yellow: supportsColor ? '\x1b[33m' : '',
-  blue: supportsColor ? '\x1b[34m' : '',
-  magenta: supportsColor ? '\x1b[35m' : '',
-  red: supportsColor ? '\x1b[31m' : '',
-  gray: supportsColor ? '\x1b[90m' : ''
+  red: supportsColor ? '\x1b[31m' : ''
 };
 
 function ensureDir(dirPath) {
@@ -41,32 +38,39 @@ function ensureDir(dirPath) {
   }
 }
 
-// Recursively find code files (excluding node_modules, .git, dist, build, eval/benchmarks unless targeting it)
-function getSourceFiles(dir, extensions = ['.js', '.ts', '.jsx', '.tsx', '.py', '.go', '.rs'], isBenchmarkTarget = false) {
+function isTestFile(relPath) {
+  const n = relPath.replace(/\\/g, '/');
+  return (
+    /(^|\/)(tests?|__tests__|fixtures?|e2e|spec)(\/|$)/i.test(n) ||
+    /\.(test|spec)\.[a-z0-9]+$/i.test(n)
+  );
+}
+
+function isScriptOrCliFile(relPath) {
+  const n = relPath.replace(/\\/g, '/');
+  return (
+    /(^|\/)(scripts|bin)(\/|$)/i.test(n) ||
+    /(cli|eval-harness|sync-tools)\.js$/i.test(n)
+  );
+}
+
+// Recursively find source files (excluding ignored build / cache directories)
+function getSourceFiles(dir, extensions = ['.js', '.ts', '.jsx', '.tsx', '.py', '.go', '.rs'], isBenchmark = false) {
   const results = [];
   if (!fs.existsSync(dir)) return results;
 
-  const isBench = isBenchmarkTarget || dir.includes('benchmarks');
+  const isBench = isBenchmark || dir.includes('benchmarks');
+  const ignoredDirs = new Set(['node_modules', '.git', 'dist', 'build', 'coverage', '.next']);
+
   const entries = fs.readdirSync(dir, { withFileTypes: true });
   for (const entry of entries) {
-    const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      if (
-        entry.name === 'node_modules' ||
-        entry.name === '.git' ||
-        entry.name === 'dist' ||
-        entry.name === 'build' ||
-        entry.name === 'coverage' ||
-        entry.name === '.next' ||
-        (!isBench && entry.name === 'benchmarks')
-      ) {
-        continue;
-      }
-      results.push(...getSourceFiles(fullPath, extensions, isBench));
+      if (ignoredDirs.has(entry.name) || (!isBench && entry.name === 'benchmarks')) continue;
+      results.push(...getSourceFiles(path.join(dir, entry.name), extensions, isBench));
     } else {
       const ext = path.extname(entry.name).toLowerCase();
       if (extensions.includes(ext)) {
-        results.push(fullPath);
+        results.push(path.join(dir, entry.name));
       }
     }
   }
@@ -74,14 +78,13 @@ function getSourceFiles(dir, extensions = ['.js', '.ts', '.jsx', '.tsx', '.py', 
 }
 
 // -------------------------------------------------------------
-// DIMENSION 1: Architecture Conformance (Weight: 30%)
+// DIMENSION 1: Architecture & Layer Isolation (Weight: 30%)
 // -------------------------------------------------------------
 function evaluateArchitecture(targetDir, findings) {
   let score = 100;
   const archPath = path.join(targetDir, 'docs', 'architecture.md');
-  const hasArch = fs.existsSync(archPath);
 
-  if (!hasArch) {
+  if (!fs.existsSync(archPath)) {
     findings.push({
       dimension: 'Architecture',
       severity: 'WARN',
@@ -89,47 +92,63 @@ function evaluateArchitecture(targetDir, findings) {
       deduction: 15
     });
     score -= 15;
+  } else {
+    const archContent = fs.readFileSync(archPath, 'utf8');
+    if (archContent.trim().length < 50) {
+      findings.push({
+        dimension: 'Architecture',
+        severity: 'WARN',
+        message: 'docs/architecture.md is minimal (< 50 chars). Architectural contracts should define boundaries.',
+        deduction: 10
+      });
+      score -= 10;
+    }
   }
 
   const sourceFiles = getSourceFiles(targetDir);
-
   for (const file of sourceFiles) {
     const relPath = path.relative(targetDir, file);
-    // Ignore test files and scripts for layer checks
-    if (relPath.includes('test') || relPath.includes('scripts') || relPath.includes('bin')) continue;
+    if (isTestFile(relPath) || isScriptOrCliFile(relPath)) continue;
+
+    const isPresentationOrRoute = /(routes|controllers|views|pages|components)[\\/]/i.test(relPath);
+    if (!isPresentationOrRoute) continue;
 
     const content = fs.readFileSync(file, 'utf8');
+    const lines = content.split('\n');
+    let hasDirectSql = false;
+    let hasDirectDbPool = false;
 
-    // Layer Isolation Check: Controllers, views, or presentation directly invoking SQL/database
-    const isPresentationOrRoute =
-      relPath.includes('routes') ||
-      relPath.includes('controllers') ||
-      relPath.includes('views') ||
-      relPath.includes('pages') ||
-      relPath.includes('components');
+    for (const line of lines) {
+      const trimmed = line.trim();
+      if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('/*') || trimmed.startsWith('#')) continue;
 
-    if (isPresentationOrRoute) {
-      if (/(\bSELECT\s+.+\s+FROM\b|\bINSERT\s+INTO\b|\bUPDATE\s+.+\s+SET\b|\bDELETE\s+FROM\b)/i.test(content)) {
-        findings.push({
-          dimension: 'Architecture',
-          severity: 'FAIL',
-          file: relPath,
-          message: 'Direct SQL execution detected in presentation/route layer. Violates layer boundary isolation.',
-          deduction: 20
-        });
-        score -= 20;
+      if (!hasDirectSql && /(\bSELECT\s+.+\s+FROM\b|\bINSERT\s+INTO\b|\bUPDATE\s+.+\s+SET\b|\bDELETE\s+FROM\b)/i.test(line)) {
+        hasDirectSql = true;
       }
-
-      if (/(\bpg\.Pool\b|\bnew\s+Pool\b|\bprisma\.\w+\.(find|create|update|delete)\b|\bmongoose\.model\b)/i.test(content)) {
-        findings.push({
-          dimension: 'Architecture',
-          severity: 'WARN',
-          file: relPath,
-          message: 'Direct database/ORM connection initiated in presentation/controller layer. Must route through service or repository.',
-          deduction: 10
-        });
-        score -= 10;
+      if (!hasDirectDbPool && /(\bpg\.Pool\b|\bnew\s+Pool\b|\bprisma\.\w+\.(find|create|update|delete)\b|\bmongoose\.model\b)/i.test(line)) {
+        hasDirectDbPool = true;
       }
+    }
+
+    if (hasDirectSql) {
+      findings.push({
+        dimension: 'Architecture',
+        severity: 'FAIL',
+        file: relPath,
+        message: 'Direct SQL execution detected in presentation/route layer. Violates layer boundary isolation.',
+        deduction: 20
+      });
+      score -= 20;
+    }
+    if (hasDirectDbPool) {
+      findings.push({
+        dimension: 'Architecture',
+        severity: 'WARN',
+        file: relPath,
+        message: 'Direct database/ORM connection initiated in presentation/controller layer. Route through service or repository.',
+        deduction: 10
+      });
+      score -= 10;
     }
   }
 
@@ -137,36 +156,44 @@ function evaluateArchitecture(targetDir, findings) {
 }
 
 // -------------------------------------------------------------
-// DIMENSION 2: Deterministic Code Quality & Linter Gate (Weight: 25%)
+// DIMENSION 2: Code Quality & Static Analysis Gate (Weight: 25%)
 // -------------------------------------------------------------
 function evaluateCodeQuality(targetDir, findings) {
   let score = 100;
-  const sourceFiles = getSourceFiles(targetDir);
-
-  // Check if project has an official linter configured in package.json
   const pkgPath = path.join(targetDir, 'package.json');
-  let hasLinterScript = false;
 
+  // 1. Run official project linter if present
   if (fs.existsSync(pkgPath)) {
     try {
       const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-      if (pkg.scripts && (pkg.scripts.lint || pkg.scripts['lint:check'])) {
-        hasLinterScript = true;
+      const lintScript = (pkg.scripts && (pkg.scripts.lint || pkg.scripts['lint:check'])) ? (pkg.scripts.lint ? 'lint' : 'lint:check') : null;
+      if (lintScript) {
+        try {
+          execSync(`npm run ${lintScript} --silent`, { cwd: targetDir, stdio: 'pipe', timeout: 30000 });
+        } catch {
+          findings.push({
+            dimension: 'Code Quality',
+            severity: 'FAIL',
+            message: `Static analysis command 'npm run ${lintScript}' exited with errors. Code must satisfy linter rules.`,
+            deduction: 15
+          });
+          score -= 15;
+        }
       }
     } catch {
-      // Ignore
+      // Ignore package.json parsing issues
     }
   }
 
-  // Fallback static analysis engine
+  // 2. Static heuristic checks for file sizing and block nesting
+  const sourceFiles = getSourceFiles(targetDir);
   for (const file of sourceFiles) {
     const relPath = path.relative(targetDir, file);
-    if (relPath.includes('node_modules') || relPath.includes('dist')) continue;
+    if (isTestFile(relPath)) continue;
 
     const content = fs.readFileSync(file, 'utf8');
     const lines = content.split('\n');
 
-    // 1. File size check (> 450 lines flag warning)
     if (lines.length > 450) {
       findings.push({
         dimension: 'Code Quality',
@@ -178,10 +205,11 @@ function evaluateCodeQuality(targetDir, findings) {
       score -= 8;
     }
 
-    // 2. Excessive nesting depth (> 4 levels)
     let maxNesting = 0;
     let currentNesting = 0;
     for (const line of lines) {
+      const trimmed = line.trim();
+      if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('#')) continue;
       const openBraces = (line.match(/\{/g) || []).length;
       const closeBraces = (line.match(/\}/g) || []).length;
       currentNesting += openBraces - closeBraces;
@@ -193,7 +221,7 @@ function evaluateCodeQuality(targetDir, findings) {
         dimension: 'Code Quality',
         severity: 'WARN',
         file: relPath,
-        message: `High cyclomatic complexity: nesting depth of ${maxNesting} levels detected. Split into focused helper functions.`,
+        message: `Deep block nesting: nesting depth of ${maxNesting} levels detected. Split into focused helper functions.`,
         deduction: 10
       });
       score -= 10;
@@ -208,20 +236,42 @@ function evaluateCodeQuality(targetDir, findings) {
 // -------------------------------------------------------------
 function evaluateAntiPatterns(targetDir, findings) {
   let score = 100;
-  const sourceFiles = getSourceFiles(targetDir);
+  const antiPatternsPath = path.join(targetDir, 'docs', 'anti-patterns.md');
+  const customDetectPatterns = [];
 
+  if (!fs.existsSync(antiPatternsPath)) {
+    findings.push({
+      dimension: 'Anti-Patterns',
+      severity: 'WARN',
+      message: 'No docs/anti-patterns.md found. Pipeline cannot track persistent defect memory or project invariants.',
+      deduction: 10
+    });
+    score -= 10;
+  } else {
+    try {
+      const apContent = fs.readFileSync(antiPatternsPath, 'utf8');
+      const detectMatches = apContent.matchAll(/###\s*(AP-\d+)[^\n]*\n[\s\S]*?(?:- \*\*Detect\*\*|Detect):\s*`?\/([^\/\n]+)\/([gimsuy]*)`?/gi);
+      for (const m of detectMatches) {
+        customDetectPatterns.push({ id: m[1], regex: new RegExp(m[2], m[3]) });
+      }
+    } catch {
+      // Ignore custom regex syntax errors
+    }
+  }
+
+  const sourceFiles = getSourceFiles(targetDir);
   for (const file of sourceFiles) {
     const relPath = path.relative(targetDir, file);
-    // Ignore test fixtures and scripts for production anti-patterns
-    if (relPath.includes('test') || relPath.includes('scripts') || relPath.includes('bin')) continue;
+    if (isTestFile(relPath) || isScriptOrCliFile(relPath)) continue;
 
     const content = fs.readFileSync(file, 'utf8');
     const lines = content.split('\n');
 
     lines.forEach((line, index) => {
       const lineNum = index + 1;
+      const trimmed = line.trim();
+      if (trimmed.startsWith('//') || trimmed.startsWith('*') || trimmed.startsWith('#')) return;
 
-      // 1. Bare catch blocks (e.g. catch (e) {} or catch(err) { /* empty */ })
       if (/catch\s*\([^\)]*\)\s*\{\s*\}/.test(line)) {
         findings.push({
           dimension: 'Anti-Patterns',
@@ -233,7 +283,6 @@ function evaluateAntiPatterns(targetDir, findings) {
         score -= 20;
       }
 
-      // 2. Unparameterized SQL or command concatenation
       if (
         /(\bSELECT\b|\bINSERT\b|\bUPDATE\b|\bDELETE\b).*\+\s*[a-zA-Z0-9_]+/i.test(line) ||
         /(\bquery\b|\bexecute\b)\s*\(\s*`[^`]*\$\{/i.test(line)
@@ -242,15 +291,14 @@ function evaluateAntiPatterns(targetDir, findings) {
           dimension: 'Anti-Patterns',
           severity: 'FAIL',
           file: `${relPath}:${lineNum}`,
-          message: 'SQL Injection Risk: unparameterized query using string concatenation or template literal. Use parameterization.',
+          message: 'SQL Injection Risk: unparameterized query using string concatenation or template literal.',
           deduction: 25
         });
         score -= 25;
       }
 
-      // 3. Exposed secrets or API keys
       if (
-        /(api[_-]?key|secret[_-]?key|auth[_-]?token|bearer)\s*[:=]\s*["'][a-zA-Z0-9_\-\.]{16,}["']/i.test(line) &&
+        /(api[_-]?key|secret[_-]?key|auth[_-]?token|bearer|jwt[_-]?secret|password)\s*[:=]\s*["'][a-zA-Z0-9_\-\.]{12,}["']/i.test(line) &&
         !line.includes('process.env')
       ) {
         findings.push({
@@ -263,8 +311,7 @@ function evaluateAntiPatterns(targetDir, findings) {
         score -= 25;
       }
 
-      // 4. console.log in production code
-      if (/\bconsole\.log\s*\(/.test(line) && !relPath.includes('cli.js')) {
+      if (/\bconsole\.log\s*\(/.test(line)) {
         findings.push({
           dimension: 'Anti-Patterns',
           severity: 'WARN',
@@ -274,6 +321,19 @@ function evaluateAntiPatterns(targetDir, findings) {
         });
         score -= 5;
       }
+
+      for (const custom of customDetectPatterns) {
+        if (custom.regex.test(line)) {
+          findings.push({
+            dimension: 'Anti-Patterns',
+            severity: 'FAIL',
+            file: `${relPath}:${lineNum}`,
+            message: `Violation of registered anti-pattern ${custom.id}.`,
+            deduction: 15
+          });
+          score -= 15;
+        }
+      }
     });
   }
 
@@ -281,29 +341,24 @@ function evaluateAntiPatterns(targetDir, findings) {
 }
 
 // -------------------------------------------------------------
-// DIMENSION 4: Traceability & Handoff Completeness (Weight: 20%)
+// DIMENSION 4: Traceability & Task Handoffs (Weight: 20%)
 // -------------------------------------------------------------
 function evaluateTraceability(targetDir, taskId, findings) {
   let score = 100;
-
-  // 1. Task Backlog Check (docs/tasks.md)
   const tasksPath = path.join(targetDir, 'docs', 'tasks.md');
+
   if (fs.existsSync(tasksPath)) {
     const tasksContent = fs.readFileSync(tasksPath, 'utf8');
     if (taskId) {
-      const taskPattern = new RegExp(`\\[([ x/])\\]\\s*\\*\\*${taskId}\\*\\*`, 'i');
-      const match = tasksContent.match(taskPattern);
-      if (match) {
-        const mark = match[1];
-        if (mark !== 'x') {
-          findings.push({
-            dimension: 'Traceability',
-            severity: 'WARN',
-            message: `Task ${taskId} is marked as '[${mark}]' in docs/tasks.md, but implementation was finished. Must be '[x]'.`,
-            deduction: 15
-          });
-          score -= 15;
-        }
+      const match = tasksContent.match(new RegExp(`\\[([ x/])\\]\\s*\\*\\*${taskId}\\*\\*`, 'i'));
+      if (match && match[1] !== 'x') {
+        findings.push({
+          dimension: 'Traceability',
+          severity: 'WARN',
+          message: `Task ${taskId} is marked '[${match[1]}]' in docs/tasks.md; completed tasks should be '[x]'.`,
+          deduction: 15
+        });
+        score -= 15;
       }
     }
   } else {
@@ -316,7 +371,6 @@ function evaluateTraceability(targetDir, taskId, findings) {
     score -= 10;
   }
 
-  // 2. Handoff Notes Check (docs/handoffs/TASK-NNN.md)
   if (taskId) {
     const handoffPath = path.join(targetDir, 'docs', 'handoffs', `${taskId}.md`);
     if (!fs.existsSync(handoffPath)) {
@@ -328,14 +382,14 @@ function evaluateTraceability(targetDir, taskId, findings) {
       });
       score -= 30;
     } else {
-      const handoffContent = fs.readFileSync(handoffPath, 'utf8');
+      const content = fs.readFileSync(handoffPath, 'utf8');
       const requiredSections = ['Summary', 'Files Changed', 'Architecture Alignment', 'Verification'];
-      for (const section of requiredSections) {
-        if (!new RegExp(`##\\s+.*${section}`, 'i').test(handoffContent)) {
+      for (const sec of requiredSections) {
+        if (!new RegExp(`##\\s+.*${sec}`, 'i').test(content)) {
           findings.push({
             dimension: 'Traceability',
             severity: 'WARN',
-            message: `Handoff note ${taskId}.md is missing required section '## ${section}'.`,
+            message: `Handoff note ${taskId}.md is missing required section '## ${sec}'.`,
             deduction: 8
           });
           score -= 8;
@@ -344,7 +398,6 @@ function evaluateTraceability(targetDir, taskId, findings) {
     }
   }
 
-  // 3. Git Commit Standards Check
   try {
     const lastCommitMsg = execSync('git log -1 --pretty=%B', { cwd: targetDir, encoding: 'utf8' }).trim();
     const conventionalCommitPattern = /^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-z0-9_\-]+\))?:\s+.+/i;
@@ -358,13 +411,12 @@ function evaluateTraceability(targetDir, taskId, findings) {
       score -= 10;
     }
   } catch {
-    // Not a git repository or no commits yet
+    // Non-git environment or empty repo
   }
 
   return Math.max(0, score);
 }
 
-// Grade calculation
 function calculateGrade(score) {
   if (score >= 95) return 'A+';
   if (score >= 90) return 'A';
@@ -374,7 +426,6 @@ function calculateGrade(score) {
   return 'F';
 }
 
-// Generate Markdown Audit Report
 function generateMarkdownReport(results, targetDir) {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
   const taskName = results.taskId || 'WORKSPACE';
@@ -386,20 +437,20 @@ function generateMarkdownReport(results, targetDir) {
   let md = `# AI Dev Pipeline Stage Evaluation Report\n\n`;
   md += `> **Audit Target**: \`${taskName}\`  \n`;
   md += `> **Timestamp**: \`${new Date().toISOString()}\`  \n`;
-  md += `> **Reliability Score**: **${results.overallScore.toFixed(1)}%** (Grade: **${results.grade}**)  \n`;
+  md += `> **Hygiene Score**: **${results.overallScore.toFixed(1)}%** (Grade: **${results.grade}**)  \n`;
   md += `> **Status**: **${results.passed ? 'PASSED' : 'FAILED'}** (Threshold: ${results.threshold}%)\n\n`;
 
   md += `## Dimension Scorecard\n\n`;
   md += `| Evaluation Dimension | Weight | Score | Status |\n`;
   md += `|---|---|---|---|\n`;
-  md += `| **1. Architecture Conformance** | 30% | ${results.dimensionScores.architecture}/100 | ${results.dimensionScores.architecture >= 80 ? '✅ PASS' : '⚠️ WARN'} |\n`;
-  md += `| **2. Deterministic Code Quality** | 25% | ${results.dimensionScores.quality}/100 | ${results.dimensionScores.quality >= 80 ? '✅ PASS' : '⚠️ WARN'} |\n`;
-  md += `| **3. Anti-Pattern Invariants** | 25% | ${results.dimensionScores.antiPatterns}/100 | ${results.dimensionScores.antiPatterns >= 80 ? '✅ PASS' : '⚠️ WARN'} |\n`;
-  md += `| **4. Traceability & Handoffs** | 20% | ${results.dimensionScores.traceability}/100 | ${results.dimensionScores.traceability >= 80 ? '✅ PASS' : '⚠️ WARN'} |\n\n`;
+  md += `| **1. Architecture & Layer Isolation** | 30% | ${results.dimensionScores.architecture}/100 | ${results.dimensionScores.architecture >= 80 ? '✅ PASS' : '⚠️ WARN'} |\n`;
+  md += `| **2. Code Quality & Static Analysis** | 25% | ${results.dimensionScores.quality}/100 | ${results.dimensionScores.quality >= 80 ? '✅ PASS' : '⚠️ WARN'} |\n`;
+  md += `| **3. Anti-Pattern Invariants & Security** | 25% | ${results.dimensionScores.antiPatterns}/100 | ${results.dimensionScores.antiPatterns >= 80 ? '✅ PASS' : '⚠️ WARN'} |\n`;
+  md += `| **4. Traceability & Task Handoffs** | 20% | ${results.dimensionScores.traceability}/100 | ${results.dimensionScores.traceability >= 80 ? '✅ PASS' : '⚠️ WARN'} |\n\n`;
 
   md += `## Actionable Findings & Recommendations\n\n`;
   if (results.findings.length === 0) {
-    md += `*No architectural drift or anti-pattern regressions detected. High fidelity implementation.*\n\n`;
+    md += `*No architectural drift, linter issues, or anti-pattern regressions detected. High fidelity implementation.*\n\n`;
   } else {
     for (const f of results.findings) {
       const badge = f.severity === 'FAIL' ? '❌ **[CRITICAL]**' : '⚠️ **[WARNING]**';
@@ -413,14 +464,10 @@ function generateMarkdownReport(results, targetDir) {
   return path.relative(targetDir, reportPath);
 }
 
-// -------------------------------------------------------------
-// Core Evaluation Runner
-// -------------------------------------------------------------
 function runEvaluation(options = {}) {
   const targetDir = options.targetDir || process.cwd();
   const taskId = options.taskId || null;
   const threshold = options.threshold || 80;
-
   const findings = [];
 
   const scoreArch = evaluateArchitecture(targetDir, findings);
@@ -434,16 +481,13 @@ function runEvaluation(options = {}) {
     scoreAntiPatterns * 0.25 +
     scoreTraceability * 0.2;
 
-  const grade = calculateGrade(overallScore);
-  const passed = overallScore >= threshold;
-
   const results = {
     targetDir,
     taskId,
     threshold,
     overallScore,
-    grade,
-    passed,
+    grade: calculateGrade(overallScore),
+    passed: overallScore >= threshold,
     dimensionScores: {
       architecture: scoreArch,
       quality: scoreQuality,
@@ -454,15 +498,10 @@ function runEvaluation(options = {}) {
   };
 
   const shouldWriteReport = options.writeReport !== false;
-  const reportPath = shouldWriteReport ? generateMarkdownReport(results, targetDir) : null;
-  results.reportPath = reportPath;
-
+  results.reportPath = shouldWriteReport ? generateMarkdownReport(results, targetDir) : null;
   return results;
 }
 
-// -------------------------------------------------------------
-// Built-in Benchmark Test Suite (--benchmark)
-// -------------------------------------------------------------
 function runBenchmarks() {
   console.log(`\n${c.bold}🧪 Running AI Dev Pipeline Benchmark Scenarios...${c.reset}\n`);
 
@@ -470,7 +509,6 @@ function runBenchmarks() {
   const scenarioA = path.join(benchmarkRoot, 'scenario-a-compliant');
   const scenarioB = path.join(benchmarkRoot, 'scenario-b-drifting');
 
-  // Verify Scenario A exists
   if (!fs.existsSync(scenarioA) || !fs.existsSync(scenarioB)) {
     console.error(`${c.red}✖ Benchmark scenarios not found at ${benchmarkRoot}${c.reset}`);
     process.exit(1);
@@ -487,7 +525,7 @@ function runBenchmarks() {
   console.log(`\n${c.bold}Benchmark Verification Summary:${c.reset}`);
   const verified = resultA.overallScore >= 90 && resultB.overallScore < 75;
   if (verified) {
-    console.log(`${c.green}${c.bold}✔ BENCHMARK SUCCESS:${c.reset} The evaluation engine successfully distinguished compliant code (${resultA.overallScore.toFixed(1)}%) from drifting code (${resultB.overallScore.toFixed(1)}%) with exact precision.\n`);
+    console.log(`${c.green}${c.bold}✔ BENCHMARK SUCCESS:${c.reset} Evaluator verified against benchmark fixtures: compliant scenario (${resultA.overallScore.toFixed(1)}%) passed, drifting scenario (${resultB.overallScore.toFixed(1)}%) correctly failed.\n`);
     process.exit(0);
   } else {
     console.error(`${c.red}${c.bold}✖ BENCHMARK FAILED:${c.reset} Scoring thresholds did not match expected delta.`);
@@ -495,11 +533,8 @@ function runBenchmarks() {
   }
 }
 
-// -------------------------------------------------------------
-// CLI Display Function
-// -------------------------------------------------------------
 function displayResults(results) {
-  console.log(`\n${c.bold}🎯 AI Dev Pipeline — Stage Evaluation Report${c.reset}`);
+  console.log(`\n${c.bold}🎯 AI Dev Pipeline — Stage Hygiene & Quality Scorecard${c.reset}`);
   console.log(`============================================================`);
   console.log(`Workspace:  ${c.dim}${results.targetDir}${c.reset}`);
   if (results.taskId) console.log(`Target:     ${c.cyan}${results.taskId}${c.reset}`);
@@ -511,15 +546,15 @@ function displayResults(results) {
   const d = results.dimensionScores;
   const statusBadge = s => (s >= 80 ? `${c.green}PASS${c.reset}` : `${c.yellow}WARN${c.reset}`);
 
-  console.log(`1. Architecture Conformance      ${d.architecture.toString().padEnd(3)}/100  ${statusBadge(d.architecture)}     30%`);
-  console.log(`2. Deterministic Code Quality    ${d.quality.toString().padEnd(3)}/100  ${statusBadge(d.quality)}     25%`);
+  console.log(`1. Architecture & Layering       ${d.architecture.toString().padEnd(3)}/100  ${statusBadge(d.architecture)}     30%`);
+  console.log(`2. Code Quality & Linter         ${d.quality.toString().padEnd(3)}/100  ${statusBadge(d.quality)}     25%`);
   console.log(`3. Anti-Pattern Invariants       ${d.antiPatterns.toString().padEnd(3)}/100  ${statusBadge(d.antiPatterns)}     25%`);
   console.log(`4. Traceability & Handoffs       ${d.traceability.toString().padEnd(3)}/100  ${statusBadge(d.traceability)}     20%`);
   console.log(`------------------------------------------------------------`);
 
   const scoreColor = results.passed ? c.green : c.red;
   console.log(
-    `Overall Reliability Score: ${scoreColor}${c.bold}${results.overallScore.toFixed(1)}%${c.reset} ` +
+    `Codebase Hygiene Score: ${scoreColor}${c.bold}${results.overallScore.toFixed(1)}%${c.reset} ` +
     `[GRADE: ${scoreColor}${c.bold}${results.grade}${c.reset}] ` +
     `— ${results.passed ? c.green + 'PASSED' : c.red + 'FAILED'}${c.reset}`
   );
@@ -538,9 +573,6 @@ function displayResults(results) {
   console.log(`\n${c.dim}📄 Full audit report saved to:${c.reset} ${c.cyan}${results.reportPath}${c.reset}\n`);
 }
 
-// -------------------------------------------------------------
-// CLI Execution
-// -------------------------------------------------------------
 function main() {
   const args = process.argv.slice(2);
 
@@ -555,9 +587,7 @@ function main() {
     taskId = taskArg.split('=')[1];
   } else {
     const taskIdx = args.indexOf('--task');
-    if (taskIdx !== -1 && args[taskIdx + 1]) {
-      taskId = args[taskIdx + 1];
-    }
+    if (taskIdx !== -1 && args[taskIdx + 1]) taskId = args[taskIdx + 1];
   }
 
   let threshold = 80;
@@ -566,16 +596,12 @@ function main() {
     threshold = parseInt(threshArg.split('=')[1], 10) || 80;
   } else {
     const threshIdx = args.indexOf('--threshold');
-    if (threshIdx !== -1 && args[threshIdx + 1]) {
-      threshold = parseInt(args[threshIdx + 1], 10) || 80;
-    }
+    if (threshIdx !== -1 && args[threshIdx + 1]) threshold = parseInt(args[threshIdx + 1], 10) || 80;
   }
 
   let targetDir = process.cwd();
   const dirArg = args.find(a => a.startsWith('--target-dir='));
-  if (dirArg) {
-    targetDir = path.resolve(dirArg.split('=')[1]);
-  }
+  if (dirArg) targetDir = path.resolve(dirArg.split('=')[1]);
 
   const results = runEvaluation({ targetDir, taskId, threshold });
 
@@ -585,9 +611,7 @@ function main() {
     displayResults(results);
   }
 
-  if (!results.passed) {
-    process.exit(1);
-  }
+  if (!results.passed) process.exit(1);
 }
 
 module.exports = {

@@ -9,7 +9,7 @@
 > **The Agentic SDLC Governance Framework for AI Coding Agents.**  
 > Delivered through a zero-friction CLI (`npx @kadvsperera/ai-dev-pipeline init`) with native parity across **Google Antigravity**, **Cursor**, **Claude Code**, and **GitHub Copilot**.
 
-`ai-dev-pipeline` transforms AI from an erratic code generator into a disciplined, 17-role software engineering organization. It enforces living architecture contracts (`docs/architecture.md`), strict quality gates (`AGENTS.md`), persistent defect memory (`docs/anti-patterns.md`), and deterministic reliability scoring (`ai-dev-pipeline eval`) directly inside your daily code editor.
+`ai-dev-pipeline` transforms AI from an erratic code generator into a disciplined, 17-role software engineering organization. It enforces living architecture contracts (`docs/architecture.md`), strict quality gates (`AGENTS.md`), persistent defect memory (`docs/anti-patterns.md`), and automated codebase hygiene scoring (`ai-dev-pipeline eval`) directly inside your daily code editor.
 
 ## How it works
 
@@ -140,8 +140,8 @@ To understand where `ai-dev-pipeline` sits in the software industry, it helps to
 | Category | Example Tools | How It Works | How AI Dev Pipeline Differs |
 |---|---|---|---|
 | **AI Editors / IDEs** | Cursor, Antigravity, VS Code | Provides file editing and inline completion in your editor. | We are the **operating system of rules, roles, and workflows** that runs *inside* those editors. |
-| **Toy Agent Simulators** | ChatDev, MetaGPT | Autonomous agents chatting in a loop to build toy sandbox games. | Built for **real-world, multi-thousand-line brownfield codebases** with human-in-the-loop approvals. |
-| **Autonomous Cloud Coders** | Devin, OpenHands | Cloud VMs attempting to solve GitHub issues with zero supervision. | Lightweight, **in-editor pair programming harness** with deterministic evaluations and zero cloud lock-in. |
+| **Multi-Agent Debate Simulators** | ChatDev, MetaGPT | Autonomous agents chatting in a loop to build sandbox scripts. | Built for **real-world, multi-thousand-line brownfield codebases** with human-in-the-loop approvals. |
+| **Autonomous Cloud Coders** | Devin, OpenHands | Cloud VMs attempting to solve GitHub issues with zero supervision. | Lightweight, **in-editor pair programming harness** with automated hygiene scoring and zero cloud lock-in. |
 | **Agentic SDLC Governance** | **AI Dev Pipeline** | **End-to-end engineering harness: Architecture contracts, quality gates, anti-pattern memory & evals.** | **This is our exact category.** |
 
 ### Division of Responsibility (Human-in-the-Loop)
@@ -538,7 +538,7 @@ See [`docs/pipeline-roadmap.md`](docs/pipeline-roadmap.md) for the philosophy be
 
 ## Automated Stage Evaluation Layer (`npx @kadvsperera/ai-dev-pipeline eval`)
 
-The evaluation harness is the deterministic verification layer that ensures coding agents do not drift from architecture contracts, degrade code quality, or repeat known anti-patterns.
+The evaluation harness (`ai-dev-pipeline eval`) is a fast, zero-dependency static hygiene evaluator that catches layer boundary leaks, static analysis failures, known anti-patterns, and incomplete task handoffs before code review.
 
 ```bash
 # Run evaluation on current workspace:
@@ -552,10 +552,10 @@ npx @kadvsperera/ai-dev-pipeline eval --benchmark
 ```
 
 ### The 4 Evaluation Dimensions:
-1. **Architecture Conformance (Weight: 30%)**: Compares code to `docs/architecture.md`. Flags layer violations (e.g., presentation querying databases directly) and unapproved dependencies.
-2. **Deterministic Code Quality (Weight: 25%)**: Validates zero-error static analysis, cyclomatic nesting depth (≤ 5 levels), and file sizes (≤ 450 lines).
-3. **Anti-Pattern Invariants (Weight: 25%)**: Scans against `AGENTS.md` and `docs/anti-patterns.md` for bare `catch` blocks, SQL concatenation, hardcoded secrets, and `console.log` in production paths.
-4. **Traceability & Handoffs (Weight: 20%)**: Verifies `docs/tasks.md` marked status, validates completeness of `docs/handoffs/TASK-NNN.md` (Summary, Files Changed, Architecture Alignment, Verification), and checks Conventional Commit standards.
+1. **Architecture & Layering (Weight: 30%)**: Checks for `docs/architecture.md` and flags layer violations (e.g., route/controller files directly executing SQL queries or initiating raw database connection pools).
+2. **Code Quality & Static Analysis (Weight: 25%)**: Runs the project's linter (`npm run lint` if configured in `package.json`), checks block nesting depth (≤ 5 levels), and flags oversized files (> 450 lines).
+3. **Anti-Pattern Invariants & Security (Weight: 25%)**: Scans against `AGENTS.md` and `docs/anti-patterns.md` (including custom `Detect: /regex/` invariants) for empty `catch` blocks, unparameterized SQL concatenation, exposed secrets/credentials, and production `console.log` statements.
+4. **Traceability & Task Handoffs (Weight: 20%)**: Verifies `docs/tasks.md` task completion status, validates developer handoff completeness in `docs/handoffs/TASK-NNN.md` (Summary, Files Changed, Architecture Alignment, Verification), and checks Conventional Commit standards on the latest commit.
 
 Evaluation reports are persistently generated in `docs/eval-reports/EVAL-[DATE]-[TASK].md`.
 
@@ -637,7 +637,7 @@ Step 4: REVIEW       → "review TASK-NNN"        → Agents 7, 8 enforce linter
         ↓
 Step 5: DEBUG (Bugs) → "debug this: [error]"    → Agent 16 writes failing test first + logs AP-NNN
         ↓
-Step 6: EVAL AUDIT   → npx ... eval             → Deterministic scorecard (docs/eval-reports/)
+Step 6: EVAL AUDIT   → npx ... eval             → Hygiene & quality scorecard (docs/eval-reports/)
 ```
 
 **Step 1 — Inject the pipeline**
