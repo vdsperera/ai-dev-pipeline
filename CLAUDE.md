@@ -6,17 +6,17 @@
 
 ## Quick Reference: Available SDLC Workflows
 
-| Workflow | Trigger / Equivalent Command | Scope |
+| Workflow | Slash Command | Scope |
 |---|---|---|
-| **Plan Project / Feature** | `sdlc-plan: [idea]` | Chains Agents 0→1→2→3→(4)→5 into docs/ |
-| **Onboard Codebase** | `sdlc-onboard` | Scans existing repo → generates docs/architecture.md |
-| **Scientific Bug Fix** | `sdlc-debug: [symptom]` | RCA → failing test first → minimal fix → handoff |
-| **Implement Task** | `implement TASK-NNN` | Implements task, tests, and handoff (supports [REFACTOR]) |
-| **Review Code** | `review TASK-NNN` | 9-category code review + OWASP security + UX |
-| **Generate Tests** | `test TASK-NNN` | Complete test suite + coverage matrix |
-| **Deploy Artifacts** | `deploy TASK-NNN` | Dockerfile, CI/CD, IaC templates |
-| **Generate Docs** | `document TASK-NNN` | API docs, README, and architecture drift sync |
-| **Merge Gate Review** | `review this PR` | 3-layer PR review with verdict |
+| **Plan Project / Feature** | `/sdlc-plan [idea]` | Chains Agents 0→1→2→3→(4)→5 into docs/ |
+| **Onboard Codebase** | `/sdlc-onboard` | Scans existing repo → generates docs/architecture.md |
+| **Scientific Bug Fix** | `/sdlc-debug [symptom]` | RCA → failing test first → minimal fix → handoff |
+| **Implement Task** | `/sdlc-develop [TASK-NNN]` | Implements task, tests, and handoff (supports [REFACTOR]) |
+| **Review Code** | `/sdlc-review [TASK-NNN]` | 9-category code review + OWASP security + UX |
+| **Generate Tests** | `/sdlc-test [TASK-NNN]` | Complete test suite + coverage matrix |
+| **Deploy Artifacts** | `/sdlc-deploy [TASK-NNN]` | Dockerfile, CI/CD, IaC templates |
+| **Generate Docs** | `/sdlc-docs [TASK-NNN]` | API docs, README, and architecture drift sync |
+| **Merge Gate Review** | `/pr-review` | 3-layer PR review with verdict |
 
 ## Continuous Improvement
 

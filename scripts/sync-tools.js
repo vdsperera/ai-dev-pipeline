@@ -1,19 +1,23 @@
 #!/usr/bin/env node
 
 /**
- * sync-tools.js — Cross-Tool Rules & Instructions Synchronizer
+ * sync-tools.js — Cross-Tool Rules & Native Skills Synchronizer
  *
- * Synchronizes the AI Dev Pipeline's central coding standards (.agents/AGENTS.md)
- * into native configuration files for other AI coding environments:
- *   - Claude Code: generates CLAUDE.md
- *   - Cursor: generates .cursorrules and .cursor/rules/agents.mdc
+ * Synchronizes central standards (.agents/AGENTS.md) and skills (.agents/skills/)
+ * into native configuration and command files for supported AI coding editors:
+ *   - Claude Code: generates CLAUDE.md and .claude/commands/<skill>.md
+ *   - Cursor: generates .cursorrules, .cursor/rules/agents.mdc, and .cursor/rules/<skill>.mdc
+ *   - GitHub Copilot: generates .github/copilot-instructions.md and .github/prompts/<skill>.prompt.md
  *
  * Usage:
  *   node scripts/sync-tools.js              # Sync all targets (default)
  *   node scripts/sync-tools.js --target=claude
  *   node scripts/sync-tools.js --target=cursor
+ *   node scripts/sync-tools.js --target=copilot
  *   node scripts/sync-tools.js --check      # Dry-run check for CI / git pre-commit
  */
+
+'use strict';
 
 const fs = require('fs');
 const path = require('path');
@@ -22,40 +26,43 @@ const ROOT_DIR = path.resolve(__dirname, '..');
 const AGENTS_MD_PATH = path.join(ROOT_DIR, '.agents', 'AGENTS.md');
 const SKILLS_DIR = path.join(ROOT_DIR, '.agents', 'skills');
 
-// Parse CLI arguments
-const args = process.argv.slice(2);
-const isCheckMode = args.includes('--check');
-const targetArg = args.find(a => a.startsWith('--target='));
-const target = targetArg ? targetArg.split('=')[1].toLowerCase() : 'all';
-
-function readFile(filePath) {
-  if (!fs.existsSync(filePath)) {
-    throw new Error(`Required file not found: ${filePath}`);
-  }
-  return fs.readFileSync(filePath, 'utf8');
-}
-
 function ensureDir(dirPath) {
   if (!fs.existsSync(dirPath)) {
     fs.mkdirSync(dirPath, { recursive: true });
   }
 }
 
-function getAvailableSkills() {
-  if (!fs.existsSync(SKILLS_DIR)) return [];
-  return fs.readdirSync(SKILLS_DIR)
-    .filter(name => fs.statSync(path.join(SKILLS_DIR, name)).isDirectory())
+function normalizePromptPaths(body) {
+  return body ? body.replace(/\(\.\.\/\.\.\/prompts\//g, '(prompts/') : '';
+}
+
+function normalizeLineEndings(str) {
+  return str ? str.replace(/\r\n/g, '\n').trim() : '';
+}
+
+function getAvailableSkills(skillsDir = SKILLS_DIR) {
+  if (!fs.existsSync(skillsDir)) return [];
+  return fs.readdirSync(skillsDir)
+    .filter(name => {
+      try {
+        return fs.statSync(path.join(skillsDir, name)).isDirectory();
+      } catch {
+        return false;
+      }
+    })
     .map(name => {
-      const skillFile = path.join(SKILLS_DIR, name, 'SKILL.md');
+      const skillFile = path.join(skillsDir, name, 'SKILL.md');
       let description = '';
+      let body = '';
       if (fs.existsSync(skillFile)) {
         const content = fs.readFileSync(skillFile, 'utf8');
         const match = content.match(/description:\s*>-?\s*([\s\S]*?)(?=---|\n[A-Za-z0-9#])/);
         if (match) {
           description = match[1].replace(/\n\s*/g, ' ').trim();
         }
+        body = content.replace(/^---[\s\S]*?---\s*/, '').trim();
       }
-      return { name, description };
+      return { name, description, body };
     });
 }
 
@@ -66,26 +73,34 @@ function generateClaudeMd(agentsContent, skills) {
   output += `> When working in this codebase with Claude Code, strictly follow the baseline coding standards, quality gates, and anti-pattern rules below.\n\n`;
 
   output += `## Quick Reference: Available SDLC Workflows\n\n`;
-  output += `| Workflow | Trigger / Equivalent Command | Scope |\n`;
+  output += `| Workflow | Slash Command | Scope |\n`;
   output += `|---|---|---|\n`;
-  output += `| **Plan Project / Feature** | \`sdlc-plan: [idea]\` | Chains Agents 0→1→2→3→(4)→5 into docs/ |\n`;
-  output += `| **Onboard Codebase** | \`sdlc-onboard\` | Scans existing repo → generates docs/architecture.md |\n`;
-  output += `| **Scientific Bug Fix** | \`sdlc-debug: [symptom]\` | RCA → failing test first → minimal fix → handoff |\n`;
-  output += `| **Implement Task** | \`implement TASK-NNN\` | Implements task, tests, and handoff (supports [REFACTOR]) |\n`;
-  output += `| **Review Code** | \`review TASK-NNN\` | 9-category code review + OWASP security + UX |\n`;
-  output += `| **Generate Tests** | \`test TASK-NNN\` | Complete test suite + coverage matrix |\n`;
-  output += `| **Deploy Artifacts** | \`deploy TASK-NNN\` | Dockerfile, CI/CD, IaC templates |\n`;
-  output += `| **Generate Docs** | \`document TASK-NNN\` | API docs, README, and architecture drift sync |\n`;
-  output += `| **Merge Gate Review** | \`review this PR\` | 3-layer PR review with verdict |\n\n`;
+  output += `| **Plan Project / Feature** | \`/sdlc-plan [idea]\` | Chains Agents 0→1→2→3→(4)→5 into docs/ |\n`;
+  output += `| **Onboard Codebase** | \`/sdlc-onboard\` | Scans existing repo → generates docs/architecture.md |\n`;
+  output += `| **Scientific Bug Fix** | \`/sdlc-debug [symptom]\` | RCA → failing test first → minimal fix → handoff |\n`;
+  output += `| **Implement Task** | \`/sdlc-develop [TASK-NNN]\` | Implements task, tests, and handoff (supports [REFACTOR]) |\n`;
+  output += `| **Review Code** | \`/sdlc-review [TASK-NNN]\` | 9-category code review + OWASP security + UX |\n`;
+  output += `| **Generate Tests** | \`/sdlc-test [TASK-NNN]\` | Complete test suite + coverage matrix |\n`;
+  output += `| **Deploy Artifacts** | \`/sdlc-deploy [TASK-NNN]\` | Dockerfile, CI/CD, IaC templates |\n`;
+  output += `| **Generate Docs** | \`/sdlc-docs [TASK-NNN]\` | API docs, README, and architecture drift sync |\n`;
+  output += `| **Merge Gate Review** | \`/pr-review\` | 3-layer PR review with verdict |\n\n`;
 
   output += `## Continuous Improvement\n\n`;
   output += `Before writing code, always check \`docs/anti-patterns.md\` (if present) to avoid previously identified mistakes or deprecated patterns in this codebase.\n\n`;
 
   output += `## Baseline Coding Standards & Invariants\n\n`;
-  // Strip the top title from AGENTS.md and append the rest
   const strippedAgents = agentsContent.replace(/^# AI Dev Pipeline — Coding Standards\s*\n\s*/i, '');
   output += strippedAgents.trim() + `\n`;
+  return output;
+}
 
+function generateClaudeSkillCommand(skill) {
+  let output = `<!-- Generated by ai-dev-pipeline. Invocable in Claude Code as /${skill.name} -->\n\n`;
+  output += `# ${skill.name}\n\n`;
+  if (skill.description) {
+    output += `> ${skill.description}\n\n`;
+  }
+  output += normalizePromptPaths(skill.body) + `\n`;
   return output;
 }
 
@@ -108,6 +123,17 @@ function generateCursorMdc(agentsContent) {
   return output;
 }
 
+function generateCursorSkillMdc(skill) {
+  let output = `---\n`;
+  output += `description: ${skill.description || skill.name}\n`;
+  output += `globs: *\n`;
+  output += `alwaysApply: false\n`;
+  output += `---\n\n`;
+  output += `<!-- Generated by ai-dev-pipeline. Invocable in Cursor via @${skill.name} -->\n\n`;
+  output += normalizePromptPaths(skill.body) + `\n`;
+  return output;
+}
+
 function generateCopilotInstructions(agentsContent) {
   let output = `<!-- Generated by scripts/sync-tools.js. Do not edit directly. -->\n`;
   output += `# GitHub Copilot Custom Instructions — AI Dev Pipeline\n\n`;
@@ -117,12 +143,17 @@ function generateCopilotInstructions(agentsContent) {
   return output;
 }
 
-function normalizeLineEndings(str) {
-  return str ? str.replace(/\r\n/g, '\n').trim() : '';
+function generateCopilotPrompt(skill) {
+  let output = `---\n`;
+  output += `description: ${skill.description || skill.name}\n`;
+  output += `---\n\n`;
+  output += `<!-- Generated by ai-dev-pipeline. Invocable in GitHub Copilot as /${skill.name} -->\n\n`;
+  output += normalizePromptPaths(skill.body) + `\n`;
+  return output;
 }
 
-function writeOrCheck(filePath, newContent, results) {
-  const relativePath = path.relative(ROOT_DIR, filePath);
+function writeOrCheck(targetRootDir, filePath, newContent, results, isCheckMode) {
+  const relativePath = path.relative(targetRootDir, filePath);
   const exists = fs.existsSync(filePath);
   const currentContent = exists ? fs.readFileSync(filePath, 'utf8') : null;
 
@@ -139,10 +170,16 @@ function writeOrCheck(filePath, newContent, results) {
   }
 }
 
-function main() {
-  console.log(`[sync-tools] Reading source rules from .agents/AGENTS.md...`);
-  const agentsContent = readFile(AGENTS_MD_PATH);
-  const skills = getAvailableSkills();
+function runSynchronizer(tools = ['all'], targetDir = ROOT_DIR, isCheckMode = false, skillsDir = null) {
+  const resolvedSkillsDir = skillsDir || path.join(targetDir, '.agents', 'skills');
+  const agentsPath = path.join(targetDir, '.agents', 'AGENTS.md');
+
+  if (!fs.existsSync(agentsPath)) {
+    return { error: `Cannot find .agents/AGENTS.md in ${targetDir}`, updated: [], outOfSync: [] };
+  }
+
+  const agentsContent = fs.readFileSync(agentsPath, 'utf8');
+  const skills = getAvailableSkills(resolvedSkillsDir);
 
   const results = {
     updated: [],
@@ -150,26 +187,53 @@ function main() {
     upToDate: []
   };
 
-  const syncClaude = target === 'all' || target === 'claude';
-  const syncCursor = target === 'all' || target === 'cursor';
-  const syncCopilot = target === 'all' || target === 'copilot';
+  const syncClaude = tools.includes('claude') || tools.includes('all');
+  const syncCursor = tools.includes('cursor') || tools.includes('all');
+  const syncCopilot = tools.includes('copilot') || tools.includes('all');
 
+  // 1. Claude Code
   if (syncClaude) {
-    const claudeContent = generateClaudeMd(agentsContent, skills);
-    writeOrCheck(path.join(ROOT_DIR, 'CLAUDE.md'), claudeContent, results);
+    writeOrCheck(targetDir, path.join(targetDir, 'CLAUDE.md'), generateClaudeMd(agentsContent, skills), results, isCheckMode);
+    const claudeCmdDir = path.join(targetDir, '.claude', 'commands');
+    for (const skill of skills) {
+      writeOrCheck(targetDir, path.join(claudeCmdDir, `${skill.name}.md`), generateClaudeSkillCommand(skill), results, isCheckMode);
+    }
   }
 
+  // 2. Cursor
   if (syncCursor) {
-    const cursorRulesContent = generateCursorRules(agentsContent);
-    writeOrCheck(path.join(ROOT_DIR, '.cursorrules'), cursorRulesContent, results);
-
-    const cursorMdcContent = generateCursorMdc(agentsContent);
-    writeOrCheck(path.join(ROOT_DIR, '.cursor', 'rules', 'agents.mdc'), cursorMdcContent, results);
+    writeOrCheck(targetDir, path.join(targetDir, '.cursorrules'), generateCursorRules(agentsContent), results, isCheckMode);
+    writeOrCheck(targetDir, path.join(targetDir, '.cursor', 'rules', 'agents.mdc'), generateCursorMdc(agentsContent), results, isCheckMode);
+    const cursorRulesDir = path.join(targetDir, '.cursor', 'rules');
+    for (const skill of skills) {
+      writeOrCheck(targetDir, path.join(cursorRulesDir, `${skill.name}.mdc`), generateCursorSkillMdc(skill), results, isCheckMode);
+    }
   }
 
+  // 3. GitHub Copilot
   if (syncCopilot) {
-    const copilotContent = generateCopilotInstructions(agentsContent);
-    writeOrCheck(path.join(ROOT_DIR, '.github', 'copilot-instructions.md'), copilotContent, results);
+    writeOrCheck(targetDir, path.join(targetDir, '.github', 'copilot-instructions.md'), generateCopilotInstructions(agentsContent), results, isCheckMode);
+    const copilotPromptDir = path.join(targetDir, '.github', 'prompts');
+    for (const skill of skills) {
+      writeOrCheck(targetDir, path.join(copilotPromptDir, `${skill.name}.prompt.md`), generateCopilotPrompt(skill), results, isCheckMode);
+    }
+  }
+
+  return results;
+}
+
+function main() {
+  const args = process.argv.slice(2);
+  const isCheckMode = args.includes('--check');
+  const targetArg = args.find(a => a.startsWith('--target='));
+  const target = targetArg ? targetArg.split('=')[1].toLowerCase() : 'all';
+
+  console.log(`[sync-tools] Reading source standards from .agents/AGENTS.md...`);
+  const results = runSynchronizer([target], ROOT_DIR, isCheckMode, SKILLS_DIR);
+
+  if (results.error) {
+    console.error(`[sync-tools] ERROR: ${results.error}`);
+    process.exit(1);
   }
 
   if (isCheckMode) {
@@ -183,21 +247,24 @@ function main() {
       process.exit(0);
     }
   } else {
-    console.log(`\n[sync-tools] Successfully synchronized cross-tool configurations:`);
-    results.updated.forEach(f => console.log(`  + ${f}`));
-    console.log(`\nYour AI coding standards are now active across your selected tools.`);
+    console.log(`\n[sync-tools] Successfully synchronized cross-tool configurations & native skills:`);
+    console.log(`  ✔ Synchronized ${results.updated.length} files across selected editors.`);
+    console.log(`\nYour AI coding standards and 16 native skills are now active across your tools.`);
   }
 }
 
 module.exports = {
+  runSynchronizer,
+  getAvailableSkills,
   generateClaudeMd,
+  generateClaudeSkillCommand,
   generateCursorRules,
   generateCursorMdc,
+  generateCursorSkillMdc,
   generateCopilotInstructions,
-  getAvailableSkills
+  generateCopilotPrompt
 };
 
 if (require.main === module) {
   main();
 }
-

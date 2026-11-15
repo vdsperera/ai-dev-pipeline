@@ -42,7 +42,9 @@
     "docs",
     "CLAUDE.md",
     ".cursorrules",
-    ".cursor"
+    ".cursor",
+    ".claude",
+    ".github"
   ],
   "engines": {
     "node": ">=18.0.0"
