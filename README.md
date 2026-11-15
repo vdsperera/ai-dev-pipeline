@@ -275,6 +275,23 @@ npx @kadvsperera/ai-dev-pipeline init -y
 
 This scaffolds the 17 agent personas, 16 skills, docs roadmap, anti-patterns memory, and native configuration files tailored to your selected AI tools (**Antigravity**, **Cursor**, **Claude Code**, and **GitHub Copilot**).
 
+### Security & Transparency: What `init` Writes and Runs
+
+We believe developers should know exactly what any CLI tool installs in their repository:
+
+* **What `init` writes to your project**:
+  - **Persona Prompts & Skills** (`prompts/`, `.agents/skills/`): Plain markdown files containing role instructions.
+  - **Living Documentation Templates** (`docs/`): Standardized documentation templates and persistent defect memory (`docs/anti-patterns.md`).
+  - **Native Editor Configurations**: Generated rule and prompt files tailored to your chosen editors (`.cursor/`, `.claude/`, `.github/`).
+  - **Project Helper Scripts** (`scripts/`): Pure zero-dependency Node.js utilities (`sync-tools.js`, `eval-harness.js`).
+  - **Package Scripts** (`package.json`): Adds convenience npm scripts (`"sync-tools"`, `"eval"`). It **never** modifies or adds external runtime dependencies.
+* **What `init` runs**:
+  - The only hook configured is `.agents/hooks.json`, which invokes the local, cross-platform script `.agents/scripts/security-gate.js` to catch leaked secrets and prevent out-of-order task implementation.
+* **What `init` NEVER does**:
+  - **Zero Telemetry / Zero Phone-Home**: No analytics, telemetry, or network requests are ever dispatched.
+  - **Zero External Credentials**: It does not collect, store, or transmit cloud API tokens or external secrets.
+  - **Zero Dependency Pollution**: Runs entirely on the built-in Node.js runtime without injecting third-party packages into your `node_modules`.
+
 #### Built-in CLI Utilities:
 ```bash
 # Check pipeline health, installed personas, and tool rule status:
@@ -568,6 +585,9 @@ npx @kadvsperera/ai-dev-pipeline eval --benchmark
 4. **Traceability & Task Handoffs (Weight: 20%)**: Verifies `docs/tasks.md` task completion status, validates developer handoff completeness in `docs/handoffs/TASK-NNN.md` (Summary, Files Changed, Architecture Alignment, Verification), and checks Conventional Commit standards on the latest commit.
 
 Evaluation reports are persistently generated in `docs/eval-reports/EVAL-[DATE]-[TASK].md`.
+
+> [!NOTE]
+> **Language Ecosystem Support**: Code quality metrics, linter execution, and anti-pattern heuristics are currently optimized for the **TypeScript and JavaScript** ecosystems (Node.js, Express, React, Next.js, NestJS, etc.). Polyglot rule packs for Python, Go, and Java are planned for a future milestone.
 
 ---
 
