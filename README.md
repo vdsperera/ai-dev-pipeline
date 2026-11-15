@@ -51,7 +51,7 @@ To understand how the pipeline operates, think of the distinction between **the 
 
 ## Scope: The Engineering Pillar
 
-This pipeline focuses strictly on the **Software Development Life Cycle (SDLC)**. It is an engineering factory that turns an idea into working, tested, and deployable code.
+This pipeline focuses strictly on the **Software Development Life Cycle (SDLC)**: turning an architectural concept into working, verified, and deployable code.
 
 It does **not** cover the other two pillars of creating a successful product:
 1. **Business & Go-To-Market:** Market research, customer discovery, marketing, legal, or pricing.
@@ -127,19 +127,19 @@ To understand where `ai-dev-pipeline` sits in the software industry, it helps to
 │  Cursor, Google Antigravity, Claude Code, Copilot      │
 ├────────────────────────────────────────────────────────┤
 │  LAYER 1: THE FOUNDATION MODEL (The Brain)             │
-│  Claude 3.5 Sonnet, Gemini 2.0, GPT-4o                 │
+│  Long-Context Frontier Models (Claude, Gemini, GPT)    │
 └────────────────────────────────────────────────────────┘
 ```
 
 * **Layer 1 (The Brain)** provides raw model intelligence, but lacks persistent context of your team's engineering process or past mistakes.
 * **Layer 2 (The Hands)** gives the AI access to read files, edit code, and run terminals, but doesn't tell it *how* to build clean, maintainable software.
-* **Layer 3 (The Engineering System — AI Dev Pipeline)** organizes the hands and brains into a disciplined 17-role software engineering factory with living architecture contracts (`docs/architecture.md`), quality gates (`AGENTS.md`), continuous anti-pattern memory, and objective evaluations (`ai-dev-pipeline eval`).
+* **Layer 3 (The Engineering System — AI Dev Pipeline)** organizes the hands and brains into specialized SDLC personas governed by living architecture contracts (`docs/architecture.md`), quality standards (`AGENTS.md`), continuous anti-pattern memory, and automated hygiene scoring (`ai-dev-pipeline eval`).
 
 ### Category Comparison
 
 | Category | Example Tools | How It Works | How AI Dev Pipeline Differs |
 |---|---|---|---|
-| **AI Editors / IDEs** | Cursor, Antigravity, VS Code | Provides file editing and inline completion in your editor. | We are the **operating system of rules, roles, and workflows** that runs *inside* those editors. |
+| **AI Editors / IDEs** | Cursor, Antigravity, VS Code | Provides file editing and inline completion in your editor. | We provide the **structured harness of rules, roles, and phase-gated workflows** that runs *inside* those editors. |
 | **Multi-Agent Debate Simulators** | ChatDev, MetaGPT | Autonomous agents chatting in a loop to build sandbox scripts. | Built for **real-world, multi-thousand-line brownfield codebases** with human-in-the-loop approvals. |
 | **Autonomous Cloud Coders** | Devin, OpenHands | Cloud VMs attempting to solve GitHub issues with zero supervision. | Lightweight, **in-editor pair programming harness** with automated hygiene scoring and zero cloud lock-in. |
 | **Agentic SDLC Governance** | **AI Dev Pipeline** | **End-to-end engineering harness: Architecture contracts, quality gates, anti-pattern memory & evals.** | **This is our exact category.** |
@@ -167,9 +167,9 @@ To understand where `ai-dev-pipeline` sits in the software industry, it helps to
 
 ---
 
-## End-to-End Reference Walkthroughs
+## Illustrative Walkthroughs (Synthetic Reference Scenarios)
 
-Explore realistic reference scenarios demonstrating how the pipeline governs greenfield microservices and brownfield bug investigations:
+The following reference scenarios demonstrate the pipeline's end-to-end artifact flow across greenfield architecture design and brownfield bug investigations (note: these are curated illustrative walkthroughs designed to showcase expected document formats):
 
 | Reference Scenario | Problem Domain | What It Demonstrates |
 |---|---|---|

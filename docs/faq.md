@@ -13,7 +13,7 @@ What has changed is model capability and practical delivery:
 ### A. Context Window Evolution
 Early LLMs in 2022–2023 were constrained by 4,000–8,000 token context windows.
 * It was practically impossible to pass an architectural design contract (`docs/architecture.md`), task backlog, anti-pattern registry, and full source code files to the model simultaneously without exhausting memory or causing severe hallucinations.
-* The arrival of reliable models with 128k to 1M+ token context windows (Claude 3.5 Sonnet, Gemini 1.5/2.0, GPT-4o) finally makes it practical to maintain an entire project's architectural context in active memory alongside code.
+* The arrival of reliable frontier models with 128k to 1M+ token context windows (Claude, Gemini, GPT) finally makes it practical to maintain an entire project's architectural context in active memory alongside code.
 
 ### B. Industry Focus: Closed SaaS vs. Open Local Governance
 The commercial AI wave initially prioritized proprietary subscription products:

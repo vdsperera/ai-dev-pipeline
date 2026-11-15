@@ -2,7 +2,7 @@
 ## Diagnosing a Production Connection Pool Leak in a 15,000-Line Legacy Codebase
 
 > [!NOTE]
-> **Reference Debugging Walkthrough**: This document is an end-to-end reference scenario demonstrating how `sdlc-onboard` and `sdlc-debug` systematically reverse-engineer architecture, perform 5-Whys RCA, write failing reproduction tests first, and register permanent anti-pattern memories for realistic legacy codebases.
+> **Illustrative Walkthrough (Synthetic Reference Scenario)**: This document is an illustrative reference scenario demonstrating how `sdlc-onboard` and `sdlc-debug` systematically reverse-engineer architecture, perform 5-Whys RCA, write failing reproduction tests first, and register permanent anti-pattern memory. It is a curated demonstration rather than an unedited live session log.
 
 * **Context**: Legacy ("Brownfield") E-Commerce monolith with zero existing documentation
 * **Tech Stack**: Node.js, Express, PostgreSQL (`pg`), Stripe SDK, Vitest

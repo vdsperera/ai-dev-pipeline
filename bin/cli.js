@@ -291,12 +291,6 @@ async function commandInit(flags) {
     createdFiles.push('docs/anti-patterns.md');
   }
 
-  const srcRoadmap = path.join(PACKAGE_ROOT, 'docs', 'pipeline-roadmap.md');
-  const destRoadmap = path.join(targetDocsDir, 'pipeline-roadmap.md');
-  if (fs.existsSync(srcRoadmap) && (!fs.existsSync(destRoadmap) || flags.force)) {
-    fs.copyFileSync(srcRoadmap, destRoadmap);
-    createdFiles.push('docs/pipeline-roadmap.md');
-  }
 
   // Subdirectories for artifacts
   const subDirs = ['handoffs', 'reviews', 'test-reports', 'deploy', 'documentation'];
@@ -430,7 +424,7 @@ function commandStatus() {
     { label: 'Cursor Rules & Skills (.cursorrules & .cursor/rules/)', path: path.join(TARGET_DIR, '.cursorrules') },
     { label: 'Copilot Instructions & Prompts (.github/copilot-instructions.md & .github/prompts/)', path: path.join(TARGET_DIR, '.github', 'copilot-instructions.md') },
     { label: 'Anti-Patterns Memory (docs/anti-patterns.md)', path: path.join(TARGET_DIR, 'docs', 'anti-patterns.md') },
-    { label: 'Pipeline Roadmap (docs/pipeline-roadmap.md)', path: path.join(TARGET_DIR, 'docs', 'pipeline-roadmap.md') }
+    { label: 'Artifact Store (docs/handoffs, reviews)', path: path.join(TARGET_DIR, 'docs', 'handoffs') }
   ];
 
   let healthyCount = 0;
