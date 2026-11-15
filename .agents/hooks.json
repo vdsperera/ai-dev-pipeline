@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "powershell.exe -NoProfile -ExecutionPolicy Bypass -File ./scripts/security-gate.ps1"
+            "command": "node ./scripts/security-gate.js"
           }
         ]
       }

@@ -377,13 +377,27 @@ async function commandInit(flags) {
   }
   createdFiles.push(`docs/ (${subDirs.join(', ')})`);
 
-  // 4. Antigravity Skills (if selected)
+  // 4. Antigravity Skills & Security Hooks (if selected)
   if (selectedTools.includes('antigravity') || selectedTools.includes('all')) {
     const srcSkillsDir = path.join(PACKAGE_ROOT, '.agents', 'skills');
     const targetSkillsDir = path.join(TARGET_DIR, '.agents', 'skills');
     if (fs.existsSync(srcSkillsDir)) {
       const skillsCount = copyDirSync(srcSkillsDir, targetSkillsDir, flags.force);
       createdFiles.push(`.agents/skills/ (${skillsCount} skill files)`);
+    }
+
+    const srcHooks = path.join(PACKAGE_ROOT, '.agents', 'hooks.json');
+    const destHooks = path.join(targetAgentsDir, 'hooks.json');
+    if (fs.existsSync(srcHooks) && (!fs.existsSync(destHooks) || flags.force)) {
+      fs.copyFileSync(srcHooks, destHooks);
+      createdFiles.push('.agents/hooks.json');
+    }
+
+    const srcAgentScripts = path.join(PACKAGE_ROOT, '.agents', 'scripts');
+    const destAgentScripts = path.join(targetAgentsDir, 'scripts');
+    if (fs.existsSync(srcAgentScripts)) {
+      copyDirSync(srcAgentScripts, destAgentScripts, flags.force);
+      createdFiles.push('.agents/scripts/');
     }
   }
 
