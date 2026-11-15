@@ -17,7 +17,8 @@ const {
   generateCursorMdc,
   generateCursorSkillMdc,
   generateCopilotInstructions,
-  generateCopilotPrompt
+  generateCopilotPrompt,
+  runSynchronizer
 } = require('../scripts/sync-tools');
 
 const sampleSkill = {
@@ -67,4 +68,11 @@ test('generateCursorMdc produces always-on rule with alwaysApply: true', () => {
   const output = generateCursorMdc(sampleAgentsContent);
   assert.match(output, /alwaysApply: true/);
   assert.match(output, /All I\/O operations are wrapped in error handling/);
+});
+
+test('runSynchronizer in check mode verifies current repository files are up to date', () => {
+  const ROOT_DIR = path.resolve(__dirname, '..');
+  const results = runSynchronizer(['all'], ROOT_DIR, true);
+  assert.equal(results.outOfSync.length, 0);
+  assert.ok(results.upToDate.length >= 50);
 });

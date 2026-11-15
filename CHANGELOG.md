@@ -12,10 +12,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Cursor**: 16 native `.cursor/rules/<skill>.mdc` skill files invocable via `@<skill>` with `alwaysApply: false`.
   - **Claude Code**: 16 native `.claude/commands/<skill>.md` command files invocable via slash commands (e.g. `/sdlc-develop`).
   - **GitHub Copilot**: 16 native `.github/prompts/<skill>.prompt.md` prompt files invocable via `/prompt` in Copilot Chat.
+- **Pre-Implement Task Dependency Gate**: Implemented mechanical dependency gating in `.agents/scripts/security-gate.js` and `scripts/security-gate.js` (and `--check-task TASK-NNN` CLI flag). Intercepts task implementation requests, verifies upstream task completion in `docs/tasks.md`, and physically blocks out-of-order execution with `decision: 'deny'`.
+- **CI Multi-Editor Drift Check**: Added `npm run sync-tools:check` to CI and `npm test` verifying that Cursor, Claude Code, and Copilot skill definitions never drift from `.agents/skills/`.
 - **Fast-Track Planning Option**: Added streamlined 2-stage planning mode (`Requirements → Tasks`) in `sdlc-plan` for lightweight feature delivery, utility scripts, and bug remediation alongside the full 6-stage enterprise track.
 - **Three-Tier Enforcement Architecture**: Documented the 3-Tier Guardrail Model in `README.md` clearly delineating Tier 1 (Instructional prompts), Tier 2 (Mechanical hooks), and Tier 3 (Deterministic eval scorecard).
-- **Native Unit Test Suite**: Added 11 native unit tests in `tests/` leveraging Node 18+ `node:test` and `node:assert/strict` covering CLI commands, multi-editor synchronization, and evaluation harness audit dimensions without external dependencies.
-- **Enhanced Test Runner**: Updated `npm test` script to run unit tests, benchmark scenarios, and CLI health checks in sequence.
+- **Native Unit Test Suite**: Added 19 native unit tests in `tests/` leveraging Node 18+ `node:test` and `node:assert/strict` covering CLI commands, multi-editor synchronization, task dependency gating, and evaluation harness audit dimensions without external dependencies.
+- **Enhanced Test Runner**: Updated `npm test` script to run unit tests, multi-editor drift check, benchmark scenarios, and CLI health checks in sequence.
 - **Cross-Platform Security Gate Hook**: Implemented pure Node.js pre-tool and pre-commit hook (`.agents/scripts/security-gate.js` and `scripts/security-gate.js`) replacing Windows-only PowerShell scripts.
 - **Dynamic Anti-Pattern Grep**: `eval-harness.js` now dynamically parses custom `Detect: /regex/` invariants from `docs/anti-patterns.md`.
 - **Project Linter Execution**: `eval-harness.js` now detects and executes the project's official static analysis script (`npm run lint` or `npm run lint:check`) from `package.json`.
