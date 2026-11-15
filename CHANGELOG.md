@@ -12,6 +12,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - **Cursor**: 16 native `.cursor/rules/<skill>.mdc` skill files invocable via `@<skill>` with `alwaysApply: false`.
   - **Claude Code**: 16 native `.claude/commands/<skill>.md` command files invocable via slash commands (e.g. `/sdlc-develop`).
   - **GitHub Copilot**: 16 native `.github/prompts/<skill>.prompt.md` prompt files invocable via `/prompt` in Copilot Chat.
+- **Native Unit Test Suite**: Added 11 native unit tests in `tests/` leveraging Node 18+ `node:test` and `node:assert/strict` covering CLI commands, multi-editor synchronization, and evaluation harness audit dimensions without external dependencies.
+- **Enhanced Test Runner**: Updated `npm test` script to run unit tests, benchmark scenarios, and CLI health checks in sequence.
 - **Cross-Platform Security Gate Hook**: Implemented pure Node.js pre-tool and pre-commit hook (`.agents/scripts/security-gate.js` and `scripts/security-gate.js`) replacing Windows-only PowerShell scripts.
 - **Dynamic Anti-Pattern Grep**: `eval-harness.js` now dynamically parses custom `Detect: /regex/` invariants from `docs/anti-patterns.md`.
 - **Project Linter Execution**: `eval-harness.js` now detects and executes the project's official static analysis script (`npm run lint` or `npm run lint:check`) from `package.json`.
@@ -25,6 +27,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Code Duplication**: Deduplicated file synchronization logic by delegating CLI synchronizer calls directly to `scripts/sync-tools.js`.
 
 ### Changed
+- **Codebase Modularization**: Decomposed overgrown files to satisfy the project's $\le 450$ lines/file and nesting depth $\le 4$ quality standards:
+  - Extracted `bin/commands/init.js` from `bin/cli.js` (reduced from 509 lines to 222 lines).
+  - Extracted `scripts/eval-dimensions.js` and `scripts/eval-reporters.js` from `scripts/eval-harness.js` (reduced from 630 lines to 176 lines).
+  - Self-audit score verified at 100% [Grade: A+] with 0 self-violations across all dimensions.
 - **Grounded Terminology**: Replaced overstated claims ("deterministic verification layer", "architecture contracts compiler", "cyclomatic depth") with accurate, honest descriptions ("Codebase Hygiene Scorecard", "block nesting depth").
 - **README Tone & Model References**: Softened marketing buzzwords ("engineering factory", "operating system") to match the authentic tone of the engineering trade-offs section, and generalized model references to long-context frontier models.
 - **Case Study Labeling**: Clarified that `docs/case-studies/01` and `02` are illustrative walkthroughs (synthetic reference scenarios) demonstrating expected document formats.
@@ -37,3 +43,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Static evaluation harness (`eval-harness.js`) with benchmark fixtures.
 - CLI scaffolder (`bin/cli.js`) with `init`, `status`, and `sync` commands.
 - Initial reference scenarios for greenfield microservices and brownfield bug investigations.
+
