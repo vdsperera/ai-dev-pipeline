@@ -193,7 +193,7 @@ async function commandInit(flags, context) {
   // 6. Project Helper Scripts
   const targetScriptsDir = path.join(TARGET_DIR, 'scripts');
   ensureDir(targetScriptsDir);
-  for (const scriptName of ['sync-tools.js', 'eval-harness.js', 'eval-reporters.js']) {
+  for (const scriptName of ['sync-tools.js', 'eval-harness.js', 'eval-dimensions.js', 'eval-reporters.js']) {
     const src = path.join(PACKAGE_ROOT, 'scripts', scriptName);
     const dest = path.join(targetScriptsDir, scriptName);
     if (fs.existsSync(src)) {

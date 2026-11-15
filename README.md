@@ -146,8 +146,18 @@ To understand where `ai-dev-pipeline` sits in the software industry, it helps to
 
 ### Division of Responsibility (Human-in-the-Loop)
 
-* **What the Pipeline Handles**: Reverse-engineering unknown code, drawing visual Mermaid diagrams, enforcing typed errors & zero-linter gates, preventing SQL injection, generating test suites, and scoring code reliability.
+* **What the Pipeline Handles**: Reverse-engineering unknown code, drawing visual Mermaid diagrams, guiding agents with typed error & security standards, running automated linter & hygiene scorecards, generating test suites, and catching credential leaks.
 * **What You (the Human) Own**: Business context & domain priorities, credentials/secrets configuration, and final production deployment sign-off.
+
+### How Enforcement Works: The 3-Tier Guardrail Model
+
+To maintain engineering discipline without overpromising what AI models can do, `ai-dev-pipeline` separates governance into three distinct layers:
+
+| Tier | Layer | Mechanism | What It Controls | Failure Mode |
+|---|---|---|---|---|
+| **Tier 1: Instructional Guidance** | Prompts & Skills | Markdown guidelines in `prompts/*.md` and `.agents/skills/` | Guides agent intent: TDD, INVEST user stories, typed error handling, behavioral preservation, and self-review checklists. | Relies on LLM instruction-following. Voluntary at the prompt level. |
+| **Tier 2: Mechanical Interception** | Editor Hooks & Pre-Commit | Cross-platform Node.js script (`.agents/scripts/security-gate.js`) | Intercepts operations before execution: rejects staged API keys/credentials, blocks prohibited shell commands, and prevents accidental file destruction. | Mechanically aborts the tool call or git commit with a non-zero exit code. |
+| **Tier 3: Objective Verification** | Stage Evaluation Scorecard & CI | Node.js evaluation engine (`scripts/eval-harness.js`) | Audits the codebase before merge: executes `npm run lint`, checks nesting depth, scans anti-pattern regexes, and checks task handoff completeness. | Returns an objective hygiene score (0–100%) and fails CI if below the configured threshold. |
 
 ### When to Use (and When NOT to Use)
 
@@ -582,19 +592,21 @@ git init
 
 **Step 2 — Plan your project**
 
-Open the project in Antigravity IDE and say:
+Open the project in your editor and choose your planning track:
 
-> "plan my project: I want to build a REST API for a task management app with user authentication, team workspaces, and real-time notifications"
+#### Planning Tracks: Full Track vs. Fast-Track
 
-The planning pipeline runs up to six agents in sequence:
-1. **Product Strategist** → defines MVP scope, business model, and risk in `docs/product-brief.md`
-2. **Requirements Analyst** → analyses your idea, finds gaps, writes `docs/requirements.md`
-3. **User Story Writer** → creates user stories with Gherkin acceptance criteria in `docs/user-stories.md`
-4. **Architect** → designs components, APIs, data models in `docs/architecture.md` (and prescribes static analysis tools)
-5. **UI/UX Designer** *(conditional)* → defines design system, page layouts, component specs in `docs/design-specs.md`
-6. **Task Planner** → breaks everything into ordered atomic tasks in `docs/tasks.md` (with `TASK-001` bootstrapping toolchain & linters)
+| Track | Best For | Stages Executed | Generated Artifacts |
+|---|---|---|---|
+| **Full Track** (`track=full`, default) | Greenfield apps, new services, complex architectures | Strategy (0) → Requirements (1) → Stories (2) → Architecture (3) → UI/UX (3.5, conditional) → Tasks (5) | `docs/product-brief.md`<br>`docs/requirements.md`<br>`docs/user-stories.md`<br>`docs/architecture.md`<br>`docs/tasks.md` |
+| **Fast-Track** (`track=lite`) | Small features, CLI tools, bug fixes, utility scripts | Requirements (1) → Tasks (5) | `docs/requirements.md`<br>`docs/tasks.md` |
 
-Each phase pauses for your review. Say "continue" to proceed or give feedback to refine.
+- **To run the Full Track**:
+  > *"plan my project: I want to build a REST API for a task management app with user authentication, team workspaces, and real-time notifications"*
+- **To run the Fast-Track**:
+  > *"plan this feature (fast-track): add CSV export for task reports"* or *"lightweight plan: [idea]"*
+
+Each phase pauses at a checkpoint for your review. Say "continue" to proceed or give feedback to refine.
 
 **Step 3 — Build task by task**
 
@@ -631,9 +643,9 @@ Step 1: ONBOARD      → "onboard this repo"      → Agent 15 writes docs/archi
         ↓
 Step 2: PLAN FEATURE → "plan this feature: ..." → Agents 1, 2, 3, 5 anchor to existing architecture
         ↓
-Step 3: IMPLEMENT    → "implement TASK-NNN"     → Agent 6 enforces AGENTS.md & anti-pattern rules
+Step 3: IMPLEMENT    → "implement TASK-NNN"     → Agent 6 implements code guided by AGENTS.md
         ↓
-Step 4: REVIEW       → "review TASK-NNN"        → Agents 7, 8 enforce linter & OWASP gates
+Step 4: REVIEW       → "review TASK-NNN"        → Agents 7, 8 review against linter & OWASP checks
         ↓
 Step 5: DEBUG (Bugs) → "debug this: [error]"    → Agent 16 writes failing test first + logs AP-NNN
         ↓
@@ -694,22 +706,22 @@ You already have the pipeline adopted and want to add a new feature.
 
 This runs the full planning chain but scoped to the new feature. It reads your existing `docs/architecture.md` and designs the feature to fit within your existing system. You can specify architectural styles if needed (e.g., `style=enterprise-ddd`).
 
-**Option 2 — Lightweight planning (for small features)**
+**Option 2 — Fast-Track planning (for small features)**
 
-Skip formal planning and go straight to implementation with a clear description:
+Run the lightweight 2-stage planning track (`Requirements → Tasks`):
 
-> "implement this: add a GET /api/users/:id/activity endpoint that returns the last 50 activity events for a user, following our existing API patterns in src/routes/"
+> "plan this feature (fast-track): add a GET /api/users/:id/activity endpoint that returns the last 50 activity events for a user, following our existing API patterns in src/routes/"
 
-The Developer Agent (Agent 6) will follow the coding standards even without formal planning docs. Then review and test as normal.
+The Requirements Analyst (Agent 1) captures the requirements in `docs/requirements.md`, and the Task Planner (Agent 5) translates them directly into atomic tasks in `docs/tasks.md`—bypassing separate architecture and user story docs for fast delivery.
 
 **Which to choose?**
 
 | Feature size | Approach |
 |-------------|----------|
-| Touches 1-2 files, simple logic | Option 2 — implement directly |
-| Touches 3+ files, new API endpoints | Option 1 — plan first |
-| New component, new data models | Option 1 — definitely plan first |
-| New integration (payment, email, etc.) | Option 1 — plan first, security review will trigger |
+| Touches 1-2 files, minor tweak | Implement directly or Fast-Track |
+| Touches 3+ files, new API endpoints | Fast-Track (`Requirements → Tasks`) |
+| New subsystem, new data models | Full Track (`Strategy → Architecture → Tasks`) |
+| New integration (payment, auth) | Full Track (ensures architecture & security review) |
 
 ---
 

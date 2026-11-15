@@ -1,5 +1,5 @@
 ---
-description: Use this skill when the user wants to plan a new project or feature from scratch. Triggers on phrases like "plan my project", "start a new project", "create requirements", "plan this feature", or "run the planning pipeline". Chains up to six agents in sequence: Product Strategist → Requirements Analyst → User Story Writer → Architect → UI/UX Designer (conditional) → Task Planner. Each agent's output is written to docs/ and fed into the next agent. Each phase is also available as a standalone skill for individual use: sdlc-strategy, sdlc-requirements, sdlc-stories, sdlc-architect, sdlc-ux, sdlc-tasks.
+description: Use this skill when the user wants to plan a new project or feature. Triggers on phrases like "plan my project", "start a new project", "create requirements", "plan this feature", "fast-track plan", or "run the planning pipeline". Supports two execution tracks: 1) Full Track (default): Chains Product Strategist → Requirements Analyst → User Story Writer → Architect → UI/UX Designer (conditional) → Task Planner. 2) Fast-Track (lightweight): Chains Requirements Analyst → Task Planner directly for small features, CLI tools, and bugfixes. Each phase is also available as a standalone skill for individual use: sdlc-strategy, sdlc-requirements, sdlc-stories, sdlc-architect, sdlc-ux, sdlc-tasks.
 globs: *
 alwaysApply: false
 ---
@@ -8,24 +8,36 @@ alwaysApply: false
 
 # SDLC Planning Pipeline
 
-Run up to six planning agents in sequence to go from a raw idea to an actionable task backlog. The UI/UX Designer phase runs only when the project has a frontend — it is skipped for API-only, CLI, or backend projects.
+Run planning agents in sequence to go from a raw idea or feature brief to an actionable task backlog in `docs/tasks.md`.
+
+## Planning Tracks
+
+Depending on the scale of the work, select or identify the appropriate planning track:
+
+| Track | Trigger Phrases | Pipeline Sequence | Generated Docs |
+|---|---|---|---|
+| **Full Track** (Default) | *"plan my project"*, *"plan this feature"*, *"run full planning"* | Phase 0 (Strategy) → Phase 1 (Requirements) → Phase 2 (Stories) → Phase 3 (Architecture) → Phase 3.5 (UI/UX, conditional) → Phase 5 (Tasks) | `docs/product-brief.md`<br>`docs/requirements.md`<br>`docs/user-stories.md`<br>`docs/architecture.md`<br>`docs/tasks.md` |
+| **Fast-Track** (Lightweight) | *"fast-track plan"*, *"lightweight plan"*, *"plan this feature (fast-track)"*, `track=lite` | Phase 1 (Requirements) → Phase 5 (Tasks) | `docs/requirements.md`<br>`docs/tasks.md` |
+
+- If the user specifies **fast-track**, **lightweight**, or the feature is a small self-contained script or bug remediation: run the **Fast-Track**.
+- Otherwise, run the **Full Track**.
 
 ## Prerequisites
 
 The user must provide a raw idea, brief, or requirements description as input. This can be anything from a one-sentence idea to a detailed brief.
 
-## Workflow
+## Workflow Execution
 
-Execute these four phases **in strict order**. After each phase, write the output to the specified file, then **pause at the checkpoint** before proceeding. Do NOT skip phases or run them out of order.
+Execute phases in order. After each phase, write the output to the specified file, then **pause at the checkpoint** before proceeding. Do NOT run phases out of order.
 
 ### How checkpoints work
 
 After each phase, present a brief summary and ask the user:
 *"Phase N complete. Review the output above. You can give feedback to refine, or say 'continue' to proceed to the next phase."*
 
-- If the user says **"continue"**, **"looks good"**, **"next"**, or similar — proceed to the next phase immediately
-- If the user provides **feedback or corrections** — incorporate them, update the output file, and present the revised summary before proceeding
-- This lets the user control the pace: say "continue" five times for a fast run, or pause and refine at any stage
+- If the user says **"continue"**, **"looks good"**, **"next"**, or similar — proceed to the next phase immediately.
+- If the user provides **feedback or corrections** — incorporate them, update the output file, and present the revised summary before proceeding.
+- On the **Fast-Track**, run Phase 1, checkpoint with the user, then immediately run Phase 5.
 
 ---
 
