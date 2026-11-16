@@ -123,6 +123,31 @@ function runEvaluation(options = {}) {
 function main() {
   const args = process.argv.slice(2);
 
+  let targetDir = process.cwd();
+  const dirArg = args.find(a => a.startsWith('--target-dir='));
+  if (dirArg) targetDir = path.resolve(dirArg.split('=')[1]);
+
+  if (args.includes('--onboard-check')) {
+    const archPath = path.join(targetDir, 'docs', 'architecture.md');
+    if (!fs.existsSync(archPath)) {
+      console.error(`${c.red}ERROR:${c.reset} docs/architecture.md not found in ${targetDir}`);
+      process.exit(1);
+    }
+    const archContent = fs.readFileSync(archPath, 'utf8');
+    const pathCheck = dimensions.verifyArchitecturePaths(archContent, targetDir);
+    console.log(`\n${c.bold}🔍 Architecture Onboard Path Verification${c.reset}`);
+    console.log(`   Scanned docs/architecture.md in: ${targetDir}`);
+    console.log(`   Verified Paths: ${c.green}${pathCheck.verified}/${pathCheck.total}${c.reset}`);
+    if (pathCheck.unresolved.length > 0) {
+      console.log(`\n${c.yellow}⚠ Unresolved / Potential Hallucinated Paths (${pathCheck.unresolved.length}):${c.reset}`);
+      pathCheck.unresolved.forEach(p => console.log(`   - ${p}`));
+      process.exit(1);
+    } else {
+      console.log(`\n${c.green}✔ All declared paths exist on disk! No architectural hallucinations detected.${c.reset}\n`);
+      process.exit(0);
+    }
+  }
+
   if (args.includes('--benchmark')) {
     reporters.runBenchmarks(runEvaluation, c);
     return;
@@ -145,10 +170,6 @@ function main() {
     const threshIdx = args.indexOf('--threshold');
     if (threshIdx !== -1 && args[threshIdx + 1]) threshold = parseInt(args[threshIdx + 1], 10) || 80;
   }
-
-  let targetDir = process.cwd();
-  const dirArg = args.find(a => a.startsWith('--target-dir='));
-  if (dirArg) targetDir = path.resolve(dirArg.split('=')[1]);
 
   const results = runEvaluation({ targetDir, taskId, threshold });
 

@@ -179,8 +179,30 @@ function runSynchronizer(tools = ['all'], targetDir = ROOT_DIR, isCheckMode = fa
     return { error: `Cannot find .agents/AGENTS.md in ${targetDir}`, updated: [], outOfSync: [] };
   }
 
-  const agentsContent = fs.readFileSync(agentsPath, 'utf8');
-  const skills = getAvailableSkills(resolvedSkillsDir);
+  let agentsContent = fs.readFileSync(agentsPath, 'utf8');
+  const localAgentsPath = path.join(targetDir, 'AGENTS.local.md');
+  if (fs.existsSync(localAgentsPath)) {
+    const localContent = fs.readFileSync(localAgentsPath, 'utf8').trim();
+    if (localContent) {
+      agentsContent += `\n\n## Project-Specific Rules (AGENTS.local.md)\n\n${localContent}\n`;
+    }
+  }
+
+  const baseSkills = getAvailableSkills(resolvedSkillsDir);
+  const overridesDir = path.join(targetDir, 'prompts', 'overrides');
+  const skills = baseSkills.map(s => {
+    const overrideFile = path.join(overridesDir, `${s.name}.md`);
+    if (fs.existsSync(overrideFile)) {
+      const extra = fs.readFileSync(overrideFile, 'utf8').trim();
+      if (extra) {
+        return {
+          ...s,
+          body: s.body + `\n\n## Project-Specific Customizations (${s.name}.md)\n\n${extra}\n`
+        };
+      }
+    }
+    return s;
+  });
 
   const results = {
     updated: [],

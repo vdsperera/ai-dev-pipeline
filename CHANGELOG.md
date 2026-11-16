@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.2.0] - 2026-11-15
+
+### Added
+- **Project Rule Overrides (`AGENTS.local.md`)**: Users can now define project-specific rules in `AGENTS.local.md` that survive updates and are automatically appended to generated editor configurations (`CLAUDE.md`, `.cursorrules`, Copilot) during sync.
+- **Skill Prompt Overrides (`prompts/overrides/`)**: Custom prompt instructions placed in `prompts/overrides/<skill>.md` are seamlessly merged into native skill definitions on sync without forking.
+- **Onboard Architecture Path Verification (`eval --onboard-check`)**: Automated verification confirming that all source files and directories declared in `docs/architecture.md` exist on disk, preventing AI hallucinated architecture from polluting downstream tasks.
+- **Explicit Step HALT & Completion Criteria**: Added explicit `HALT and ask the user if:` and `This step is complete when:` criteria to skill workflows (`sdlc-develop`), improving LLM task boundary enforcement.
+- **Defect Recurrence Frequency Tracking**: Added `Seen in: TASK-NNN` field to `docs/anti-patterns.md` template for tracking which tasks triggered recurring defects.
+- **Expanded Test Suite**: Added unit tests for architecture path verification and local rule synchronization, bringing the total passing test suite to 21 native tests.
+
 ## [1.1.0] - 2026-11-15
 
 ### Added

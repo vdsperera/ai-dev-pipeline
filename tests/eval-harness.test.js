@@ -8,8 +8,9 @@
 
 const test = require('node:test');
 const assert = require('node:assert/strict');
+const path = require('path');
 const { isTestFile, isScriptOrCliFile, calculateGrade } = require('../scripts/eval-harness');
-const { checkLineInvariants } = require('../scripts/eval-dimensions');
+const { checkLineInvariants, verifyArchitecturePaths } = require('../scripts/eval-dimensions');
 
 test('isTestFile identifies test paths and prevents false positive exclusions', () => {
   // Real test paths (MUST match)
@@ -91,4 +92,19 @@ test('calculateGrade maps numerical scores to academic grades accurately', () =>
   assert.equal(calculateGrade(75), 'C');
   assert.equal(calculateGrade(65), 'D');
   assert.equal(calculateGrade(50), 'F');
+});
+
+test('verifyArchitecturePaths identifies verified files and flags hallucinated paths', () => {
+  const sampleArch = `
+# Architecture Document
+- Router: \`bin/cli.js\`
+- Helpers: \`scripts/eval-harness.js\`
+- Missing Module: \`src/non-existent-hallucinated-controller.js\`
+- Database Model: \`src/models/imaginary-user.js\`
+`;
+  const result = verifyArchitecturePaths(sampleArch, path.resolve(__dirname, '..'));
+  assert.ok(result.total >= 3);
+  assert.ok(result.verified >= 2);
+  assert.ok(result.unresolved.some(p => p.includes('non-existent-hallucinated-controller.js')));
+  assert.ok(result.unresolved.some(p => p.includes('imaginary-user.js')));
 });

@@ -120,7 +120,7 @@ async function commandInit(flags, context) {
 
   const createdFiles = [];
 
-  // 1. Core standards (.agents/AGENTS.md)
+  // 1. Core standards (.agents/AGENTS.md & AGENTS.local.md)
   const targetAgentsDir = path.join(TARGET_DIR, '.agents');
   ensureDir(targetAgentsDir);
   const srcAgentsMd = path.join(PACKAGE_ROOT, '.agents', 'AGENTS.md');
@@ -130,13 +130,23 @@ async function commandInit(flags, context) {
     createdFiles.push('.agents/AGENTS.md');
   }
 
-  // 2. Prompts (all 17 agent personas)
+  const localAgentsPath = path.join(TARGET_DIR, 'AGENTS.local.md');
+  if (!fs.existsSync(localAgentsPath)) {
+    const localTemplate = `# Local Project Rules (AGENTS.local.md)\n\n` +
+      `<!-- Add project-specific architectural rules, tech stack constraints, or domain conventions here. -->\n` +
+      `<!-- This file is NEVER overwritten by 'ai-dev-pipeline sync' or package updates. -->\n\n`;
+    fs.writeFileSync(localAgentsPath, localTemplate, 'utf8');
+    createdFiles.push('AGENTS.local.md (customizable project overrides)');
+  }
+
+  // 2. Prompts (all 17 agent personas & overrides dir)
   const targetPromptsDir = path.join(TARGET_DIR, 'prompts');
   const srcPromptsDir = path.join(PACKAGE_ROOT, 'prompts');
   if (fs.existsSync(srcPromptsDir)) {
     const copiedCount = copyDirSync(srcPromptsDir, targetPromptsDir, flags.force);
     createdFiles.push(`prompts/ (${copiedCount} agent personas)`);
   }
+  ensureDir(path.join(TARGET_DIR, 'prompts', 'overrides'));
 
   // 3. Docs templates & memory bank
   const targetDocsDir = path.join(TARGET_DIR, 'docs');

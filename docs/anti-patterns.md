@@ -12,6 +12,9 @@ This document serves as the persistent memory bank of corrected AI mistakes, inv
 - **Mistake**: What went wrong or was incorrectly assumed (e.g., swallowed exceptions, assumed Python 3.12 syntax in a Python 3.9 environment).
 - **Correction**: The correct approach, pattern, or API to use instead.
 - **Rule**: The permanent invariant agents must follow in this codebase.
+- **Detect:** `/optional-regex-pattern/` (optional automation rule executed by eval harness)
+- **Paths:** `src/**` (optional path filter)
+- **Seen in:** TASK-001, TASK-004 (tracks recurrence frequency across tasks)
 
 ### AP-002: Unreleased Resource Pools on Error Catch
 - **Mistake**: Acquiring pooled connections (database, socket, HTTP client) without guaranteed release in a mandatory `finally` block, causing connection starvation when upstream calls time out or throw errors.

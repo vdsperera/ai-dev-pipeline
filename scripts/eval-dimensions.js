@@ -55,6 +55,40 @@ function checkPresentationLayer(relPath, content, findings) {
   return deduction;
 }
 
+function verifyArchitecturePaths(archContent, targetDir) {
+  if (!archContent) return { total: 0, verified: 0, unresolved: [] };
+
+  const pathRegex = /(?:`|'|")([a-zA-Z0-9_\-\.\/]+\.[a-zA-Z0-9]+)(?:`|'|")|(?:`|'|")((?:src|lib|bin|routes|controllers|services|models|db|config)[a-zA-Z0-9_\-\.\/]*)(?:`|'|")/gi;
+  const foundPaths = new Set();
+  let match;
+  while ((match = pathRegex.exec(archContent)) !== null) {
+    const rawPath = match[1] || match[2];
+    if (!rawPath) continue;
+    const normalized = rawPath.replace(/[\\\/]+/g, path.sep).replace(/^[\\\/]+/, '');
+    if (normalized.startsWith('http') || normalized.startsWith('node_modules') || normalized.includes('@') || normalized.startsWith('.')) continue;
+    if (normalized.includes(' ') || normalized.length < 3) continue;
+    foundPaths.add(normalized);
+  }
+
+  const verified = [];
+  const unresolved = [];
+
+  for (const relPath of foundPaths) {
+    const fullPath = path.join(targetDir, relPath);
+    if (fs.existsSync(fullPath)) {
+      verified.push(relPath);
+    } else {
+      unresolved.push(relPath);
+    }
+  }
+
+  return {
+    total: foundPaths.size,
+    verified: verified.length,
+    unresolved
+  };
+}
+
 function evaluateArchitecture(targetDir, findings, sourceFiles, isTestFile, isScriptOrCliFile) {
   let score = 100;
   const archPath = path.join(targetDir, 'docs', 'architecture.md');
@@ -374,6 +408,7 @@ function evaluateTraceability(targetDir, taskId, findings) {
 }
 
 module.exports = {
+  verifyArchitecturePaths,
   evaluateArchitecture,
   evaluateCodeQuality,
   evaluateAntiPatterns,

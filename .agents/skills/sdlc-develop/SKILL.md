@@ -30,6 +30,9 @@ Implement a single atomic task from the backlog following Developer Agent (Agent
 
 If any dependency is not marked done, **stop and tell the user** which tasks must be completed first.
 
+- **HALT and ask the user if:** Any upstream dependency in `docs/tasks.md` is not marked `[x] Done`.
+- **This step is complete when:** Prerequisite dependencies are verified and context docs are loaded.
+
 ### Step 2: Validate Input
 
 **Read the full agent instructions** from [`prompts/06-developer.md`](../../prompts/06-developer.md).
@@ -49,6 +52,9 @@ Needed: [what is needed to unblock]
 
 Do NOT proceed past a blocker. Present the report to the user and wait for resolution.
 
+- **HALT and ask the user if:** The task definition is ambiguous, contradicts architecture, or lacks objective pass/fail acceptance conditions.
+- **This step is complete when:** Input contract is validated with zero unresolved blockers.
+
 ### Step 3: Implement
 
 Following the coding standards from the developer agent instructions:
@@ -66,6 +72,9 @@ Following the coding standards from the developer agent instructions:
    - At least one boundary/edge case
 6. Tests must be runnable and independent
 
+- **HALT and ask the user if:** Implementation introduces architectural drift, requires unapproved third-party packages, or fails unit tests.
+- **This step is complete when:** Implementation code and unit tests are written and passing.
+
 ### Step 4: Self-Review Checklist
 
 Run this checklist before completing. Every item must pass:
@@ -82,6 +91,9 @@ Run this checklist before completing. Every item must pass:
 - [ ] Acceptance condition from the task is verifiably met
 - [ ] No logic added beyond the task scope
 - [ ] Handoff note written
+
+- **HALT and ask the user if:** Any self-review checklist item fails or cannot be confirmed.
+- **This step is complete when:** All 12 self-review checklist items pass with zero exceptions.
 
 ### Step 5: Produce Handoff
 

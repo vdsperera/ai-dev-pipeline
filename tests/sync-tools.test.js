@@ -76,3 +76,19 @@ test('runSynchronizer in check mode verifies current repository files are up to 
   assert.equal(results.outOfSync.length, 0);
   assert.ok(results.upToDate.length >= 50);
 });
+
+test('runSynchronizer appends AGENTS.local.md when present in workspace', () => {
+  const fs = require('fs');
+  const tempDir = path.join(__dirname, 'temp-sync-test');
+  fs.mkdirSync(path.join(tempDir, '.agents'), { recursive: true });
+  fs.writeFileSync(path.join(tempDir, '.agents', 'AGENTS.md'), '# Base Rules', 'utf8');
+  fs.writeFileSync(path.join(tempDir, 'AGENTS.local.md'), '- Must use UUIDv7 for IDs', 'utf8');
+
+  const results = runSynchronizer(['cursor'], tempDir, false, path.join(__dirname, '..', '.agents', 'skills'));
+  assert.ok(results.updated.length > 0);
+  const cursorrules = fs.readFileSync(path.join(tempDir, '.cursorrules'), 'utf8');
+  assert.match(cursorrules, /Project-Specific Rules \(AGENTS\.local\.md\)/);
+  assert.match(cursorrules, /Must use UUIDv7 for IDs/);
+
+  fs.rmSync(tempDir, { recursive: true, force: true });
+});
