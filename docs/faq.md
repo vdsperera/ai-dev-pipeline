@@ -25,6 +25,8 @@ The commercial AI wave initially prioritized proprietary subscription products:
 
 ## 2. How does this compare to BMAD-METHOD and other agentic SDLC frameworks?
 
+> **The Identity Rule**: `ai-dev-pipeline` is the small one. It gives AI coding agents a role-based SDLC with a paper trail, installs into Antigravity, Claude Code, Cursor, and Copilot natively, and ships an executable anti-pattern registry and a codebase hygiene check you can read in full. It is zero-dependency and readable in an afternoon. It does not try to be BMAD-METHOD; if you need BMAD's depth, multi-tiered overrides, or large module ecosystem, use BMAD-METHOD.
+
 In the AI-assisted software engineering space, two primary paradigms have emerged: spec-driven/persona-driven pipeline frameworks, and early academic multi-agent debate simulators.
 
 * **BMAD-METHOD** ("Breakthrough Method for Agile AI-Driven Development") is a mature, widely adopted persona-based SDLC framework. Like `ai-dev-pipeline`, it coordinates specialized roles (Product Strategist, Architect, Developer, QA) through sequential markdown artifacts checked into the repo, rejecting unconstrained conversational loops.
@@ -37,12 +39,12 @@ In the AI-assisted software engineering space, two primary paradigms have emerge
 |---|---|---|---|
 | **Core Concept** | Role personas, phase-gated document artifacts | Role personas, phase-gated document artifacts | Spec → Plan → Tasks (no personas) |
 | **Footprint & Dependencies** | **~390 KB**, zero runtime dependencies (pure Node.js) | Large multi-runtime footprint (Node.js + Python / `uv`) | Python CLI |
-| **Editor / Skill Support** | Native Antigravity skills + universal rules across Cursor, Claude Code, and Copilot | Compiled generators across multiple IDE targets (`.claude/skills`, Cursor, etc.) | Custom prompt command files |
-| **Workflow Scalability** | Granular individual skills (`sdlc-architect`, `sdlc-debug`) or chained execution (`sdlc-plan`) | Distinct workflow tracks (Quick Flow, Method, Enterprise) | Single linear flow |
-| **Customization Model** | Direct markdown customization of `prompts/` and `AGENTS.md` | Layered TOML configuration overrides | Template and constitution edits |
-| **Hygiene Scorecard** | Built-in heuristic static evaluation harness (`ai-dev-pipeline eval`) | No static CLI scorecard (QA handled via Test Architect persona) | No built-in scorecard |
-| **Defect Memory** | Explicit, numbered invariant registry (`docs/anti-patterns.md`) | `project-context.md` and retrospective logs | Project constitution |
-| **Maturity & Scale** | Focused, lightweight local harness (v1.0) | Large open-source community, v6.12+ (~47k+ GitHub stars) | Backed by GitHub |
+| **Editor / Skill Support** | Native parity across 4 editors (16 skills generated for Antigravity, Cursor, Claude Code, and Copilot) | Compiled generators across multiple IDE targets (`.claude/skills`, Cursor, etc.) | Custom prompt command files |
+| **Workflow Scalability** | Two planning tracks: Full Track (6 stages) + Fast-Track (`Requirements → Tasks`), plus granular standalone skills | Distinct workflow tracks (Quick Flow, Method, Enterprise) | Single linear flow |
+| **Customization Model** | Non-destructive overrides via `AGENTS.local.md` and `prompts/overrides/` without forking | Layered TOML configuration overrides | Template and constitution edits |
+| **Hygiene Scorecard** | Built-in static evaluation harness (`eval`) with real linter execution, dynamic anti-pattern grep, and onboard path verification | No static CLI scorecard (QA handled via Test Architect persona) | No built-in scorecard |
+| **Defect Memory** | Executable invariant registry (`docs/anti-patterns.md`) with `Detect: /regex/`, `Paths:`, and `Seen in:` frequency tracking | `project-context.md` and retrospective logs | Project constitution |
+| **Maturity & Scale** | Focused, lightweight local harness (v1.2) | Large open-source community, v6.12+ (~47k+ GitHub stars) | Backed by GitHub |
 
 ### Where `ai-dev-pipeline` Fits Best
 

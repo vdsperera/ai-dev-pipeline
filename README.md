@@ -6,8 +6,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Node: >=18](https://img.shields.io/badge/Node->=18.0.0-green.svg)](https://nodejs.org/)
 
-> **The Agentic SDLC Governance Framework for AI Coding Agents.**  
-> Delivered through a zero-friction CLI (`npx @kadvsperera/ai-dev-pipeline init`) with native parity across **Google Antigravity**, **Cursor**, **Claude Code**, and **GitHub Copilot**.
+> **The lightweight, zero-dependency SDLC governance harness for AI coding agents.**  
+> Delivered through a zero-friction CLI (`npx @kadvsperera/ai-dev-pipeline init`) with native parity across **Google Antigravity**, **Cursor**, **Claude Code**, and **GitHub Copilot**.  
+>  
+> *ai-dev-pipeline is the small one. It gives AI coding agents a role-based SDLC with a paper trail, installs into 4 editors natively, and ships an executable anti-pattern registry and a codebase hygiene check you can read in full. It is zero-dependency and readable in an afternoon. It does not try to be BMAD-METHOD; if you need BMAD's depth, use BMAD.*
 
 `ai-dev-pipeline` transforms AI from an erratic code generator into a disciplined, 17-role software engineering organization. It enforces living architecture contracts (`docs/architecture.md`), strict quality gates (`AGENTS.md`), persistent defect memory (`docs/anti-patterns.md`), and automated codebase hygiene scoring (`ai-dev-pipeline eval`) directly inside your daily code editor.
 
@@ -300,6 +302,9 @@ npx @kadvsperera/ai-dev-pipeline status
 # Evaluate stage outputs for architectural drift and anti-pattern regressions:
 npx @kadvsperera/ai-dev-pipeline eval
 
+# Verify all paths and routes in docs/architecture.md exist on disk (anti-hallucination):
+npx @kadvsperera/ai-dev-pipeline eval --onboard-check
+
 # Run strict CI quality gate on specific task (fails if score < 90%):
 npx @kadvsperera/ai-dev-pipeline eval --task TASK-001 --threshold 90
 
@@ -560,6 +565,15 @@ The coding standards from Agent 6 (Developer) are installed as `AGENTS.md` — t
 - Unit test requirements
 
 See [`docs/pipeline-roadmap.md`](docs/pipeline-roadmap.md) for the philosophy behind contextual enforcement (principles over rigid global rules) and architectural upgrades.
+
+### Customizing Rules without Forking (`AGENTS.local.md` & `prompts/overrides/`)
+
+To add project-specific rules or customize prompt personas without maintaining a private fork or losing edits on updates:
+
+* **Local Project Rules (`AGENTS.local.md`)**: Add project-specific constraints (e.g. *"All monetary calculations must use BigInt"* or *"All endpoints require tenant_id"*) to `AGENTS.local.md` in your project root. Running `npx @kadvsperera/ai-dev-pipeline sync` automatically appends these rules into `CLAUDE.md`, `.cursorrules`, `.cursor/rules/agents.mdc`, and Copilot prompts.
+* **Skill Prompt Overrides (`prompts/overrides/<skill>.md`)**: Drop role-specific tweaks into `prompts/overrides/<skill>.md` (e.g. `prompts/overrides/sdlc-review.md`). The synchronizer seamlessly merges them into your editor's native skill definitions.
+
+Both `AGENTS.local.md` and `prompts/overrides/` are **never** overwritten by pipeline updates.
 
 ---
 
