@@ -92,13 +92,14 @@ These standards apply to all code written in this workspace. They are extracted 
 
 ## Pipeline Context
 
-This workspace uses an SDLC pipeline with 17 specialised agent personas packaged as 16 skills. Pipeline docs live in `docs/`:
+This workspace uses an SDLC pipeline with 18 specialised agent personas packaged as 17 skills. Pipeline docs live in `docs/`:
 - `docs/pipeline-roadmap.md` — architectural principles and quality control roadmap
 - `docs/anti-patterns.md` — project lessons learned & recurring AI mistakes to avoid
 - `docs/product-brief.md` — product strategy and MVP scope
 - `docs/requirements.md` — refined requirements
 - `docs/user-stories.md` — user stories with Gherkin acceptance criteria
 - `docs/architecture.md` — system design document
+- `docs/architecture-retro.md` — architectural retrospective & trade-off audit reports
 - `docs/design-specs.md` — UI/UX design specifications (when project has a frontend)
 - `docs/tasks.md` — ordered task backlog
 - `docs/handoffs/` — developer handoff notes per task

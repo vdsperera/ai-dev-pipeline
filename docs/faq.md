@@ -39,7 +39,7 @@ In the AI-assisted software engineering space, two primary paradigms have emerge
 |---|---|---|---|
 | **Core Concept** | Role personas, phase-gated document artifacts | Role personas, phase-gated document artifacts | Spec → Plan → Tasks (no personas) |
 | **Footprint & Dependencies** | **~390 KB**, zero runtime dependencies (pure Node.js) | Large multi-runtime footprint (Node.js + Python / `uv`) | Python CLI |
-| **Editor / Skill Support** | Native parity across 4 editors (16 skills generated for Antigravity, Cursor, Claude Code, and Copilot) | Compiled generators across multiple IDE targets (`.claude/skills`, Cursor, etc.) | Custom prompt command files |
+| **Editor / Skill Support** | Native parity across 4 editors (17 skills generated for Antigravity, Cursor, Claude Code, and Copilot) | Compiled generators across multiple IDE targets (`.claude/skills`, Cursor, etc.) | Custom prompt command files |
 | **Workflow Scalability** | Two planning tracks: Full Track (6 stages) + Fast-Track (`Requirements → Tasks`), plus granular standalone skills | Distinct workflow tracks (Quick Flow, Method, Enterprise) | Single linear flow |
 | **Customization Model** | Non-destructive overrides via `AGENTS.local.md` and `prompts/overrides/` without forking | Layered TOML configuration overrides | Template and constitution edits |
 | **Hygiene Scorecard** | Built-in static evaluation harness (`eval`) with real linter execution, dynamic anti-pattern grep, and onboard path verification | No static CLI scorecard (QA handled via Test Architect persona) | No built-in scorecard |

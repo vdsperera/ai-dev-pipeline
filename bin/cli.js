@@ -4,7 +4,7 @@
  * AI Dev Pipeline CLI Scaffolder
  *
  * Zero-friction, cross-tool SDLC harness initializer and manager.
- * Injects 17 specialized agent personas, 16 skills, and baseline coding standards
+ * Injects 18 specialized agent personas, 17 skills, and baseline coding standards
  * into any repository for Antigravity, Cursor, Claude Code, and GitHub Copilot.
  *
  * Usage:
@@ -147,24 +147,24 @@ function commandStatus() {
     let extra = '';
     if (check.path.endsWith('prompts')) {
       const count = fs.readdirSync(check.path).filter(f => f.endsWith('.md')).length;
-      extra = ` (${count}/17 personas)`;
+      extra = ` (${count}/18 personas)`;
     } else if (check.path.endsWith('skills')) {
       const count = fs.readdirSync(check.path).filter(f => {
         try { return fs.statSync(path.join(check.path, f)).isDirectory(); } catch { return false; }
       }).length;
-      extra = ` (${count}/16 skills)`;
+      extra = ` (${count}/17 skills)`;
     } else if (check.path.endsWith('CLAUDE.md')) {
       const cmdDir = path.join(TARGET_DIR, '.claude', 'commands');
       const count = fs.existsSync(cmdDir) ? fs.readdirSync(cmdDir).filter(f => f.endsWith('.md')).length : 0;
-      if (count > 0) extra = ` (${count}/16 slash commands)`;
+      if (count > 0) extra = ` (${count}/17 slash commands)`;
     } else if (check.path.endsWith('.cursorrules')) {
       const rulesDir = path.join(TARGET_DIR, '.cursor', 'rules');
       const count = fs.existsSync(rulesDir) ? fs.readdirSync(rulesDir).filter(f => f.endsWith('.mdc') && f !== 'agents.mdc').length : 0;
-      if (count > 0) extra = ` (${count}/16 skill rules)`;
+      if (count > 0) extra = ` (${count}/17 skill rules)`;
     } else if (check.path.endsWith('copilot-instructions.md')) {
       const promptDir = path.join(TARGET_DIR, '.github', 'prompts');
       const count = fs.existsSync(promptDir) ? fs.readdirSync(promptDir).filter(f => f.endsWith('.prompt.md')).length : 0;
-      if (count > 0) extra = ` (${count}/16 prompt skills)`;
+      if (count > 0) extra = ` (${count}/17 prompt skills)`;
     }
     console.log(`  ${c.green}✔${c.reset} ${check.label}${c.dim}${extra}${c.reset}`);
   }

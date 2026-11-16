@@ -15,7 +15,7 @@
 
 ## How it works
 
-The pipeline has **17 specialised agent personas** packaged as **16 skills** and 1 always-on rule. The 6 planning agents can be invoked individually as standalone skills or chained together via `sdlc-plan`. Instead of copy-pasting between separate AI chat windows, you invoke skills by name and the agent runs automatically.
+The pipeline has **18 specialised agent personas** packaged as **17 skills** and 1 always-on rule. The 6 planning agents can be invoked individually as standalone skills or chained together via `sdlc-plan`. Instead of copy-pasting between separate AI chat windows, you invoke skills by name and the agent runs automatically.
 
 ```
 Your idea
@@ -46,7 +46,7 @@ To understand how the pipeline operates, think of the distinction between **the 
 
 | Component | Nature | When It Triggers | What It Controls |
 |---|---|---|---|
-| **16 Skills** (`.agents/skills/`) | **On-Demand** | Triggered only when you say phrases like `"plan my project"`, `"implement TASK-001"`, or `"debug this"`. | **WHAT task to do**: Orchestrates multi-agent chains, creates task backlogs, runs code reviews, and writes reports into `docs/`. |
+| **17 Skills** (`.agents/skills/`) | **On-Demand** | Triggered only when you say phrases like `"plan my project"`, `"implement TASK-001"`, `"debug this"`, or `"explain architecture decisions"`. | **WHAT task to do**: Orchestrates multi-agent chains, creates task backlogs, runs code reviews, and writes reports into `docs/`. |
 | **Always-On Rules** (`.agents/AGENTS.md`) | **Always-On** | Injected automatically on **100% of interactions** (every prompt, every skill, and every ad-hoc question). | **HOW the code must be written**: Enforces baseline engineering law across all tools (typed error handling, parameterized SQL, no console.log, zero linter errors, and anti-pattern memory). |
 
 ---
@@ -123,7 +123,7 @@ To understand where `ai-dev-pipeline` sits in the software industry, it helps to
 ┌────────────────────────────────────────────────────────┐
 │  LAYER 3: GOVERNANCE & SDLC FRAMEWORK                  │
 │  👉 AI Dev Pipeline                                    │
-│  (17 specialized roles, architecture contracts, evals) │
+│  (18 specialized roles, architecture contracts, evals) │
 ├────────────────────────────────────────────────────────┤
 │  LAYER 2: THE EDITOR / INTERFACE (The Hands)           │
 │  Cursor, Google Antigravity, Claude Code, Copilot      │
@@ -214,6 +214,7 @@ The following reference scenarios demonstrate the pipeline's end-to-end artifact
 │       ├── sdlc-docs/SKILL.md          # Documentation generation & drift sync (Agent 14)
 │       ├── sdlc-onboard/SKILL.md       # Brownfield codebase onboarding (Agent 15)
 │       ├── sdlc-debug/SKILL.md         # Root-cause analysis & bug fixing (Agent 16)
+│       ├── sdlc-retro/SKILL.md         # Architectural retrospective & design deep-dive (Agent 17)
 │       ├── pr-review/SKILL.md          # PR review at merge gate (Agent 11)
 │       └── pr-triage/SKILL.md          # Large PR triage (Agent 12)
 ├── prompts/                            # Source of truth for all agent instructions
@@ -233,7 +234,8 @@ The following reference scenarios demonstrate the pipeline's end-to-end artifact
 │   ├── 13-devops-agent.md             # Dockerfile, CI/CD, IaC
 │   ├── 14-documentation-agent.md      # API docs, README, changelog
 │   ├── 15-codebase-onboarder.md       # Reverse-engineer architecture from code
-│   └── 16-bug-investigator.md         # Scientific RCA, reproduction test first
+│   ├── 16-bug-investigator.md         # Scientific RCA, reproduction test first
+│   └── 17-architectural-retro.md      # 5 design choices, break points, 100x scale
 ├── scripts/                            # Automation & cross-tool synchronizers
 │   ├── sync-tools.js                  # Syncs AGENTS.md → CLAUDE.md, .cursorrules & Copilot
 │   └── sync-tools.ps1                 # PowerShell synchronizer
@@ -275,7 +277,7 @@ npx @kadvsperera/ai-dev-pipeline init
 npx @kadvsperera/ai-dev-pipeline init -y
 ```
 
-This scaffolds the 17 agent personas, 16 skills, docs roadmap, anti-patterns memory, and native configuration files tailored to your selected AI tools (**Antigravity**, **Cursor**, **Claude Code**, and **GitHub Copilot**).
+This scaffolds the 18 agent personas, 17 skills, docs roadmap, anti-patterns memory, and native configuration files tailored to your selected AI tools (**Antigravity**, **Cursor**, **Claude Code**, and **GitHub Copilot**).
 
 ### Security & Transparency: What `init` Writes and Runs
 
@@ -330,7 +332,7 @@ npx @kadvsperera/ai-dev-pipeline sync
 
 ### Option 1: Global Setup (Install Once, Available Everywhere)
 
-Use this method if you want the 17 agents, 16 skills, and coding standards available across **every folder and project** you open without copying files into each repository:
+Use this method if you want the 18 agents, 17 skills, and coding standards available across **every folder and project** you open without copying files into each repository:
 
 #### For Google Antigravity:
 1. Clone or copy this repository into your global plugins directory:
@@ -341,7 +343,7 @@ Use this method if you want the 17 agents, 16 skills, and coding standards avail
    # macOS / Linux:
    git clone https://github.com/vdsperera/ai-dev-pipeline.git ~/.gemini/config/plugins/ai-dev-pipeline
    ```
-2. Antigravity discovers the plugin automatically. All 16 skills are immediately available in any workspace you open.
+2. Antigravity discovers the plugin automatically. All 17 skills are immediately available in any workspace you open.
 
 #### For Cursor:
 1. Open Cursor Settings (`Ctrl+Shift+J` or `Cmd+Shift+J`) → **General** → **Rules for AI**.
@@ -475,6 +477,7 @@ graph TD
 | Generate the task backlog | `sdlc-tasks` (auto-bootstraps `TASK-001` for toolchain setup) |
 | Onboard an existing codebase | `sdlc-onboard` |
 | Diagnose and fix a bug scientifically | `sdlc-debug` |
+| Audit architecture & design trade-offs | `sdlc-retro` |
 | Run the full end-to-end pipeline | `sdlc-plan` (orchestrates all planning steps) |
 
 **Portability**: To use any standalone skill in another project, copy its `.agents/skills/<skill-name>/` folder and the referenced prompt file from `prompts/` into your target project.
@@ -483,7 +486,7 @@ graph TD
 
 ## The Complete Software Team (Agent personas)
 
-The 17 agents map directly to a cross-functional real-world software team, covering every phase of the SDLC.
+The 18 agents map directly to a cross-functional real-world software team, covering every phase of the SDLC.
 
 ### 1. Product & Strategy
 | # | Agent | Real-world role | Prompt |
@@ -525,6 +528,7 @@ The 17 agents map directly to a cross-functional real-world software team, cover
 |---|-------|----------------|--------|
 | 15| Codebase Onboarder | Reverse Engineer / Solution Architect | `prompts/15-codebase-onboarder.md` |
 | 16| Bug Investigator & RCA Specialist | Debugger / Reliability Engineer | `prompts/16-bug-investigator.md` |
+| 17| Architectural Retrospective & Socratic Reviewer | Principal Architect / Tech Lead | `prompts/17-architectural-retro.md` |
 
 ## Skills reference
 
@@ -544,6 +548,7 @@ The 17 agents map directly to a cross-functional real-world software team, cover
 | `sdlc-docs` | "document TASK-NNN", "generate docs", "update README" | API docs, README, changelog. Auto-syncs architecture drift back to `docs/architecture.md` |
 | `sdlc-onboard` | "onboard this repo", "reverse engineer architecture", "scan existing codebase" | Scans brownfield code, reverse-engineers tech stack and writes baseline `docs/architecture.md` |
 | `sdlc-debug` | "debug this", "fix bug", "investigate error", "root cause analysis", "hotfix" | Scientific RCA: failing test first → minimal fix → linters/tests → `docs/handoffs/BUG-NNN.md` |
+| `sdlc-retro` | "explain architecture decisions", "architectural retro", "audit design choices" | Audits 5 core decisions, failure points, 100x scale, and review cheat sheet → `docs/architecture-retro.md` |
 | `pr-review` | "review this PR", "review PR #47" | Three-layer PR review with verdict |
 | `pr-triage` | "triage this PR", "this PR is too large" | Segments large PRs for reviewable chunks |
 
