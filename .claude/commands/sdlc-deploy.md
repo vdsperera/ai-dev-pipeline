@@ -2,7 +2,7 @@
 
 # sdlc-deploy
 
-> Use this skill when the user wants to generate or review deployment artifacts for a completed task. Triggers on phrases like "deploy TASK-NNN", "review deployment", "generate Dockerfile", "create CI/CD", or "deployment review". Runs the DevOps Agent (Agent 13) to produce Dockerfiles, CI/CD pipelines, IaC templates, and deployment configs.
+> Use this skill when the user wants to generate or review deployment artifacts for a completed task. Triggers on phrases like "deploy TASK-NNN", "review deployment", "generate Dockerfile", "create CI/CD", or "deployment review". Runs the DevOps Agent (Agent 13) to produce Dockerfiles, CI/CD pipelines, IaC templates, and deployment configs.
 
 # SDLC Deploy — DevOps Review & Artifact Generation
 

@@ -2,7 +2,7 @@
 
 # pr-review
 
-> Use this skill when the user wants to review a pull request at the merge gate. Triggers on phrases like "review this PR", "review PR #NNN", "PR review", or "review this diff". Runs the three-layer PR Reviewer (Agent 11) to produce mechanical findings, engineering questions, and system flags with a verdict.
+> Use this skill when the user wants to review a pull request at the merge gate. Triggers on phrases like "review this PR", "review PR #NNN", "PR review", or "review this diff". Runs the three-layer PR Reviewer (Agent 11) to produce mechanical findings, engineering questions, and system flags with a verdict.
 
 # PR Review — Agent 11
 

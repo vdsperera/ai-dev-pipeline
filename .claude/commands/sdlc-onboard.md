@@ -2,7 +2,7 @@
 
 # sdlc-onboard
 
-> Use this skill when bringing the AI Dev Pipeline into an existing ("brownfield") codebase that does not yet have docs/architecture.md. Triggers on phrases like "onboard this repo", "reverse engineer architecture", "scan existing codebase", "initialize pipeline for existing project", or "sdlc-onboard". Runs Agent 15 (Codebase Onboarder) to generate docs/architecture.md from existing code.
+> Use this skill when bringing the AI Dev Pipeline into an existing ("brownfield") codebase that does not yet have docs/architecture.md. Triggers on phrases like "onboard this repo", "reverse engineer architecture", "scan existing codebase", "initialize pipeline for existing project", or "sdlc-onboard". Runs Agent 15 (Codebase Onboarder) to generate docs/architecture.md from existing code.
 
 # SDLC Onboard — Reverse-Engineer Existing Codebase
 

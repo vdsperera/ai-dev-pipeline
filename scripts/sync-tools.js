@@ -37,7 +37,7 @@ function normalizePromptPaths(body) {
 }
 
 function normalizeLineEndings(str) {
-  return str ? str.replace(/\r\n/g, '\n').trim() : '';
+  return str ? str.replace(/\r\n/g, '\n').replace(/\r/g, '').trim() : '';
 }
 
 function getAvailableSkills(skillsDir = SKILLS_DIR) {
@@ -58,7 +58,7 @@ function getAvailableSkills(skillsDir = SKILLS_DIR) {
         const content = fs.readFileSync(skillFile, 'utf8');
         const match = content.match(/description:\s*>-?\s*([\s\S]*?)(?=---|\n[A-Za-z0-9#])/);
         if (match) {
-          description = match[1].replace(/\n\s*/g, ' ').trim();
+          description = match[1].replace(/\r?\n\s*/g, ' ').trim();
         }
         body = content.replace(/^---[\s\S]*?---\s*/, '').trim();
       }

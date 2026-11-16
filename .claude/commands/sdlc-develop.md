@@ -2,7 +2,7 @@
 
 # sdlc-develop
 
-> Use this skill when the user wants to implement a specific task from the backlog. Triggers on phrases like "implement TASK-NNN", "develop TASK-NNN", "build TASK-NNN", "work on TASK-NNN", or "start task NNN". Reads the task definition, linked stories, and architecture, then implements the code following Agent 6 (Developer) standards.
+> Use this skill when the user wants to implement a specific task from the backlog. Triggers on phrases like "implement TASK-NNN", "develop TASK-NNN", "build TASK-NNN", "work on TASK-NNN", or "start task NNN". Reads the task definition, linked stories, and architecture, then implements the code following Agent 6 (Developer) standards.
 
 # SDLC Developer — Implement a Task
 

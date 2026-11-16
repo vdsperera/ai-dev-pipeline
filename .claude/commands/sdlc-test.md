@@ -2,7 +2,7 @@
 
 # sdlc-test
 
-> Use this skill when the user wants to generate a comprehensive test suite for a completed task. Triggers on phrases like "test TASK-NNN", "generate tests for TASK-NNN", "write tests for TASK-NNN", or "create test suite". Runs the Test Generator (Agent 10) to produce unit, integration, E2E, and performance tests based on linked stories, architecture, and review reports.
+> Use this skill when the user wants to generate a comprehensive test suite for a completed task. Triggers on phrases like "test TASK-NNN", "generate tests for TASK-NNN", "write tests for TASK-NNN", or "create test suite". Runs the Test Generator (Agent 10) to produce unit, integration, E2E, and performance tests based on linked stories, architecture, and review reports.
 
 # SDLC Test Generation — Agent 10
 

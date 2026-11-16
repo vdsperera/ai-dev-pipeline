@@ -2,7 +2,7 @@
 
 # sdlc-stories
 
-> Use this skill when the user wants to generate user stories with Gherkin acceptance criteria. Triggers on phrases like "write user stories", "create stories", "generate acceptance criteria", "user stories for feature", or "write Gherkin scenarios". Runs Agent 2 (User Story Writer) to produce structured user stories.
+> Use this skill when the user wants to generate user stories with Gherkin acceptance criteria. Triggers on phrases like "write user stories", "create stories", "generate acceptance criteria", "user stories for feature", or "write Gherkin scenarios". Runs Agent 2 (User Story Writer) to produce structured user stories.
 
 # SDLC User Stories — Generate Stories with Acceptance Criteria
 

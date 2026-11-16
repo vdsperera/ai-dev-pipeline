@@ -1,5 +1,5 @@
 ---
-description: Use this skill when the user wants to investigate, debug, or fix a bug, stack trace, regression, or unexpected behaviour. Triggers on phrases like "debug this", "fix bug", "investigate error", "root cause analysis", "hotfix", or "sdlc-debug". Runs Agent 16 (Bug Investigator) to perform RCA, write a failing reproduction test first, apply a minimal fix, and produce a BUG-NNN handoff report.
+description: Use this skill when the user wants to investigate, debug, or fix a bug, stack trace, regression, or unexpected behaviour. Triggers on phrases like "debug this", "fix bug", "investigate error", "root cause analysis", "hotfix", or "sdlc-debug". Runs Agent 16 (Bug Investigator) to perform RCA, write a failing reproduction test first, apply a minimal fix, and produce a BUG-NNN handoff report.
 globs: *
 alwaysApply: false
 ---

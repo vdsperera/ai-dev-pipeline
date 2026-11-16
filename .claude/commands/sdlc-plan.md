@@ -2,7 +2,7 @@
 
 # sdlc-plan
 
-> Use this skill when the user wants to plan a new project or feature. Triggers on phrases like "plan my project", "start a new project", "create requirements", "plan this feature", "fast-track plan", or "run the planning pipeline". Supports two execution tracks: 1) Full Track (default): Chains Product Strategist → Requirements Analyst → User Story Writer → Architect → UI/UX Designer (conditional) → Task Planner. 2) Fast-Track (lightweight): Chains Requirements Analyst → Task Planner directly for small features, CLI tools, and bugfixes. Each phase is also available as a standalone skill for individual use: sdlc-strategy, sdlc-requirements, sdlc-stories, sdlc-architect, sdlc-ux, sdlc-tasks.
+> Use this skill when the user wants to plan a new project or feature. Triggers on phrases like "plan my project", "start a new project", "create requirements", "plan this feature", "fast-track plan", or "run the planning pipeline". Supports two execution tracks: 1) Full Track (default): Chains Product Strategist → Requirements Analyst → User Story Writer → Architect → UI/UX Designer (conditional) → Task Planner. 2) Fast-Track (lightweight): Chains Requirements Analyst → Task Planner directly for small features, CLI tools, and bugfixes. Each phase is also available as a standalone skill for individual use: sdlc-strategy, sdlc-requirements, sdlc-stories, sdlc-architect, sdlc-ux, sdlc-tasks.
 
 # SDLC Planning Pipeline
 

@@ -2,7 +2,7 @@
 
 # sdlc-review
 
-> Use this skill when the user wants to review code for a completed task. Triggers on phrases like "review TASK-NNN", "code review TASK-NNN", "check TASK-NNN", or "review the code". Chains the Code Reviewer (Agent 7), optionally the Security Reviewer (Agent 8), and optionally the UX & Accessibility Reviewer (Agent 9) on the implemented code.
+> Use this skill when the user wants to review code for a completed task. Triggers on phrases like "review TASK-NNN", "code review TASK-NNN", "check TASK-NNN", or "review the code". Chains the Code Reviewer (Agent 7), optionally the Security Reviewer (Agent 8), and optionally the UX & Accessibility Reviewer (Agent 9) on the implemented code.
 
 # SDLC Review — Code Review, Security Review & UX Review
 

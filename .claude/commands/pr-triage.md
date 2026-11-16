@@ -2,7 +2,7 @@
 
 # pr-triage
 
-> Use this skill when the user has a large pull request that needs to be broken into reviewable segments before running a PR review. Triggers on phrases like "triage this PR", "this PR is too large", "segment this PR", or "break down this PR for review". Runs Agent 12 (Large PR Triage) to produce a structured review plan with segments and cross-cutting concerns.
+> Use this skill when the user has a large pull request that needs to be broken into reviewable segments before running a PR review. Triggers on phrases like "triage this PR", "this PR is too large", "segment this PR", or "break down this PR for review". Runs Agent 12 (Large PR Triage) to produce a structured review plan with segments and cross-cutting concerns.
 
 # Large PR Triage — Agent 12
 

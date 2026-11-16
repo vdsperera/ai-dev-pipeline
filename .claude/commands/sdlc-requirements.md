@@ -2,7 +2,7 @@
 
 # sdlc-requirements
 
-> Use this skill when the user wants to analyse and refine requirements for a project or feature. Triggers on phrases like "analyse requirements", "refine requirements", "create requirements", "requirements analysis", or "find gaps in requirements". Runs Agent 1 (Requirements Analyst) to detect gaps, ambiguities, and produce a refined requirements document.
+> Use this skill when the user wants to analyse and refine requirements for a project or feature. Triggers on phrases like "analyse requirements", "refine requirements", "create requirements", "requirements analysis", or "find gaps in requirements". Runs Agent 1 (Requirements Analyst) to detect gaps, ambiguities, and produce a refined requirements document.
 
 # SDLC Requirements Analysis — Refine Requirements
 

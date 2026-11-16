@@ -2,7 +2,7 @@
 
 # sdlc-docs
 
-> Use this skill when the user wants to generate or update documentation for a completed task. Triggers on phrases like "document TASK-NNN", "generate docs", "update README", "write API docs", or "generate changelog". Runs the Documentation Agent (Agent 14) to produce API docs, README updates, changelog entries, and staleness reports.
+> Use this skill when the user wants to generate or update documentation for a completed task. Triggers on phrases like "document TASK-NNN", "generate docs", "update README", "write API docs", or "generate changelog". Runs the Documentation Agent (Agent 14) to produce API docs, README updates, changelog entries, and staleness reports.
 
 # SDLC Documentation — Generate & Review Docs
 

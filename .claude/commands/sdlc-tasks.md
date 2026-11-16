@@ -2,7 +2,7 @@
 
 # sdlc-tasks
 
-> Use this skill when the user wants to generate or regenerate a task backlog from existing architecture and user stories. Triggers on phrases like "plan tasks", "create task backlog", "break down tasks", "generate tasks", or "task planning". Runs Agent 5 (Task Planner) to produce an ordered atomic task list with dependencies.
+> Use this skill when the user wants to generate or regenerate a task backlog from existing architecture and user stories. Triggers on phrases like "plan tasks", "create task backlog", "break down tasks", "generate tasks", or "task planning". Runs Agent 5 (Task Planner) to produce an ordered atomic task list with dependencies.
 
 # SDLC Task Planning — Generate Task Backlog
 

@@ -2,7 +2,7 @@
 
 # sdlc-architect
 
-> Use this skill when the user wants to design or redesign system architecture for a project or feature. Triggers on phrases like "design architecture", "create architecture", "system design", "component design", "API contracts", or "data model design". Runs Agent 3 (Architect) to produce a system design document.
+> Use this skill when the user wants to design or redesign system architecture for a project or feature. Triggers on phrases like "design architecture", "create architecture", "system design", "component design", "API contracts", or "data model design". Runs Agent 3 (Architect) to produce a system design document.
 
 # SDLC Architecture Design — Create System Design
 

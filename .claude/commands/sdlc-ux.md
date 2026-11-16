@@ -2,7 +2,7 @@
 
 # sdlc-ux
 
-> Use this skill when the user wants to create or update UI/UX design specifications for a project or feature. Triggers on phrases like "design UI", "create design specs", "UX design", "design system", "component specs", "page layouts", or "user flow design". Runs Agent 4 (UI/UX Designer) to produce design specifications.
+> Use this skill when the user wants to create or update UI/UX design specifications for a project or feature. Triggers on phrases like "design UI", "create design specs", "UX design", "design system", "component specs", "page layouts", or "user flow design". Runs Agent 4 (UI/UX Designer) to produce design specifications.
 
 # SDLC UI/UX Design — Create Design Specifications
 

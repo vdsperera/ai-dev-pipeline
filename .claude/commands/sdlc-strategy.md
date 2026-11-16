@@ -2,7 +2,7 @@
 
 # sdlc-strategy
 
-> Use this skill when the user wants to define or refine product strategy, MVP scope, and business risks for a project or feature. Triggers on phrases like "define product strategy", "create product brief", "MVP scope", "business model", or "product strategy". Runs Agent 0 (Product Strategist) to produce a structured product brief.
+> Use this skill when the user wants to define or refine product strategy, MVP scope, and business risks for a project or feature. Triggers on phrases like "define product strategy", "create product brief", "MVP scope", "business model", or "product strategy". Runs Agent 0 (Product Strategist) to produce a structured product brief.
 
 # SDLC Product Strategy — Define Product Brief
 
