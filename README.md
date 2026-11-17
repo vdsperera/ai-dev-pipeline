@@ -70,6 +70,7 @@ The AI Dev Pipeline solves this by positioning the developer as the **Lead Archi
 * **Every architectural decision is defensible:** Architecture Decision Records (ADRs in `docs/architecture.md`) explicitly capture why an approach was chosen, what alternatives were evaluated, and what trade-offs were accepted.
 * **Full paper trail per task:** Developer handoff notes (`docs/handoffs/`), Gherkin acceptance criteria (`docs/user-stories.md`), and automated drift checks guarantee you can always explain and defend *how* and *why* your system functions.
 * **Instant brownfield visibility (`sdlc-onboard`):** Reverse-engineer any legacy or existing codebase to surface architectural risks, dependency bottlenecks, and tech debt before touching a line of code.
+* **Evidence-grounded architectural retro (`sdlc-retro`):** Automatically audit past decisions against recorded ADRs and git commit churn, reason about 100x scale, and prepare review defense talking points.
 * **Scientific debugging (`sdlc-debug`):** Enforce root-cause analysis with automated failing reproduction tests before applying fixes—preventing "guess-and-check" hallucinated patches.
 
 ### Interrogating & Defending Your Architecture
@@ -77,13 +78,13 @@ The AI Dev Pipeline solves this by positioning the developer as the **Lead Archi
 A resilient architecture is one you can explain and defend under scrutiny. You can use the AI assistant to conduct **Architecture Defense & Stress-Testing sessions** before presenting your project to an Architecture Review Board (ARB), technical lead, or auditor:
 
 #### Workflow A: For projects built with this pipeline
-If you built the project using the pipeline, your design reasoning is already recorded in `docs/architecture.md` and `docs/handoffs/`. You can immediately run the stress-test prompts below.
+If you built the project using the pipeline, your design reasoning is already recorded in `docs/architecture.md` and `docs/handoffs/`. Run: `"run an architectural retro"` or `"prepare me to explain this"` (`sdlc-retro`) to produce an evidence-backed review report and elevator pitches.
 
 #### Workflow B: For projects built WITHOUT this pipeline (legacy or external code)
 If you are working with an existing codebase that has no documentation:
 1. Run: `"onboard this repo"` (`sdlc-onboard`).
 2. The agent scans the code and reverse-engineers a baseline `docs/architecture.md` with component maps, implicit ADRs, and risk flags.
-3. Once generated, run the stress-test prompts below to interrogate the codebase.
+3. Run: `"run an architectural retro"` (`sdlc-retro`) to audit the 5 core decisions, likely failure modes, and 100x scale reasoning.
 
 #### Architecture Defense Prompts
 

@@ -5,6 +5,27 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.0] - 2026-11-17
+
+### Added
+- **Architectural Retrospective Agent & Skill (`sdlc-retro` — Agent 17)**:
+  - Added standalone `sdlc-retro` skill (`prompts/17-architectural-retro.md` and `.agents/skills/sdlc-retro/SKILL.md`) for auditing system design trade-offs, break points, and reversibility on completed features or existing repositories.
+  - **Evidence Provenance Tagging**: Requires all claims in sections 1–4 to carry explicit provenance tags: `[recorded]` (citing ADRs/handoffs/commits), `[observed]` (citing `file:line`), or `[inferred]` (stating deductive reasoning). Sections with only inferred claims are explicitly flagged as hypothesis sections.
+  - **Git Churn Grounding**: Cross-references top 10 churned files and commit messages containing `"revert"`, `"hotfix"`, or `"workaround"` from `git log` as empirical evidence for fragility. Gracefully handles cold-start repositories with `<5` commits.
+  - **Scale Reasoning**: Analyzes 100x scalability grounded in explicitly stated load profiles (read-heavy, write-heavy, fan-out) and sensitivity conditions, replacing speculative simulation language.
+  - **Feed-Forward Loop**: Automatically converts retro findings into project artifacts: proposes `TASK-NNN` entries for severe failure modes to `docs/tasks.md`, `AP-NNN` entries to `docs/anti-patterns.md`, and retroactive ADR drafts to `docs/architecture.md`.
+  - **Elevator Pitch Mode**: Optional Section 5 providing 60-second casual coffee-chat pitches and senior technical review defense using the C-A-T (Context, Alternatives, Trade-offs) framework via `--with-pitch` or trigger phrase `"prepare me to explain this"`.
+- **Architectural Retrospective Path Verification (`eval --retro-check`)**:
+  - Added `--retro-check` flag to `scripts/eval-harness.js` that audits `docs/architecture-retro.md` to guarantee 100% of cited files and directory paths exist on disk without hallucination.
+- **Enhanced Architecture Decision Records (ADRs)**:
+  - Upgraded ADR template in `prompts/03-architect.md` to require `Status`, `Date`, `Alternatives considered` (with explicit rejection rationale), `Implementing files`, and added a HALT rule: *"halt if you cannot name at least one rejected alternative — a decision with no alternative is not a decision."*
+- **Architecture Deviations Tracking**:
+  - Upgraded developer handoff template in `.agents/skills/sdlc-develop/SKILL.md` to include explicit `Deviations from architecture` (`[none] | [ADR-NNN: what differed and why]`) and ADR supersession tracking rules.
+- **Cross-Tool Parity & Skill Expansion**:
+  - Expanded pipeline to **18 specialized agent personas** and **17 native skills**.
+  - Re-synchronized all 55 native tool files across Antigravity, Cursor (`.cursor/rules/sdlc-retro.mdc`), Claude Code (`.claude/commands/sdlc-retro.md`), and GitHub Copilot (`.github/prompts/sdlc-retro.prompt.md`).
+  - Updated global Antigravity plugin (`~/.gemini/config/plugins/ai-dev-pipeline`).
+
 ## [1.2.0] - 2026-11-15
 
 ### Added

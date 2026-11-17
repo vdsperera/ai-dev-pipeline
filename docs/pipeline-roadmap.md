@@ -61,14 +61,18 @@ To cover 100% of real-world software engineering without causing "skill bloat", 
 - **Concept**: Preventing documentation rot when implementation realities cause APIs, schemas, or component boundaries to evolve during development.
 - **Implementation**: `sdlc-develop` includes an explicit `Architecture drift check` section in every task handoff note (`docs/handoffs/TASK-NNN.md`), and `sdlc-docs` automatically syncs any contract, data model, or component changes back into `docs/architecture.md`.
 
-### 6. Continuous Learning & Anti-Patterns Loop (`docs/anti-patterns.md`)
+### 6. Architectural Retrospective & System Design Audit (`sdlc-retro` — Agent 17)
+- **Concept**: Empowering developers to deeply understand, audit, and explain architectural decisions and trade-offs made during AI-assisted development.
+- **Implementation**: Standalone `sdlc-retro` skill (`prompts/17-architectural-retro.md`) reads recorded project history first (ADRs, handoffs, reviews, anti-patterns, git churn) before code, tags every finding with evidence provenance (`[recorded]`, `[observed]`, `[inferred]`), identifies likely failure modes grounded in commit churn, reasons about 100x scale with stated load profiles, verifies paths via `eval --retro-check`, and feeds findings forward into `TASK-NNN`, `AP-NNN`, and retroactive ADRs.
+
+### 7. Continuous Learning & Anti-Patterns Loop (`docs/anti-patterns.md`)
 - **Concept**: Eliminating recurring AI mistakes, deprecated API usage, and domain traps across sessions without bloating global instructions.
 - **Implementation**: A hybrid continuous improvement loop:
   - **Global Rules (`AGENTS.md`)**: Instructs agents to proactively record developer corrections and lessons learned.
   - **Project Registry (`docs/anti-patterns.md`)**: Stores concrete mistakes, corrections, and permanent invariants for that codebase.
   - **Enforcement Gate**: `sdlc-develop` reads anti-patterns before writing code, `sdlc-review` checks against them, and `sdlc-debug` logs root causes to prevent recurrence.
 
-### 7. Cross-Tool Portability & Rule Sync (Cursor, Claude Code, Antigravity)
+### 8. Cross-Tool Portability & Rule Sync (Cursor, Claude Code, Antigravity)
 - **Concept**: Preventing tool lock-in and eliminating manual duplication of rules and workflows across multiple AI IDEs and CLI tools.
 - **Implementation**: Automated cross-tool synchronizers (`scripts/sync-tools.js` and `scripts/sync-tools.ps1`):
   - Uses `.agents/AGENTS.md` as the single source of truth for all coding standards and quality gates.
@@ -76,7 +80,7 @@ To cover 100% of real-world software engineering without causing "skill bloat", 
   - Generates `.cursorrules` and `.cursor/rules/agents.mdc` for Cursor (Composer & Chat).
   - Includes `--check` mode for CI/pre-commit verification to prevent configuration drift.
 
-### 8. Automated Stage Evaluation Harness (`npx ai-dev-pipeline eval`)
+### 9. Automated Stage Evaluation Harness (`npx ai-dev-pipeline eval`)
 - **Concept**: Transforming the pipeline from a passive prompt collection into an independently evaluated, verifiable engineering harness with objective reliability scoring.
 - **Implementation**: Zero-dependency evaluation engine (`scripts/eval-harness.js`) that scores agent stages from 0 to 100% across four core dimensions:
   1. **Architecture Conformance (30%)**: Compares code to `docs/architecture.md` contracts and flags layer boundary leaks.
