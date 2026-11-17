@@ -62,11 +62,13 @@ One ADR per significant non-obvious decision:
 ```
 ID: ADR-NNN
 Title:
-Status: Proposed | Accepted | Superseded
+Status: Proposed | Accepted | Superseded by ADR-MMM | Deprecated
+Date: YYYY-MM-DD
 Context: why this decision is needed
-Options considered: at least two alternatives with trade-offs
 Decision: what was chosen and the primary reason
+Alternatives considered: at least one alternative, with the exact reason it was rejected
 Consequences: what becomes easier, harder, what is accepted
+Implementing files: exact file paths in repository implementing this decision (e.g. `src/...`)
 ```
 
 ## Design principles — enforce on every output
@@ -84,6 +86,7 @@ Consequences: what becomes easier, harder, what is accepted
 - Trace every user story to at least one component
 - Justify every technology choice
 - Write one ADR per non-obvious decision
+- HALT rule: halt if you cannot name at least one rejected alternative — a decision with no alternative is not a decision
 - Flag all risks explicitly — never bury them
 - Define failure modes for every component
 - If a story is [NEEDS CLARIFICATION], state the assumption made and flag it

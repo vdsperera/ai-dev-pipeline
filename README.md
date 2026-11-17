@@ -307,6 +307,9 @@ npx @kadvsperera/ai-dev-pipeline eval
 # Verify all paths and routes in docs/architecture.md exist on disk (anti-hallucination):
 npx @kadvsperera/ai-dev-pipeline eval --onboard-check
 
+# Verify all paths cited in docs/architecture-retro.md exist on disk:
+npx @kadvsperera/ai-dev-pipeline eval --retro-check
+
 # Run strict CI quality gate on specific task (fails if score < 90%):
 npx @kadvsperera/ai-dev-pipeline eval --task TASK-001 --threshold 90
 

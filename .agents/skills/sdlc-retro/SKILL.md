@@ -1,62 +1,86 @@
 ---
 name: sdlc-retro
 description: >-
-  Use this skill when the user wants to understand, audit, or prepare to explain the
+  Use this skill when the user wants to audit, understand, or prepare to explain the
   architecture and system design of an existing project or feature. Triggers on phrases
   like "explain architecture decisions", "architectural retro", "audit design choices",
-  "why was this built this way", "what could break", or "sdlc-retro". Runs Agent 17
-  (Architectural Retrospective) to produce a 5-dimension system design deep dive.
+  "why was this built this way", "what could break", "prepare me to explain this", or
+  "sdlc-retro". Runs Agent 17 (Architectural Retrospective) to produce an evidence-backed
+  system design audit and feed findings forward into tasks and ADRs.
 ---
 
-# SDLC Retro — Architectural Retrospective & System Design Deep-Dive
+# SDLC Retro — Architectural Retrospective & System Design Audit
 
-Run the Architectural Retrospective agent (Agent 17) to audit an existing codebase, analyze the 5 core design decisions and trade-offs, identify break points, evaluate 100x scalability, and prepare elevator pitches for technical reviews and interviews.
+Run the Architectural Retrospective agent (Agent 17) to audit an existing codebase, analyze recorded vs. inferred design decisions, evaluate failure modes grounded in git churn, reason about 100x scalability, and convert findings into new pipeline tasks, anti-patterns, and retroactive ADRs.
 
 ## Prerequisites
 
 - An existing codebase or implemented feature with source code and manifests
-- If `docs/architecture.md` exists, read it for baseline context; if not, discover architecture directly from code
+- If `docs/architecture.md` exists, read it alongside `docs/handoffs/`, `docs/reviews/`, and `docs/anti-patterns.md`
 
 ## Workflow
 
-### Step 1: Load Agent Instructions
+### Step 0: Load Recorded History & Decision Ledger
 
-**Read the full agent instructions** from [`prompts/17-architectural-retro.md`](../../prompts/17-architectural-retro.md) before proceeding.
+Before scanning code, inspect the project's historical records:
+1. Read `docs/architecture.md` (all ADRs, alternatives, and consequences)
+2. Read `docs/handoffs/*.md` (deviations, trade-offs, accepted technical debt)
+3. Read `docs/reviews/*.md` (flagged risks, reviewer findings)
+4. Read `docs/anti-patterns.md` (recurring defects and permanent invariants)
+5. Read `docs/tasks.md` (task status and component mapping)
+6. Check git churn: run `git log --stat --since=6.months` (or full log if shorter) and identify top 10 churned files and commits mentioning `"revert"`, `"hotfix"`, or `"workaround"`. *(If <5 commits exist, note that churn data is unavailable and proceed).*
 
-### Step 2: Scan Codebase & Map Architecture
+Build a **Decision Ledger** mapping each recorded choice to its source (ADR id, handoff id, commit hash).
 
-1. Inspect configuration files, dependency manifests, and entry points
-2. Identify core state management, database schemas, and inter-service communication
-3. Trace critical request/data paths through domain services and storage layers
+- **HALT and ask the user if:** `docs/architecture.md` contradicts code on a core decision (e.g. ADR says PostgreSQL, code uses SQLite). Ask which is current before proceeding.
+- **This step is complete when:** The decision ledger lists all discovered ADRs, handoffs, and top churned files.
 
-### Step 3: Conduct the 5-Dimension Retrospective
+### Step 1: Scan Codebase & Ground Implementation
+
+1. Read entry points, configuration files, and dependency manifests
+2. Trace state stores, database schemas, and inter-component contracts
+3. Verify recorded decisions match actual code, and discover implicit unrecorded decisions
+
+- **HALT and ask the user if:** Fewer than 5 architectural decisions can be grounded with `[recorded]` or `[observed]` evidence. Offer to run `sdlc-onboard` first.
+- **This step is complete when:** Entry points, state boundaries, and dependencies are mapped with verified file paths.
+
+### Step 2: Conduct Evidence-Tagged Retrospective
 
 **Role**: You are an Architectural Retrospective & Socratic Reviewer (Agent 17).
 
 **Process**:
-Produce all 5 sections specified in [`prompts/17-architectural-retro.md`](../../prompts/17-architectural-retro.md):
-1. **The 5 Core Architectural Decisions** (What was chosen, why, alternatives rejected, and trade-offs accepted)
-2. **Failure Mode Analysis** (Top 3 break points, trigger conditions, blast radiuses, and resilience fixes)
+Produce the 4 core sections specified in [`prompts/17-architectural-retro.md`](../../prompts/17-architectural-retro.md), tagging every claim with `[recorded]`, `[observed]`, or `[inferred]`:
+1. **The 5 Core Architectural Decisions** (Decision, Rationale, Rejected Alternatives, Trade-off Accepted, Implementing Files)
+2. **Likely Failure Modes** (Components most likely to break, cross-referenced with git churn and hotfix history)
 3. **Reversibility Matrix** (One-way doors vs. two-way doors)
-4. **100x Scale Stress Test** (First bottleneck to saturate and required architectural shift)
-5. **Review & Elevator Pitch Cheat Sheet** (60s casual pitch + Senior review defense using the C-A-T framework)
+4. **Scale Reasoning** (Stated load profile, probable first bottleneck, sensitivity condition, required architectural shift)
 
-### Step 4: Write Output & Present Summary
+*(Optional: If invoked with `--with-pitch` or trigger phrase `"prepare me to explain this"`, also include Section 5: Review & Elevator Pitch Cheat Sheet using the C-A-T framework).*
+
+- **HALT and ask the user if:** Any failure mode mitigation requires an architectural direction the user has explicitly ruled out.
+- **This step is complete when:** All sections are drafted and 100% of claims carry evidence tags.
+
+### Step 3: Write Output & Verify Paths
 
 1. Write the complete retrospective to `docs/architecture-retro.md`.
-2. Present a crisp, high-signal summary to the user:
-   - The top 3 trade-offs accepted
-   - The #1 component most likely to break under load
-   - The 60-second review elevator pitch
+2. Verify all cited paths exist on disk by running `npx ai-dev-pipeline eval --retro-check`.
+3. Present a concise summary to the user:
+   - Top recorded decisions vs. inferred decisions
+   - Top likely failure mode and churn risk
+   - Required shift for 100x scale
 
-### Step 5: Next Steps
+- **This step is complete when:** `docs/architecture-retro.md` is written and `eval --retro-check` reports 0 unresolved paths.
 
-Tell the user:
-*"Architectural retrospective is complete and saved to `docs/architecture-retro.md`. You can use the talking points to explain the design in reviews, or plan architectural enhancements using `sdlc-plan` or `sdlc-tasks`."*
+### Step 4: Feed Findings Forward (Convert to Pipeline Artifacts)
+
+Proactively offer to convert findings into real project work:
+1. **Remediation Tasks:** Propose `TASK-NNN` entries for severe failure modes to append to `docs/tasks.md`.
+2. **Anti-Pattern Candidates:** Propose `AP-NNN` entries for recurring bug patterns to append to `docs/anti-patterns.md`.
+3. **Retroactive ADRs:** Draft ADR entries for undocumented decisions discovered in code to append to `docs/architecture.md`.
 
 ## Rules
 
-- Base all analysis on real code and configuration present in the repository — cite actual file paths
-- Do not gloss over architectural risks, tight coupling, or single points of failure
+- Tag every finding with `[recorded]`, `[observed]`, or `[inferred]`
+- Never use speculative language like *"simulating 100x"*; state the assumed load profile
+- Cross-reference git commit churn as empirical evidence for fragility
 - Do not modify application source code during retrospective
-

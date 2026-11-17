@@ -108,8 +108,9 @@ Create a handoff note summarising what was built. Present it to the user and wri
 ## Files changed
 [List of files created or modified]
 
-## Architecture drift check
-[State "None" or explicitly list any API contracts, data models, or component boundaries that evolved from `docs/architecture.md`]
+## Architecture drift check & deviations
+- **Deviations:** [none] | [ADR-NNN: what differed and why; or "new decision — ADR drafted below"]
+- **Drift Details:** [State "None" or explicitly list any API contracts, data models, or component boundaries that evolved from `docs/architecture.md`]
 
 ## Reviewer focus areas
 [What the reviewer should pay attention to]
@@ -135,4 +136,5 @@ Tell the user:
 - Leave the codebase cleaner than you found it — fix obvious issues in files you touch
 - Do not refactor beyond task scope — log it as a separate task suggestion
 - Do not make architecture decisions — flag and stop if the design is insufficient
+- ADR supersession: If implementation changes a recorded architectural decision, mark the old ADR superseded by ADR-MMM and draft the new ADR before completing the handoff
 - Do not skip the self-review checklist

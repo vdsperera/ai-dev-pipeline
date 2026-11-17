@@ -148,6 +148,27 @@ function main() {
     }
   }
 
+  if (args.includes('--retro-check')) {
+    const retroPath = path.join(targetDir, 'docs', 'architecture-retro.md');
+    if (!fs.existsSync(retroPath)) {
+      console.error(`${c.red}ERROR:${c.reset} docs/architecture-retro.md not found in ${targetDir}`);
+      process.exit(1);
+    }
+    const retroContent = fs.readFileSync(retroPath, 'utf8');
+    const pathCheck = dimensions.verifyArchitecturePaths(retroContent, targetDir);
+    console.log(`\n${c.bold}🔍 Architectural Retrospective Path Verification${c.reset}`);
+    console.log(`   Scanned docs/architecture-retro.md in: ${targetDir}`);
+    console.log(`   Verified Paths: ${c.green}${pathCheck.verified}/${pathCheck.total}${c.reset}`);
+    if (pathCheck.unresolved.length > 0) {
+      console.log(`\n${c.yellow}⚠ Unresolved / Potential Hallucinated Paths (${pathCheck.unresolved.length}):${c.reset}`);
+      pathCheck.unresolved.forEach(p => console.log(`   - ${p}`));
+      process.exit(1);
+    } else {
+      console.log(`\n${c.green}✔ All declared paths exist on disk! No retrospective hallucinations detected.${c.reset}\n`);
+      process.exit(0);
+    }
+  }
+
   if (args.includes('--benchmark')) {
     reporters.runBenchmarks(runEvaluation, c);
     return;
