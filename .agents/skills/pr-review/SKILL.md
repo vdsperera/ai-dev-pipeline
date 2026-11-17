@@ -29,6 +29,9 @@ Determine how to get the PR content:
 - **From paste**: If the user pasted a diff, use that directly
 - **From MCP**: If a GitHub/GitLab MCP server is connected and a PR number is given, fetch the PR data
 
+- **HALT and ask the user if:** Diff content or target PR branch cannot be located.
+- **This step is complete when:** PR diff and modified files are loaded.
+
 ### Step 2: Classify PR Size
 
 | Size | Lines changed | Components touched | Layer 2 | Layer 3 |
@@ -106,6 +109,9 @@ Issue exactly one verdict:
 | **Approved with comments** | Minor/Nit findings only; may merge but should address |
 | **Request changes** | L1 blockers or unresolved L2 risks |
 | **Escalate** | L3 concern requires architectural decision before merge |
+
+- **HALT and ask the user if:** Review issues `Request changes` or `Escalate` verdict.
+- **This step is complete when:** 3-layer PR review findings and final verdict are communicated.
 
 Present the full review report to the user.
 

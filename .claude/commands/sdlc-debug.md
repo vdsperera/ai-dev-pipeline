@@ -25,11 +25,17 @@ Run the Bug Investigator agent (Agent 16) to diagnose a defect scientifically, w
 2. Read `docs/architecture.md` (if present) and inspect the files/functions implicated by the bug report or stack trace
 3. Trace the execution path and formulate hypotheses to isolate the true **root cause** (not just the surface symptom)
 
+- **HALT and ask the user if:** Symptom description is missing or cannot be correlated with codebase files.
+- **This step is complete when:** Implicated files and root-cause hypothesis are identified.
+
 ### Step 3: Reproduce with a Failing Test (Red Phase)
 
 1. Write a unit or integration test that reproduces the exact bug
 2. Run the test suite to confirm the new test fails as expected
 3. Do not modify production code until the failure is reproduced and understood
+
+- **HALT and ask the user if:** Defect cannot be reproduced locally in an automated test.
+- **This step is complete when:** A failing reproduction test is written and confirmed failing.
 
 ### Step 4: Implement Minimal Fix & Verify (Green Phase)
 
@@ -37,9 +43,12 @@ Run the Bug Investigator agent (Agent 16) to diagnose a defect scientifically, w
 2. Run the reproduction test and confirm it passes
 3. Run the full test suite and project static analysis/linters to ensure zero regressions and zero lint errors
 
-### Step 5: Produce RCA Handoff
+- **HALT and ask the user if:** Fix requires architectural breaking changes or causes regressions in existing tests.
+- **This step is complete when:** Fix is applied and all tests and linters pass cleanly.
 
-Write the RCA and handoff report to `docs/handoffs/BUG-NNN.md`:
+### Step 5: Produce RCA Handoff & Anti-Pattern Decision
+
+1. Write the RCA and handoff report to `docs/handoffs/BUG-NNN.md`:
 
 ```markdown
 # Bug RCA & Handoff — BUG-NNN
@@ -62,9 +71,18 @@ Write the RCA and handoff report to `docs/handoffs/BUG-NNN.md`:
 ## Blast Radius & Architecture Drift Check
 [Impact on other components and whether `docs/architecture.md` needs updating]
 
-## Anti-Pattern Prevention
-[If this bug stemmed from a recurring pitfall or flawed pattern, note whether `docs/anti-patterns.md` was updated]
+## Anti-Pattern Decision
+[Decision: YES (added AP-NNN with Detect: regex) / NO (one-line reason why this is not recurring)]
 ```
+
+2. **Mandatory Anti-Pattern Decision**:
+   Conclude every fix by deciding whether this bug represents a recurring pitfall:
+   - **Decision: YES** — Append an entry (`AP-NNN`) to `docs/anti-patterns.md` with `Detect: /regex/`, `Paths:`, and `Seen in: BUG-NNN`.
+   - **Decision: NO** — State a one-line reason (e.g., *"One-off typographical typo, not a recurring defect pattern"*).
+   This step cannot be skipped.
+
+- **HALT and ask the user if:** Defect highlights a systemic architecture flaw requiring an architectural review.
+- **This step is complete when:** `docs/handoffs/BUG-NNN.md` is saved and anti-pattern decision is made.
 
 ### Step 6: Next Steps
 

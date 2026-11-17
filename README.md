@@ -291,7 +291,7 @@ We believe developers should know exactly what any CLI tool installs in their re
   - **Project Helper Scripts** (`scripts/`): Pure zero-dependency Node.js utilities (`sync-tools.js`, `eval-harness.js`).
   - **Package Scripts** (`package.json`): Adds convenience npm scripts (`"sync-tools"`, `"eval"`). It **never** modifies or adds external runtime dependencies.
 * **What `init` runs**:
-  - The only hook configured is `.agents/hooks.json`, which invokes the local, cross-platform script `.agents/scripts/security-gate.js` to catch leaked secrets and prevent out-of-order task implementation.
+  - The hook configured in `.agents/hooks.json` invokes the local, cross-platform script `.agents/scripts/security-gate.js` to catch leaked secrets before git commits, while `sdlc-develop` executes `node scripts/security-gate.js --check-task` to mechanically verify task prerequisites before writing code.
 * **What `init` NEVER does**:
   - **Zero Telemetry / Zero Phone-Home**: No analytics, telemetry, or network requests are ever dispatched.
   - **Zero External Credentials**: It does not collect, store, or transmit cloud API tokens or external secrets.

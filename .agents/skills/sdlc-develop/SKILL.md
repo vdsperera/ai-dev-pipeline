@@ -20,18 +20,18 @@ Implement a single atomic task from the backlog following Developer Agent (Agent
 
 ## Workflow
 
-### Step 1: Gather Context
+### Step 1: Gather Context & Verify Dependencies
 
 1. Read `docs/tasks.md` and locate the specified task
 2. Read the task's linked user stories from `docs/user-stories.md` (if applicable)
 3. Read the task's linked component from `docs/architecture.md`
-4. Check the task's dependencies — verify all `Depends on` tasks are marked done
+4. **Enforce Task Dependencies**: Execute `node scripts/security-gate.js --check-task TASK-NNN` (or `node .agents/scripts/security-gate.js --check-task TASK-NNN`).
+   - If the output contains `"decision": "deny"`, **HALT immediately** and report the uncompleted dependencies to the user. Do not implement code or proceed until prerequisites are marked complete.
+   - If the task is unlisted or has no upstream dependencies, the gate automatically returns `"decision": "allow"`.
 5. Read `docs/anti-patterns.md` (if it exists) to identify any previously recorded mistakes or invariants to avoid
 
-If any dependency is not marked done, **stop and tell the user** which tasks must be completed first.
-
-- **HALT and ask the user if:** Any upstream dependency in `docs/tasks.md` is not marked `[x] Done`.
-- **This step is complete when:** Prerequisite dependencies are verified and context docs are loaded.
+- **HALT and ask the user if:** `node scripts/security-gate.js --check-task TASK-NNN` returns `decision: deny` or any upstream dependency in `docs/tasks.md` is not marked `[x] Done`.
+- **This step is complete when:** Task dependencies are verified as satisfied via the security gate and context docs are loaded.
 
 ### Step 2: Validate Input
 

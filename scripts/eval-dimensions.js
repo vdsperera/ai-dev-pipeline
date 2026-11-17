@@ -33,41 +33,46 @@ function checkPresentationLayer(relPath, content, findings) {
 
   let deduction = 0;
   if (hasDirectSql) {
-    findings.push({
-      dimension: 'Architecture',
-      severity: 'FAIL',
-      file: relPath,
-      message: 'Direct SQL execution detected in presentation/route layer. Violates layer boundary isolation.',
-      deduction: 20
-    });
+    findings.push({ dimension: 'Architecture', severity: 'FAIL', file: relPath, message: 'Direct SQL execution detected in presentation/route layer. Violates layer boundary isolation.', deduction: 20 });
     deduction += 20;
   }
   if (hasDirectDbPool) {
-    findings.push({
-      dimension: 'Architecture',
-      severity: 'WARN',
-      file: relPath,
-      message: 'Direct database/ORM connection initiated in presentation/controller layer. Route through service or repository.',
-      deduction: 10
-    });
+    findings.push({ dimension: 'Architecture', severity: 'WARN', file: relPath, message: 'Direct database/ORM connection initiated in presentation/controller layer. Route through service or repository.', deduction: 10 });
     deduction += 10;
   }
   return deduction;
 }
 
+function addCandidatePath(raw, foundPaths) {
+  if (!raw) return;
+  let cleaned = raw.trim().replace(/:\d+.*$/, '').replace(/#.*$/, '').replace(/[,\.;\)]+$/, '');
+  cleaned = cleaned.replace(/^\.\//, '');
+  if (!cleaned || cleaned.includes(' ') || cleaned.length < 3) return;
+  if (/^(https?:|node_modules|@)/i.test(cleaned) || cleaned.includes('//')) return;
+
+  const hasExt = /\.[a-zA-Z0-9]{1,8}$/.test(cleaned);
+  const hasSlash = cleaned.includes('/');
+  const isKnownRoot = /(?:^|\/)(src|lib|bin|routes|controllers|services|models|db|config|docs|scripts|tests?|\.github|\.agents|\.claude|\.cursor)(\/|$)/i.test(cleaned);
+
+  if ((hasExt && hasSlash) || cleaned.endsWith('/') || (hasExt && isKnownRoot)) {
+    const normalized = cleaned.replace(/[\\\/]+/g, path.sep).replace(/[\\\/]+$/, '');
+    foundPaths.add(normalized);
+  }
+}
+
 function verifyArchitecturePaths(archContent, targetDir) {
   if (!archContent) return { total: 0, verified: 0, unresolved: [] };
 
-  const pathRegex = /(?:`|'|")([a-zA-Z0-9_\-\.\/]+\.[a-zA-Z0-9]+)(?:`|'|")|(?:`|'|")((?:src|lib|bin|routes|controllers|services|models|db|config)[a-zA-Z0-9_\-\.\/]*)(?:`|'|")/gi;
   const foundPaths = new Set();
+  const quotedRegex = /(?:`|'|")([a-zA-Z0-9_\-\.\/]+)(?:`|'|")/g;
   let match;
-  while ((match = pathRegex.exec(archContent)) !== null) {
-    const rawPath = match[1] || match[2];
-    if (!rawPath) continue;
-    const normalized = rawPath.replace(/[\\\/]+/g, path.sep).replace(/^[\\\/]+/, '');
-    if (normalized.startsWith('http') || normalized.startsWith('node_modules') || normalized.includes('@') || normalized.startsWith('.')) continue;
-    if (normalized.includes(' ') || normalized.length < 3) continue;
-    foundPaths.add(normalized);
+  while ((match = quotedRegex.exec(archContent)) !== null) {
+    addCandidatePath(match[1], foundPaths);
+  }
+
+  const unquotedRegex = /(?:^|\s|\|)([a-zA-Z0-9_\-\.]+\/[a-zA-Z0-9_\-\.\/]+)(?:\s|\||,|\)|;|$)/gm;
+  while ((match = unquotedRegex.exec(archContent)) !== null) {
+    addCandidatePath(match[1], foundPaths);
   }
 
   const verified = [];
@@ -291,6 +296,20 @@ function parseCustomAntiPatterns(antiPatternsPath) {
   return patterns;
 }
 
+function checkTemplateVersion(antiPatternsPath, findings) {
+  if (!fs.existsSync(antiPatternsPath)) return;
+  try {
+    const apContent = fs.readFileSync(antiPatternsPath, 'utf8');
+    if (!apContent.includes('pipeline-template: anti-patterns/v2') && !/Detect:/i.test(apContent)) {
+      findings.push({
+        dimension: 'Anti-Patterns',
+        severity: 'INFO',
+        message: 'docs/anti-patterns.md uses legacy v1 format. Add "Detect: /regex/" and "Seen in:" fields to enable automated defect detection.'
+      });
+    }
+  } catch {}
+}
+
 function evaluateAntiPatterns(targetDir, findings, sourceFiles, isTestFile, isScriptOrCliFile) {
   let score = 100;
   const antiPatternsPath = path.join(targetDir, 'docs', 'anti-patterns.md');
@@ -305,6 +324,7 @@ function evaluateAntiPatterns(targetDir, findings, sourceFiles, isTestFile, isSc
     score -= 10;
   }
 
+  checkTemplateVersion(antiPatternsPath, findings);
   const customDetectPatterns = parseCustomAntiPatterns(antiPatternsPath);
 
   for (const file of sourceFiles) {
@@ -382,7 +402,9 @@ function verifyHandoffNote(targetDir, taskId, findings) {
 
 function verifyLastCommit(targetDir, findings) {
   try {
-    const lastCommitMsg = execSync('git log -1 --pretty=%B', { cwd: targetDir, encoding: 'utf8' }).trim();
+    const gitDir = path.join(targetDir, '.git');
+    if (!fs.existsSync(gitDir)) return 0;
+    const lastCommitMsg = execSync('git log -1 --pretty=%B', { cwd: targetDir, encoding: 'utf8', stdio: ['pipe', 'pipe', 'pipe'] }).trim();
     const conventionalCommitPattern = /^(feat|fix|docs|style|refactor|perf|test|build|ci|chore|revert)(\([a-z0-9_\-]+\))?:\s+.+/i;
     if (!conventionalCommitPattern.test(lastCommitMsg.split('\n')[0])) {
       findings.push({

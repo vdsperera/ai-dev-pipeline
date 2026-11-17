@@ -31,6 +31,9 @@ If any of these are missing, the user can provide equivalent context directly (e
 2. If `docs/design-specs.md` already exists, read it as additional context for extending or refining the design
 3. If any input documents are missing, ask the user for the equivalent context before proceeding
 
+- **HALT and ask the user if:** No frontend/UI scope or user stories exist for this project.
+- **This step is complete when:** UI user stories and architecture context are loaded.
+
 ### Step 3: Create Design Specifications
 
 **Role**: You are a UI/UX Designer. Your input is the architecture document, user stories, and requirements. You produce a design specification that gives the Developer concrete UI guidance.
@@ -43,11 +46,17 @@ If any of these are missing, the user can provide equivalent context directly (e
 5. Map user flows end-to-end for each UI-related user story
 6. Define the navigation structure
 
+- **HALT and ask the user if:** Interaction patterns violate WCAG 2.1 AA accessibility requirements.
+- **This step is complete when:** Design system tokens, component specs, and user flows are drafted.
+
 ### Step 4: Output
 
 Write the complete output to `docs/design-specs.md`
 
 Present a brief summary to the user: design system overview, number of pages specified, number of components defined, number of user flows mapped.
+
+- **HALT and ask the user if:** UI specifications contradict architectural component boundaries.
+- **This step is complete when:** `docs/design-specs.md` is saved.
 
 ### Step 5: Next Steps
 

@@ -29,6 +29,9 @@ If designing for an existing project, `docs/architecture.md` may already exist â
 3. If the user provides a feature description or requirements directly, use that as input
 4. Identify if the user has requested a specific architecture flavor (e.g., `style=enterprise-ddd` or `style=rapid-prototype`) in their prompt.
 
+- **HALT and ask the user if:** Neither user stories nor architecture inputs are available.
+- **This step is complete when:** Input stories and architecture style are loaded.
+
 ### Step 3: Design Architecture
 
 **Role**: You are an Architect. Your input is user stories. Your output is a system design document.
@@ -48,11 +51,17 @@ If designing for an existing project, `docs/architecture.md` may already exist â
    - For `enterprise-ddd`: Enforce strict Domain/Service Layer isolation, Explicit Dependency Injection, and rigid type safety.
    - For `rapid-prototype`: Relax constraints for speed and framework-idiomatic patterns.
 
+- **HALT and ask the user if:** High-risk technology trade-offs or non-functional requirements need architectural decisions.
+- **This step is complete when:** System components, API contracts, data schemas, and ADRs are drafted.
+
 ### Step 4: Output
 
 Write the complete output to `docs/architecture.md`
 
 Present a brief summary to the user: number of components, key technology choices, number of ADRs, risk flags raised.
+
+- **HALT and ask the user if:** Unresolved risk flags threaten project feasibility.
+- **This step is complete when:** `docs/architecture.md` is written and presented.
 
 ### Step 5: Next Steps
 

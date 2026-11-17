@@ -29,6 +29,9 @@ One of the following must be available as input:
 2. If the user provides raw requirements or a feature description directly, use that as input
 3. If both exist, use the requirements document as the base and incorporate the user's additional input
 
+- **HALT and ask the user if:** `docs/requirements.md` is missing and no feature input is provided.
+- **This step is complete when:** Input requirements are loaded.
+
 ### Step 3: Write User Stories
 
 **Role**: You are a User Story Writer. Your input is the requirements. Your output is a structured list of user stories with acceptance criteria.
@@ -39,11 +42,17 @@ One of the following must be available as input:
 3. Validate every story against the INVEST checklist
 4. Apply the splitting rules
 
+- **HALT and ask the user if:** Stories fail the INVEST criteria or contain untestable acceptance criteria.
+- **This step is complete when:** User stories with Given/When/Then scenarios are formulated.
+
 ### Step 4: Output
 
 Write the complete output to `docs/user-stories.md`
 
 Present a brief summary to the user: number of stories produced, MoSCoW breakdown, any stories flagged from `[NEEDS CLARIFICATION]` requirements.
+
+- **HALT and ask the user if:** User stories conflict with core scope or require scope re-negotiation.
+- **This step is complete when:** `docs/user-stories.md` is saved.
 
 ### Step 5: Next Steps
 

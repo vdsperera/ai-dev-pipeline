@@ -101,10 +101,23 @@ test('verifyArchitecturePaths identifies verified files and flags hallucinated p
 - Helpers: \`scripts/eval-harness.js\`
 - Missing Module: \`src/non-existent-hallucinated-controller.js\`
 - Database Model: \`src/models/imaginary-user.js\`
+- Unquoted Real File: bin/cli.js
+- Line Suffix File: bin/cli.js:45
+- Dot-prefixed Workflow: .github/workflows/ci.yml
+- Unquoted Missing: src/repositories/missing-orders.repo.ts
 `;
   const result = verifyArchitecturePaths(sampleArch, path.resolve(__dirname, '..'));
-  assert.ok(result.total >= 3);
+  assert.ok(result.total >= 4);
   assert.ok(result.verified >= 2);
   assert.ok(result.unresolved.some(p => p.includes('non-existent-hallucinated-controller.js')));
   assert.ok(result.unresolved.some(p => p.includes('imaginary-user.js')));
+  assert.ok(result.unresolved.some(p => p.includes('missing-orders.repo.ts')));
+});
+
+test('verifyArchitecturePaths handles empty documents with zero paths', () => {
+  const emptyArch = `# Architecture Overview\nNo specific file paths declared yet.`;
+  const result = verifyArchitecturePaths(emptyArch, path.resolve(__dirname, '..'));
+  assert.equal(result.total, 0);
+  assert.equal(result.verified, 0);
+  assert.equal(result.unresolved.length, 0);
 });

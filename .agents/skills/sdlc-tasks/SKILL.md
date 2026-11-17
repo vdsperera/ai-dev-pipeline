@@ -30,6 +30,9 @@ The following documents should be available as input:
 2. If `docs/design-specs.md` exists, read it as additional input — UI tasks should reference design specs
 3. If any required input documents are missing, ask the user for equivalent context before proceeding
 
+- **HALT and ask the user if:** `docs/architecture.md` or `docs/user-stories.md` are missing.
+- **This step is complete when:** Architecture and story inputs are loaded.
+
 ### Step 3: Plan Tasks
 
 **Role**: You are a Task Planner. Your input is the architecture document and user stories. Your output is an ordered atomic task list a Developer agent can execute one task at a time.
@@ -42,11 +45,17 @@ The following documents should be available as input:
 4. Verify traceability: every story and every component must appear in at least one task
 5. Produce the coverage matrix
 
+- **HALT and ask the user if:** Task dependencies contain circular references or cannot be executed in sequence.
+- **This step is complete when:** Atomic task list with explicit pass/fail conditions and dependencies is drafted.
+
 ### Step 4: Output
 
 Write the complete output to `docs/tasks.md`
 
 Present a brief summary to the user: total task count, layer breakdown, critical path, estimated effort distribution.
+
+- **HALT and ask the user if:** Any architectural component or user story lacks task coverage.
+- **This step is complete when:** `docs/tasks.md` is written and critical path summarized.
 
 ### Step 5: Next Steps
 

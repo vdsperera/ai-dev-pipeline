@@ -58,6 +58,9 @@ After each phase, present a brief summary and ask the user:
 
 **⏸️ Checkpoint 0**: Present a brief summary: the defined MVP scope, identified business model, and key risks. Ask the user to review, give feedback, or continue.
 
+- **HALT and ask the user if:** User requests changes or rejects the MVP scope.
+- **This phase is complete when:** `docs/product-brief.md` is written and approved by user.
+
 ---
 
 ### Phase 1: Requirements Analysis
@@ -78,6 +81,9 @@ After each phase, present a brief summary and ask the user:
 **Output**: Write the complete output to `docs/requirements.md`
 
 **⏸️ Checkpoint 1**: Present a brief summary: number of issues found, number of `[NEEDS CLARIFICATION]` items, and key requirements identified. Then ask the user to review, give feedback, or continue.
+
+- **HALT and ask the user if:** Core requirements remain ambiguous or contradictory.
+- **This phase is complete when:** `docs/requirements.md` is approved by user.
 
 ---
 
@@ -100,6 +106,9 @@ After each phase, present a brief summary and ask the user:
 
 **⏸️ Checkpoint 2**: Present a brief summary: number of stories produced, MoSCoW breakdown, any stories flagged from `[NEEDS CLARIFICATION]` requirements. Then ask the user to review, give feedback, or continue.
 
+- **HALT and ask the user if:** User stories violate INVEST criteria or acceptance criteria are untestable.
+- **This phase is complete when:** `docs/user-stories.md` is approved by user.
+
 ---
 
 ### Phase 3: Architecture Design
@@ -119,6 +128,9 @@ After each phase, present a brief summary and ask the user:
 **Output**: Write the complete output to `docs/architecture.md`
 
 **⏸️ Checkpoint 3**: Present a brief summary: number of components, key technology choices, number of ADRs, risk flags raised. Then ask the user to review, give feedback, or continue.
+
+- **HALT and ask the user if:** Architectural trade-offs or ADRs require technical stakeholder consensus.
+- **This phase is complete when:** `docs/architecture.md` is approved by user.
 
 ---
 
@@ -145,6 +157,9 @@ After each phase, present a brief summary and ask the user:
 
 **⏸️ Checkpoint 3.5**: Present a brief summary: design system overview, number of pages specified, number of components defined, number of user flows mapped. Ask the user to review, give feedback, or continue.
 
+- **HALT and ask the user if:** UI design specifications contradict architectural component boundaries.
+- **This phase is complete when:** `docs/design-specs.md` is approved by user.
+
 ---
 
 ### Phase 5: Task Planning
@@ -164,6 +179,9 @@ After each phase, present a brief summary and ask the user:
 6. Produce the coverage matrix
 
 **Output**: Write the complete output to `docs/tasks.md`
+
+- **HALT and ask the user if:** Task dependency graph contains circular dependencies or unmapped requirements.
+- **This phase is complete when:** `docs/tasks.md` is saved and critical path presented.
 
 ---
 

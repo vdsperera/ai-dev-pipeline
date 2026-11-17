@@ -41,6 +41,9 @@ Based on the context, determine which artifacts are needed:
 | Architecture specifies deployment strategy not yet configured | Generate deployment config |
 | Existing deployment files, no new artifacts needed | Review existing files only |
 
+- **HALT and ask the user if:** Target hosting environment or cloud provider is unspecified.
+- **This step is complete when:** Context is gathered and required deployment artifacts are selected.
+
 ### Step 3: Generate Artifacts
 
 **Read the full agent instructions** from [`prompts/13-devops-agent.md`](prompts/13-devops-agent.md).
@@ -89,6 +92,9 @@ Write the deployment review report to `docs/deploy/TASK-NNN-deploy.md`:
 ## Verdict
 [Approved | Rework | Escalate]
 ```
+
+- **HALT and ask the user if:** Review discovers unpinned secrets or missing rollback strategy.
+- **This step is complete when:** `docs/deploy/TASK-NNN-deploy.md` is saved.
 
 ### Step 6: Next Steps
 

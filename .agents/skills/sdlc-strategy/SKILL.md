@@ -36,11 +36,17 @@ The user must provide a raw idea, brief, or product concept as input. This can b
    - Go / No-go / Pivot recommendation
 3. Produce the structured Product Brief in the format specified by the agent instructions
 
+- **HALT and ask the user if:** Core problem or target audience is fundamentally undefined.
+- **This step is complete when:** 6-step business interrogation is drafted with MVP boundaries.
+
 ### Step 3: Output
 
 Write the complete output to `docs/product-brief.md`
 
 Present a brief summary to the user: the defined MVP scope, identified business model, key risks, and go/no-go recommendation.
+
+- **HALT and ask the user if:** Go/No-go recommendation is "No-go" or "Pivot" requiring user alignment.
+- **This step is complete when:** `docs/product-brief.md` is written and summarized.
 
 ### Step 4: Next Steps
 

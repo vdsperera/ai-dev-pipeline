@@ -73,6 +73,9 @@ Proactively offer to convert findings into real project work:
 2. **Anti-Pattern Candidates:** Propose `AP-NNN` entries for recurring bug patterns to append to `docs/anti-patterns.md`.
 3. **Retroactive ADRs:** Draft ADR entries for undocumented decisions discovered in code to append to `docs/architecture.md`.
 
+- **HALT and ask the user if:** Converting findings into tasks alters current sprint or MVP backlog scope.
+- **This step is complete when:** Feedback forward artifacts (tasks, anti-patterns, ADRs) are presented to user.
+
 ## Rules
 
 - Tag every finding with `[recorded]`, `[observed]`, or `[inferred]`

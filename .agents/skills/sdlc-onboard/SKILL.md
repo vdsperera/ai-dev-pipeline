@@ -29,6 +29,9 @@ Run the Codebase Onboarder agent (Agent 15) to scan an existing repository and g
 2. Identify the source directories, entry points, route controllers, domain services, data models/migrations, and test suites
 3. Read key architectural files (entry points, routers, schema/model definitions, configuration loaders, middleware)
 
+- **HALT and ask the user if:** Repository is empty or source directories cannot be identified.
+- **This step is complete when:** File manifest and framework entry points are mapped.
+
 ### Step 3: Generate Baseline Architecture
 
 **Role**: You are a Codebase Onboarder (Agent 15). Your input is the existing repository. Your output is `docs/architecture.md`.
@@ -43,6 +46,9 @@ Run the Codebase Onboarder agent (Agent 15) to scan an existing repository and g
    - Baseline ADRs
 2. Ensure every component and contract links to actual files in the repository
 
+- **HALT and ask the user if:** Architecture cannot be inferred from code without developer input.
+- **This step is complete when:** Baseline components, contracts, schemas, and ADRs are drafted.
+
 ### Step 4: Output
 
 Write the complete output to `docs/architecture.md`.
@@ -51,6 +57,9 @@ Present a concise summary to the user:
 - Detected tech stack & linters
 - Number of components and API endpoints mapped
 - Key risk flags / tech debt items discovered
+
+- **HALT and ask the user if:** Path verification fails or non-existent files are referenced.
+- **This step is complete when:** `docs/architecture.md` is saved.
 
 ### Step 5: Next Steps
 

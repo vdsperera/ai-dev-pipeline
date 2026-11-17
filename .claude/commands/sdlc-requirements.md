@@ -26,6 +26,9 @@ One of the following must be available as input:
 2. If the user provides raw requirements or a feature description directly, use that as input
 3. If both exist, use the product brief as the base and incorporate the user's additional input
 
+- **HALT and ask the user if:** Neither `docs/product-brief.md` nor feature description is provided.
+- **This step is complete when:** Input requirements are loaded.
+
 ### Step 3: Analyse Requirements
 
 **Role**: You are a Requirements Analyst. Analyse the input and produce a refined requirements document.
@@ -36,11 +39,17 @@ One of the following must be available as input:
 3. Detect gaps, ambiguities, conflicts, hidden assumptions, and missing constraints
 4. Produce the issues list and refined requirements document in the format specified by the agent instructions
 
+- **HALT and ask the user if:** Contradictory business rules cannot be resolved without user input.
+- **This step is complete when:** Gaps and ambiguities are flagged and requirements refined.
+
 ### Step 4: Output
 
 Write the complete output to `docs/requirements.md`
 
 Present a brief summary to the user: number of issues found, number of `[NEEDS CLARIFICATION]` items, and key requirements identified.
+
+- **HALT and ask the user if:** Unresolved `[NEEDS CLARIFICATION]` items block core functionality.
+- **This step is complete when:** `docs/requirements.md` is written and presented.
 
 ### Step 5: Next Steps
 

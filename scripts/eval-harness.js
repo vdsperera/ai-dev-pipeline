@@ -87,6 +87,14 @@ function runEvaluation(options = {}) {
   const threshold = options.threshold || 80;
   const findings = [];
   const sourceFiles = getSourceFiles(targetDir);
+  const jsTsFiles = sourceFiles.filter(f => /\.(js|ts|jsx|tsx|mjs|cjs)$/i.test(f));
+  if (sourceFiles.length > 0 && (jsTsFiles.length / sourceFiles.length) < 0.5) {
+    findings.push({
+      dimension: 'Code Quality',
+      severity: 'INFO',
+      message: 'Heuristic rules are tuned for JavaScript/TypeScript; results for non-JS/TS files are partial.'
+    });
+  }
 
   const scoreArch = dimensions.evaluateArchitecture(targetDir, findings, sourceFiles, isTestFile, isScriptOrCliFile);
   const scoreQuality = dimensions.evaluateCodeQuality(targetDir, findings, sourceFiles, isTestFile);
@@ -142,6 +150,9 @@ function main() {
       console.log(`\n${c.yellow}⚠ Unresolved / Potential Hallucinated Paths (${pathCheck.unresolved.length}):${c.reset}`);
       pathCheck.unresolved.forEach(p => console.log(`   - ${p}`));
       process.exit(1);
+    } else if (pathCheck.total === 0) {
+      console.log(`\n${c.yellow}⚠ No declared paths found in document to verify.${c.reset}\n`);
+      process.exit(0);
     } else {
       console.log(`\n${c.green}✔ All declared paths exist on disk! No architectural hallucinations detected.${c.reset}\n`);
       process.exit(0);
@@ -163,6 +174,9 @@ function main() {
       console.log(`\n${c.yellow}⚠ Unresolved / Potential Hallucinated Paths (${pathCheck.unresolved.length}):${c.reset}`);
       pathCheck.unresolved.forEach(p => console.log(`   - ${p}`));
       process.exit(1);
+    } else if (pathCheck.total === 0) {
+      console.log(`\n${c.yellow}⚠ No declared paths found in document to verify.${c.reset}\n`);
+      process.exit(0);
     } else {
       console.log(`\n${c.green}✔ All declared paths exist on disk! No retrospective hallucinations detected.${c.reset}\n`);
       process.exit(0);

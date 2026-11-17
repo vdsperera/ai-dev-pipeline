@@ -45,6 +45,9 @@ Build a map of what changed:
 - Shared utilities affected
 - Deleted or renamed files
 
+- **HALT and ask the user if:** PR changes under 20 files across 1 layer (suggest running `pr-review` directly).
+- **This step is complete when:** PR shape and topology map are established.
+
 ### Step 3: Segment the PR
 
 Group related files into named review segments (10–30 files each):
@@ -82,6 +85,9 @@ Order segments with rationale:
 
 Write the complete triage report and tell the user:
 *"Triage is complete. To review each segment, invoke the PR review skill and reference this triage report. Start with Segment 1."*
+
+- **HALT and ask the user if:** Large PR cannot be decomposed into reviewable segments.
+- **This step is complete when:** Triage report and segmented review sequence are delivered.
 
 ## Rules
 

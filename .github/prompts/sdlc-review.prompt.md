@@ -29,6 +29,9 @@ Review implemented code for a task through up to three review layers: Code Revie
 7. Identify if the user has requested a specific reviewer strictness (e.g., `strictness=ruthless` or `strictness=lenient`) in their prompt.
 8. Read `docs/anti-patterns.md` (if it exists) to check against known project pitfalls and anti-patterns.
 
+- **HALT and ask the user if:** Implementation files or handoff notes are missing for the specified task.
+- **This step is complete when:** Context documents and task diff are gathered and loaded.
+
 ### Step 2: Code Review (Agent 7)
 
 **Read the full agent instructions** from [`prompts/07-code-reviewer.md`](prompts/07-code-reviewer.md).
@@ -72,6 +75,9 @@ Fix: concrete, actionable description of what to change
 Write the review report to `docs/reviews/TASK-NNN-code-review.md`.
 
 **If verdict is Rework or Escalate** — stop here. Present the findings and tell the user what to fix. Do not proceed to Security Review.
+
+- **HALT and ask the user if:** Static analysis fails or review verdict is `Rework` or `Escalate`.
+- **This step is complete when:** `docs/reviews/TASK-NNN-code-review.md` is generated with an explicit verdict.
 
 ### Step 3: Security Review (Agent 8) — Conditional
 
@@ -165,10 +171,23 @@ Write the UX review report to `docs/reviews/TASK-NNN-ux-review.md`.
 
 **If verdict is Rework or Escalate** — stop here. Present the findings.
 
-### Step 4: Next Steps
+- **HALT and ask the user if:** Security or UX review discovers Blocker or Critical findings.
+- **This step is complete when:** Applicable conditional review reports are written with verdicts.
 
-If all applicable reviews pass (Approved/Cleared), tell the user:
-*"TASK-NNN has passed code review [and security review] [and UX review]. To generate the test suite, ask me to test TASK-NNN."*
+### Step 4: Summary & Anti-Pattern Decision
+
+1. **Mandatory Anti-Pattern Decision**:
+   Conclude every review with an explicit decision on whether any identified defect warrants addition to `docs/anti-patterns.md`:
+   - **Decision: YES** — Append an entry (`AP-NNN`) to `docs/anti-patterns.md` including `Detect: /regex/`, `Paths:`, and `Seen in: TASK-NNN`.
+   - **Decision: NO** — State a one-line reason (e.g., *"No recurring defect pattern; isolated implementation omission"*).
+   This step cannot be skipped.
+
+2. **Next Steps**:
+   If all applicable reviews pass (Approved/Cleared), tell the user:
+   *"TASK-NNN has passed code review [and security review] [and UX review]. To generate the test suite, ask me to test TASK-NNN."*
+
+- **HALT and ask the user if:** Adding an anti-pattern changes team-wide coding standards.
+- **This step is complete when:** Review verdicts and anti-pattern decision are communicated.
 
 ## Rules
 

@@ -1,3 +1,4 @@
+<!-- pipeline-template: anti-patterns/v2 -->
 # Anti-Patterns & Lessons Learned
 
 This document serves as the persistent memory bank of corrected AI mistakes, invalid assumptions, deprecated API usages, and recurring defects for this project.

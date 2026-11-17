@@ -42,7 +42,7 @@ ${c.cyan}${c.bold}   ___    ____     ____                 ____  _            _ _
 / ___ |_/ /_____/ /_/ /  __/ |/ /_____/ ____/ / /_/ /  __/ / / / / /  __/   
 /_/  |_/___/    /_____/\\___/|___/     /_/   /_/ .___/\\___/_/_/_/ /_/\\___/    
                                              /_/                             ${c.reset}
-${c.dim}  The Industrial-Grade, Cross-Tool SDLC Harness for AI Coding Agents${c.reset}
+${c.dim}  The Lightweight SDLC Governance Harness for AI Coding Agents${c.reset}
 `;
 
 function getPkgVersion() {

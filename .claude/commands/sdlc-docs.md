@@ -48,6 +48,9 @@ Based on the task and code changes, determine what documentation is needed:
 | Architecture decision revealed during implementation | Append ADR to `docs/architecture.md` |
 | Contract, data model, or component boundary changed (Architecture Drift) | Sync and update `docs/architecture.md` sections to match actual code |
 
+- **HALT and ask the user if:** Implementation code or task handoff cannot be found.
+- **This step is complete when:** Context is gathered and documentation actions are selected.
+
 ### Step 3: Generate Documentation
 
 For each documentation item identified:
@@ -88,6 +91,9 @@ Write the documentation report to `docs/documentation/TASK-NNN-docs.md`:
 ## Verdict
 [Complete | Gaps found | Stale]
 ```
+
+- **HALT and ask the user if:** Documentation drift indicates an unintended breaking change in API contracts.
+- **This step is complete when:** `docs/documentation/TASK-NNN-docs.md` is saved.
 
 ### Step 6: Next Steps
 

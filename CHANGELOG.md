@@ -8,6 +8,23 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.3.0] - 2026-11-17
 
 ### Added
+- **Mechanical Task Dependency Gate Trigger (`sdlc-develop`)**:
+  - Explicitly wired into `sdlc-develop` Step 1: the agent executes `node scripts/security-gate.js --check-task TASK-NNN` prior to implementation. If dependencies are incomplete, the gate returns `decision: deny` and the agent halts immediately.
+  - Updated documentation: accurately described as a skill-invoked mechanical gate (Tier 2/Tier 1 hybrid) rather than magical user-prompt interception.
+- **Robust Path Verification & Edge Case Handling (`eval --onboard-check` & `--retro-check`)**:
+  - Broadened path detection in `scripts/eval-dimensions.js` to catch unquoted markdown table paths (e.g. `src/repositories/orders.repo.ts`), dot-prefixed paths (`.github/workflows/ci.yml`, `.agents/`), and strip trailing `:line` suffixes.
+  - Special-cased zero-path documents to report `"No paths found to verify"` instead of false-positive 100% passes.
+- **Universal Step HALT & Completion Criteria**:
+  - Implemented explicit `HALT and ask the user if:` and `This step is complete when:` criteria across all 17 skills, preventing run-away LLM loops and enforcing strict turn boundaries.
+- **Mandatory Anti-Pattern Feedback Decisions (`sdlc-review` & `sdlc-debug`)**:
+  - Added a mandatory concluding step to code reviews and bug fixes requiring an explicit decision (`YES` with `Detect: /regex/` or `NO` with reason) to ensure `docs/anti-patterns.md` defect memory is actively maintained.
+- **Template Versioning & Language Scope Warnings**:
+  - Stamped anti-pattern template with `<!-- pipeline-template: anti-patterns/v2 -->`.
+  - Added non-blocking upgrade notice in `eval` when legacy v1 templates lack executable fields.
+  - Added runtime disclosure when evaluated projects are predominantly non-JS/TS.
+- **Cosmetic & Diagnostic Cleanups**:
+  - Refined CLI banner in `bin/cli.js` to *"The Lightweight SDLC Governance Harness for AI Coding Agents"*.
+  - Suppressed `git log` stderr in `verifyLastCommit` when running benchmarks outside a git repository.
 - **Architectural Retrospective Agent & Skill (`sdlc-retro` — Agent 17)**:
   - Added standalone `sdlc-retro` skill (`prompts/17-architectural-retro.md` and `.agents/skills/sdlc-retro/SKILL.md`) for auditing system design trade-offs, break points, and reversibility on completed features or existing repositories.
   - **Evidence Provenance Tagging**: Requires all claims in sections 1–4 to carry explicit provenance tags: `[recorded]` (citing ADRs/handoffs/commits), `[observed]` (citing `file:line`), or `[inferred]` (stating deductive reasoning). Sections with only inferred claims are explicitly flagged as hypothesis sections.

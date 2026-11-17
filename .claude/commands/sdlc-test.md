@@ -26,6 +26,9 @@ Generate a complete, runnable test suite for a task that has passed code review 
 5. If it exists, read the security review report from `docs/reviews/TASK-NNN-security-review.md`
 6. Read all implementation code and existing test files for this task
 
+- **HALT and ask the user if:** Implementation code or task definitions are missing.
+- **This step is complete when:** Task context, linked stories, and review reports are loaded.
+
 ### Step 2: Generate Test Suite
 
 **Read the full agent instructions** from [`prompts/10-test-generator.md`](prompts/10-test-generator.md).
@@ -68,6 +71,9 @@ Following the agent instructions, generate tests covering:
 3. If tests fail, investigate and fix the test (not the implementation) if it's a test issue
 4. If tests fail because of an implementation bug, report it as a finding
 
+- **HALT and ask the user if:** Tests fail due to implementation defects requiring developer rework.
+- **This step is complete when:** Generated test cases execute cleanly.
+
 ### Step 5: Coverage Matrix
 
 Produce the coverage matrix at the end:
@@ -80,12 +86,18 @@ Every Gherkin scenario, security finding, and architecture risk flag must appear
 
 Write the coverage matrix and test report to `docs/test-reports/TASK-NNN-tests.md`.
 
+- **HALT and ask the user if:** Coverage gaps exist for critical user stories or NFRs.
+- **This step is complete when:** `docs/test-reports/TASK-NNN-tests.md` is saved.
+
 ### Step 6: Mark Task Done
 
 1. Update `docs/tasks.md` — mark TASK-NNN as done
 2. Tell the user:
    *"TASK-NNN is complete. Tests are written and passing. The task is marked done in docs/tasks.md."*
 3. Suggest the next task to implement based on the dependency graph and critical path
+
+- **HALT and ask the user if:** Verification checks fail prior to marking task complete.
+- **This step is complete when:** `docs/tasks.md` is updated and next task is proposed.
 
 ## Rules
 
