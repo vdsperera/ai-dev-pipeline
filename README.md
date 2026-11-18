@@ -11,7 +11,7 @@
 >  
 > *ai-dev-pipeline is the small one. It gives AI coding agents a role-based SDLC with a paper trail, installs into 4 editors natively, and ships an executable anti-pattern registry and a codebase hygiene check you can read in full. It is zero-dependency and readable in an afternoon. It does not try to be BMAD-METHOD; if you need BMAD's depth, use BMAD.*
 
-`ai-dev-pipeline` transforms AI from an erratic code generator into a disciplined, 17-role software engineering organization. It enforces living architecture contracts (`docs/architecture.md`), strict quality gates (`AGENTS.md`), persistent defect memory (`docs/anti-patterns.md`), and automated codebase hygiene scoring (`ai-dev-pipeline eval`) directly inside your daily code editor.
+`ai-dev-pipeline` transforms AI from an erratic code generator into a disciplined, 20-role software engineering organization. It enforces living architecture contracts (`docs/architecture.md`), strict quality gates (`AGENTS.md`), persistent defect memory (`docs/anti-patterns.md`), and automated codebase hygiene scoring (`ai-dev-pipeline eval`) directly inside your daily code editor.
 
 ## How it works
 
@@ -317,6 +317,10 @@ npx @kadvsperera/ai-dev-pipeline status
 # Evaluate stage outputs for architectural drift and anti-pattern regressions:
 npx @kadvsperera/ai-dev-pipeline eval
 
+# Evaluate only files modified relative to a git branch or commit (task delta evaluation):
+npx @kadvsperera/ai-dev-pipeline eval --since main
+npx @kadvsperera/ai-dev-pipeline eval --since HEAD~1
+
 # Verify all paths and routes in docs/architecture.md exist on disk (anti-hallucination):
 npx @kadvsperera/ai-dev-pipeline eval --onboard-check
 
@@ -331,6 +335,15 @@ npx @kadvsperera/ai-dev-pipeline eval --benchmark
 
 # Re-synchronize rules across all editors after updating .agents/AGENTS.md:
 npx @kadvsperera/ai-dev-pipeline sync
+
+# Non-destructively upgrade docs templates and stamp planning checksums:
+npx @kadvsperera/ai-dev-pipeline migrate
+
+# Run any command against an explicit target workspace directory:
+npx @kadvsperera/ai-dev-pipeline status --target-dir ./my-project
+npx @kadvsperera/ai-dev-pipeline eval --target-dir ./my-project
+npx @kadvsperera/ai-dev-pipeline sync --target-dir ./my-project
+npx @kadvsperera/ai-dev-pipeline migrate --target-dir ./my-project
 ```
 
 ---
@@ -624,6 +637,86 @@ npx @kadvsperera/ai-dev-pipeline eval --benchmark
 4. **Traceability & Task Handoffs (Weight: 20%)**: Verifies `docs/tasks.md` task completion status, validates developer handoff completeness in `docs/handoffs/TASK-NNN.md` (Summary, Files Changed, Architecture Alignment, Verification), and checks Conventional Commit standards on the latest commit.
 
 Evaluation reports are persistently generated in `docs/eval-reports/EVAL-[DATE]-[TASK].md`.
+
+### Architectural Layer Contract Enforcement
+
+The evaluation harness statically enforces unidirectional architectural layer boundaries declared in `docs/architecture.md`. You can define your project's layer contract using standard Markdown lists or HTML comment tags:
+
+```markdown
+### Layer Contract
+- **controllers** (`src/controllers/`): may import `services`, `utils`
+- **services** (`src/services/`): may import `repositories`, `models`, `utils`
+- **repositories** (`src/repositories/`): may import `models`, `utils`
+- **models** (`src/models/`): may import `utils`
+- **utils** (`src/utils/`): may import none
+```
+
+Or via comment format:
+```markdown
+<!-- layer-contract:
+controllers (src/controllers/): services, utils
+services (src/services/): repositories, models, utils
+repositories (src/repositories/): models, utils
+models (src/models/): utils
+utils (src/utils/): none
+-->
+```
+
+**How it works:**
+- When running `npx @kadvsperera/ai-dev-pipeline eval`, the evaluator parses relative `import` and `require()` paths across all JavaScript/TypeScript files.
+- It detects when an upper layer bypasses middle tiers (e.g., a controller importing a database model directly) or when an inverted import occurs (e.g., a repository importing a controller).
+- Discovered layer leaks reduce the **Architecture & Layering** dimension score by 15 points per violation, preventing AI coding agents from taking shortcuts through architectural boundaries.
+
+### Task Delta Evaluation (`--since <ref>`)
+
+When developing large projects or reviewing pull requests, evaluating the entire codebase can introduce noise from pre-existing files. Use the `--since` flag to evaluate only files modified relative to a target git reference:
+
+```bash
+# Evaluate only uncommitted or branch changes against main:
+npx @kadvsperera/ai-dev-pipeline eval --since main
+
+# Evaluate changes made in the last commit:
+npx @kadvsperera/ai-dev-pipeline eval --since HEAD~1
+
+# Run strict CI check on PR delta:
+npx @kadvsperera/ai-dev-pipeline eval --since origin/main --threshold 90
+```
+
+The harness runs `git diff --name-only --diff-filter=ACMRTUXB <ref>` to isolate changed files and limits code quality, layer contract, and anti-pattern static checks strictly to those modified files, while maintaining full-system architectural and traceability context.
+
+### Cryptographic Planning Drift Detection
+
+To guarantee that code implementations adhere to current requirements and architectural specifications, `ai-dev-pipeline` stamps cryptographic SHA-256 checksums of `docs/requirements.md` and `docs/architecture.md` into `docs/tasks.md`:
+
+```markdown
+<!-- planning-checksums: requirements=a1b2c3d4 architecture=e5f6g7h8 -->
+```
+
+- When upstream requirements or architecture documents are edited without regenerating or reconciling tasks, `eval` detects the hash mismatch and flags a **Planning Drift Warning** (-10 points under Traceability).
+- To recompute checksums after reviewing and accepting upstream changes, run:
+  ```bash
+  npx @kadvsperera/ai-dev-pipeline migrate
+  ```
+
+### Scale-Normalized Scoring (KLOC Normalization)
+
+Large software projects naturally have more lines of code and nesting instances than small utility scripts. To avoid penalizing mature codebases unfairly while maintaining strict density invariants, the evaluator computes metrics per KLOC (1,000 Lines of Code):
+- The density scaling factor is calculated as: `densityFactor = max(1.0, sqrt(KLOC))`
+- Nesting and file length deductions scale against the total codebase size, allowing large codebases to score on their true engineering density rather than raw volume.
+
+### Non-Destructive Template Migrations (`migrate`)
+
+As new governance features are added to `ai-dev-pipeline`, existing workspaces can be upgraded non-destructively:
+
+```bash
+# Upgrade documentation templates and stamp planning checksums:
+npx @kadvsperera/ai-dev-pipeline migrate
+
+# Run migration on a specific project directory:
+npx @kadvsperera/ai-dev-pipeline migrate --target-dir ./my-project
+```
+
+The migration runner reads existing documents in `docs/`, injects missing template sections (such as `<!-- pipeline-template: ... -->` and `<!-- planning-checksums: ... -->`), and leaves all user-written content completely intact.
 
 > [!NOTE]
 > **Language Ecosystem Support**: Code quality metrics, linter execution, and anti-pattern heuristics are currently optimized for the **TypeScript and JavaScript** ecosystems (Node.js, Express, React, Next.js, NestJS, etc.). Polyglot rule packs for Python, Go, and Java are planned for a future milestone.

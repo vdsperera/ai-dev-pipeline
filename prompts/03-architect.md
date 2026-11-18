@@ -71,6 +71,21 @@ Consequences: what becomes easier, harder, what is accepted
 Implementing files: exact file paths in repository implementing this decision (e.g. `src/...`)
 ```
 
+### 7. Layer Contract
+
+Define unidirectional architectural import boundaries for code layers:
+
+```markdown
+### Layer Contract
+- **controllers** (`src/controllers/`): may import `services`, `utils`
+- **services** (`src/services/`): may import `repositories`, `models`, `utils`
+- **repositories** (`src/repositories/`): may import `models`, `utils`
+- **models** (`src/models/`): may import `utils`
+- **utils** (`src/utils/`): may import none
+```
+
+The automated evaluation harness (`eval`) statically enforces these boundaries across all source code files.
+
 ## Design principles — enforce on every output
 
 - **Single responsibility** — every component does one thing

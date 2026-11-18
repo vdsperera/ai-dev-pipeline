@@ -48,6 +48,7 @@ If designing for an existing project, `docs/architecture.md` may already exist â
    - NFR mapping
    - Risk flags
    - Architecture Decision Records (ADRs)
+   - Layer Contract (unidirectional import boundaries enforced by `eval`)
 3. Enforce all design principles from the agent instructions
 4. **Linter Mandate**: Explicitly prescribe the static analysis tools (e.g., Ruff, ESLint) that must be used for the chosen technology stack, enforcing exact quantitative rules.
 5. **Architecture Flavors**: If the user specified a `style` parameter:

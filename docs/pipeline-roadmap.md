@@ -89,3 +89,44 @@ To cover 100% of real-world software engineering without causing "skill bloat", 
   4. **Traceability & Handoffs (20%)**: Audits task completion tracking, handoff completeness in `docs/handoffs/`, and Conventional Commits.
   - Generates persistent audit reports in `docs/eval-reports/EVAL-[DATE]-[TASK].md` and supports CI failure thresholds (`--threshold 90`).
   - Includes benchmark verification suites (`eval/benchmarks/`) comparing compliant vs. drifting implementations.
+
+### 10. Pragmatic Fast-Track Execution (`sdlc-quick` — Agent 18)
+- **Concept**: Providing a lightweight, surgical developer agent for single-turn bug fixes, script adjustments, or minor maintenance tasks without the full multi-agent planning ceremony.
+- **Implementation**: Standalone `sdlc-quick` skill (`prompts/18-quick-dev.md`):
+  - Applies surgical, minimal changes directly to targeted files.
+  - Verifies changes with linters and automated tests before completing.
+  - Proactively asks the developer if they would like documentation (e.g. handoff notes or changelog updates) rather than producing ceremony unprompted.
+
+### 11. Multi-Perspective Trade-Off Deliberation (`sdlc-consult` — Agent 19)
+- **Concept**: Resolving complex architectural crossroads, competing engineering priorities, and technology selection dilemmas through structured Socratic debate.
+- **Implementation**: Standalone `sdlc-consult` skill (`prompts/19-consultant.md`):
+  - Synthesizes Architect (Agent 3), Security (Agent 8), and Developer (Agent 6) viewpoints into a 3-way deliberative analysis.
+  - Produces a scored Decision Matrix weighing simplicity, security, scalability, and delivery speed.
+  - Pre-drafts a complete Architecture Decision Record (`ADR-NNN`) ready for immediate commit into `docs/architecture.md`.
+
+### 12. Architectural Layer Contract Enforcement (Stage 2.3)
+- **Concept**: Mechanically preventing AI coding agents from bypassing business logic tiers, making direct database queries from route handlers, or creating circular module dependencies.
+- **Implementation**: Pure zero-dependency layer parser and static import resolver (`scripts/eval-layers.js`):
+  - Parses `### Layer Contract` specifications from `docs/architecture.md`.
+  - Statically analyzes all ES module `import` and CommonJS `require()` specifiers across JavaScript and TypeScript files.
+  - Deducts 15 points per layer violation under the **Architecture Conformance** evaluation dimension.
+
+### 13. Task Delta Evaluation (`eval --since <ref>`)
+- **Concept**: Isolating evaluation scope to only files modified within a specific branch, commit, or task to eliminate noise from legacy files in large repositories.
+- **Implementation**: Parameterized git delta inspector:
+  - Validates git references against `git rev-parse --verify` to protect against command injection.
+  - Scopes code quality metrics, layer contract audits, and anti-pattern heuristics strictly to modified files (`git diff --name-only`).
+  - Retains full-repository context for architecture, requirements, and task traceability checks.
+
+### 14. Scale-Normalized Scoring (KLOC) & Cryptographic Planning Drift Detection
+- **Concept**: Fairly scoring mature enterprise repositories versus small utilities while guaranteeing code implementation adheres to the latest approved architecture and requirements.
+- **Implementation**:
+  - **KLOC Density Scaling**: Calculates a mathematical scaling factor `densityFactor = max(1.0, sqrt(KLOC))` to normalize cyclomatic nesting and file length deductions across varying repository sizes.
+  - **Cryptographic Planning Checksums**: Computes short SHA-256 hashes of `docs/requirements.md` and `docs/architecture.md` and stamps them into `docs/tasks.md`. Warns and flags 10-point deductions when tasks become stale relative to upstream planning documents.
+
+### 15. Non-Destructive Template Migrations (`migrate` CLI)
+- **Concept**: Allowing users to upgrade their project's living documentation templates and governance stamps as `ai-dev-pipeline` evolves without losing or overwriting their existing project documentation.
+- **Implementation**: `bin/commands/migrate.js` (`npx @kadvsperera/ai-dev-pipeline migrate`):
+  - Scans workspace `docs/` directory.
+  - Injects missing template metadata tags and stamps current planning checksums.
+  - Fully preserves existing user-authored architecture, requirements, and task backlog content.

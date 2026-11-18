@@ -81,5 +81,5 @@ TASK-001 → TASK-002 → TASK-005 → TASK-008 _(update with actual critical pa
 
 <!-- planning-checksums:
 requirements: f2884d50
-architecture: 1113c2d1
+architecture: a4a9cb4f
 -->

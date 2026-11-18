@@ -25,6 +25,14 @@ src/
 └── config/       # Environment config and constants
 ```
 
+### Layer Contract
+- **api** (`src/api/`): may import `services`, `utils`, `config`
+- **services** (`src/services/`): may import `repositories`, `models`, `utils`, `config`
+- **repositories** (`src/repositories/`): may import `models`, `utils`, `config`
+- **models** (`src/models/`): may import `utils`
+- **utils** (`src/utils/`): may import none
+- **config** (`src/config/`): may import none
+
 ## Component map
 
 ### [ComponentName]

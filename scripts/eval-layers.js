@@ -50,7 +50,7 @@ function parseLayerContract(archContent) {
       const bulletMatch = line.match(/[-*]\s+\*\*([a-zA-Z0-9_\-]+)\*\*(?:\s*\(([^)]+)\))?\s*:\s*(?:may\s+import\s+)?([^\n]+)/i);
       if (bulletMatch) {
         const layerName = bulletMatch[1].toLowerCase().trim();
-        const customPath = bulletMatch[2] ? bulletMatch[2].trim() : null;
+        const customPath = bulletMatch[2] ? bulletMatch[2].trim().replace(/[`]/g, '') : null;
         const rawImports = bulletMatch[3].trim().replace(/^(may\s+import\s*:?\s*)/i, '');
         const mayImport = rawImports
           .replace(/[`\[\]]/g, '')
