@@ -13,6 +13,7 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const layers = require('./eval-layers');
 
 function checkPresentationLayer(relPath, content, findings) {
   const lines = content.split('\n');
@@ -99,23 +100,17 @@ function evaluateArchitecture(targetDir, findings, sourceFiles, isTestFile, isSc
   const archPath = path.join(targetDir, 'docs', 'architecture.md');
 
   if (!fs.existsSync(archPath)) {
-    findings.push({
-      dimension: 'Architecture',
-      severity: 'WARN',
-      message: 'No docs/architecture.md found. Pipeline cannot verify component boundaries or API contracts.',
-      deduction: 15
-    });
+    findings.push({ dimension: 'Architecture', severity: 'WARN', message: 'No docs/architecture.md found. Pipeline cannot verify component boundaries or API contracts.', deduction: 15 });
     score -= 15;
   } else {
     const archContent = fs.readFileSync(archPath, 'utf8');
     if (archContent.trim().length < 50) {
-      findings.push({
-        dimension: 'Architecture',
-        severity: 'WARN',
-        message: 'docs/architecture.md is minimal (< 50 chars). Architectural contracts should define boundaries.',
-        deduction: 10
-      });
+      findings.push({ dimension: 'Architecture', severity: 'WARN', message: 'docs/architecture.md is minimal (< 50 chars). Architectural contracts should define boundaries.', deduction: 10 });
       score -= 10;
+    }
+    const layerContract = layers.parseLayerContract(archContent);
+    if (layerContract) {
+      score -= layers.checkLayerContract(targetDir, sourceFiles, layerContract, findings, isTestFile, isScriptOrCliFile);
     }
   }
 
@@ -175,6 +170,9 @@ function runProjectLinter(targetDir, findings) {
 
 function evaluateCodeQuality(targetDir, findings, sourceFiles, isTestFile) {
   let score = 100 - runProjectLinter(targetDir, findings);
+  const metrics = layers.calculateKlocMetrics(sourceFiles, targetDir, isTestFile);
+  const nestingDeduction = Math.max(2, Math.round(10 / metrics.densityFactor));
+  const lineLengthDeduction = Math.max(2, Math.round(8 / metrics.densityFactor));
 
   for (const file of sourceFiles) {
     const relPath = path.relative(targetDir, file);
@@ -189,9 +187,9 @@ function evaluateCodeQuality(targetDir, findings, sourceFiles, isTestFile) {
         severity: 'WARN',
         file: relPath,
         message: `File exceeds 450 lines (${lines.length} lines). Violates Single Responsibility Principle.`,
-        deduction: 8
+        deduction: lineLengthDeduction
       });
-      score -= 8;
+      score -= lineLengthDeduction;
     }
 
     const maxNesting = measureFileNesting(lines);
@@ -201,9 +199,9 @@ function evaluateCodeQuality(targetDir, findings, sourceFiles, isTestFile) {
         severity: 'WARN',
         file: relPath,
         message: `Deep block nesting: nesting depth of ${maxNesting} levels detected. Split into focused helper functions.`,
-        deduction: 10
+        deduction: nestingDeduction
       });
-      score -= 10;
+      score -= nestingDeduction;
     }
   }
 
@@ -426,6 +424,7 @@ function evaluateTraceability(targetDir, taskId, findings) {
   score -= verifyTaskBacklog(targetDir, taskId, findings);
   score -= verifyHandoffNote(targetDir, taskId, findings);
   score -= verifyLastCommit(targetDir, findings);
+  score -= layers.verifyPlanningChecksums(targetDir, findings);
   return Math.max(0, score);
 }
 

@@ -5,6 +5,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - 2026-11-18
+
+### Added
+- **Architectural Layer Contract Enforcement (`scripts/eval-layers.js` & `scripts/eval-dimensions.js`)**:
+  - Implemented `parseLayerContract` and `checkLayerContract` to enforce project-declared architectural boundaries from `docs/architecture.md`.
+  - Supports both HTML comments (`<!-- layer-contract: ... -->`) and Markdown sections (`### Layer Contract`), validating relative `import` and `require()` statements to prevent prohibited architectural bypasses (e.g. controllers importing models directly).
+  - Fully backward-compatible; projects without declared layer contracts run baseline heuristics without penalty.
+- **KLOC-Normalized Code Quality Scoring**:
+  - Implemented `calculateKlocMetrics` to compute physical SLOC, KLOC, and density scaling factors.
+  - Scaled density findings (line lengths and block nesting) proportionally across repository size, preventing single isolated findings in large codebases from disproportionately dropping hygiene scores.
+  - Added code volume metrics display (`fileCount`, `totalSloc`, `kloc`, `densityFactor`) to terminal scorecards and Markdown audit reports.
+- **Cryptographic Planning Checksums & Stale Backlog Detection**:
+  - Added short SHA-256 document checksumming (`computeDocChecksum`, `verifyPlanningChecksums`) between `docs/tasks.md` and upstream planning documents (`docs/requirements.md`, `docs/architecture.md`).
+  - Automatically flags when architecture or requirements have evolved after tasks were generated.
+  - Wired into `npx ai-dev-pipeline migrate` to stamp and update planning checksums automatically.
+- **Multi-Agent Deliberation Skill (`sdlc-consult` — Agent 19)**:
+  - Added standalone consultation skill (`prompts/19-consultant.md` and `.agents/skills/sdlc-consult/SKILL.md`) for debating complex architectural dilemmas.
+  - Synthesizes competing System Architect, Security Reviewer, and Pragmatic Developer perspectives into a structured Trade-Off Decision Matrix with pre-drafted ADRs and stated sensitivity invariants.
+  - Fully synchronized across all supported editors: `.claude/commands/sdlc-consult.md`, `.cursor/rules/sdlc-consult.mdc`, and `.github/prompts/sdlc-consult.prompt.md` (61 synchronized editor files).
+- **Target Directory Support across CLI Commands (`bin/cli.js`)**:
+  - Added `--target-dir` flag support to `status`, `sync`, and `migrate` commands to enable targeted operations on sub-projects and examples.
+- **Expanded Native Unit Test Suite**:
+  - Added `tests/eval-layers.test.js` covering layer contract parsing, violation detection, checksum generation, stale planning detection, and KLOC metric counting (32 unit tests passing in ~1.0s).
+
 ## [1.4.0] - 2026-11-18
 
 ### Added

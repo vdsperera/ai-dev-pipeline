@@ -100,6 +100,8 @@ function parseArgs(args) {
     else if (arg === '--preset' && args[i + 1]) flags.preset = args[++i].toLowerCase();
     else if (arg.startsWith('--type=')) flags.type = arg.split('=')[1].toLowerCase();
     else if (arg === '--type' && args[i + 1]) flags.type = args[++i].toLowerCase();
+    else if (arg.startsWith('--target-dir=')) flags.targetDir = path.resolve(arg.split('=')[1]);
+    else if (arg === '--target-dir' && args[i + 1]) flags.targetDir = path.resolve(args[++i]);
     else if (!arg.startsWith('-')) positional.push(arg);
   }
 
@@ -107,11 +109,11 @@ function parseArgs(args) {
   return flags;
 }
 
-function commandSync() {
+function commandSync(workspaceDir = TARGET_DIR) {
   console.log(BANNER);
   console.log(`${c.bold}🔄 Synchronizing Cross-Tool Rules & Instructions...${c.reset}`);
   const syncModule = require(path.join(PACKAGE_ROOT, 'scripts', 'sync-tools.js'));
-  const res = syncModule.runSynchronizer(['all'], TARGET_DIR, false, path.join(PACKAGE_ROOT, '.agents', 'skills'));
+  const res = syncModule.runSynchronizer(['all'], workspaceDir, false, path.join(PACKAGE_ROOT, '.agents', 'skills'));
   if (res.updated && res.updated.length > 0) {
     console.log(`${c.green}${c.bold}✔ Synchronized ${res.updated.length} configs from .agents/AGENTS.md:${c.reset}`);
     for (const r of res.updated) console.log(`   ${c.green}+${c.reset} ${r}`);
@@ -120,20 +122,20 @@ function commandSync() {
   }
 }
 
-function commandStatus() {
+function commandStatus(workspaceDir = TARGET_DIR) {
   console.log(BANNER);
   console.log(`${c.bold}🔍 AI Dev Pipeline Diagnostics & Health Check${c.reset}`);
-  console.log(`   Workspace: ${c.dim}${TARGET_DIR}${c.reset}\n`);
+  console.log(`   Workspace: ${c.dim}${workspaceDir}${c.reset}\n`);
 
   const checks = [
-    { label: 'Core Standards (.agents/AGENTS.md)', path: path.join(TARGET_DIR, '.agents', 'AGENTS.md') },
-    { label: 'Agent Prompts (prompts/)', path: path.join(TARGET_DIR, 'prompts') },
-    { label: 'Antigravity Skills (.agents/skills/)', path: path.join(TARGET_DIR, '.agents', 'skills') },
-    { label: 'Claude Code Config & Commands (CLAUDE.md & .claude/commands/)', path: path.join(TARGET_DIR, 'CLAUDE.md') },
-    { label: 'Cursor Rules & Skills (.cursorrules & .cursor/rules/)', path: path.join(TARGET_DIR, '.cursorrules') },
-    { label: 'Copilot Instructions & Prompts (.github/copilot-instructions.md & .github/prompts/)', path: path.join(TARGET_DIR, '.github', 'copilot-instructions.md') },
-    { label: 'Anti-Patterns Memory (docs/anti-patterns.md)', path: path.join(TARGET_DIR, 'docs', 'anti-patterns.md') },
-    { label: 'Artifact Store (docs/handoffs, reviews)', path: path.join(TARGET_DIR, 'docs', 'handoffs') }
+    { label: 'Core Standards (.agents/AGENTS.md)', path: path.join(workspaceDir, '.agents', 'AGENTS.md') },
+    { label: 'Agent Prompts (prompts/)', path: path.join(workspaceDir, 'prompts') },
+    { label: 'Antigravity Skills (.agents/skills/)', path: path.join(workspaceDir, '.agents', 'skills') },
+    { label: 'Claude Code Config & Commands (CLAUDE.md & .claude/commands/)', path: path.join(workspaceDir, 'CLAUDE.md') },
+    { label: 'Cursor Rules & Skills (.cursorrules & .cursor/rules/)', path: path.join(workspaceDir, '.cursorrules') },
+    { label: 'Copilot Instructions & Prompts (.github/copilot-instructions.md & .github/prompts/)', path: path.join(workspaceDir, '.github', 'copilot-instructions.md') },
+    { label: 'Anti-Patterns Memory (docs/anti-patterns.md)', path: path.join(workspaceDir, 'docs', 'anti-patterns.md') },
+    { label: 'Artifact Store (docs/handoffs, reviews)', path: path.join(workspaceDir, 'docs', 'handoffs') }
   ];
 
   let healthyCount = 0;
@@ -193,21 +195,23 @@ async function main() {
     return;
   }
 
+  const targetDir = flags.targetDir || TARGET_DIR;
+
   switch (flags.command) {
     case 'init': {
       const { commandInit } = require('./commands/init');
-      await commandInit(flags, { PACKAGE_ROOT, TARGET_DIR, BANNER, c });
+      await commandInit(flags, { PACKAGE_ROOT, TARGET_DIR: targetDir, BANNER, c });
       break;
     }
     case 'sync':
-      commandSync();
+      commandSync(targetDir);
       break;
     case 'status':
-      commandStatus();
+      commandStatus(targetDir);
       break;
     case 'migrate': {
       const { commandMigrate } = require('./commands/migrate');
-      await commandMigrate(flags, { PACKAGE_ROOT, TARGET_DIR, BANNER, c });
+      await commandMigrate(flags, { PACKAGE_ROOT, TARGET_DIR: targetDir, BANNER, c });
       break;
     }
     case 'eval': {

@@ -77,3 +77,9 @@ TASK-001 → TASK-002 → TASK-005 → TASK-008 _(update with actual critical pa
 |-----------|-------|
 | AuthService | TASK-001, TASK-003 |
 | UserService | TASK-002, TASK-004 |
+
+
+<!-- planning-checksums:
+requirements: f2884d50
+architecture: 1113c2d1
+-->

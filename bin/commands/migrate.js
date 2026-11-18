@@ -6,6 +6,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { computeDocChecksum } = require('../../scripts/eval-layers');
 
 function migrateTemplateTag(filePath, templateTag, headerRegex) {
   if (!fs.existsSync(filePath)) return { status: 'missing' };
@@ -24,6 +25,36 @@ function migrateTemplateTag(filePath, templateTag, headerRegex) {
 
   fs.writeFileSync(filePath, updatedContent, 'utf8');
   return { status: 'upgraded', filePath, templateTag };
+}
+
+function stampPlanningChecksums(tasksPath, targetDir) {
+  if (!fs.existsSync(tasksPath)) return false;
+  const content = fs.readFileSync(tasksPath, 'utf8');
+
+  const reqPath = path.join(targetDir, 'docs', 'requirements.md');
+  const archPath = path.join(targetDir, 'docs', 'architecture.md');
+
+  const reqHash = computeDocChecksum(reqPath);
+  const archHash = computeDocChecksum(archPath);
+  if (!reqHash && !archHash) return false;
+
+  const blockLines = ['<!-- planning-checksums:'];
+  if (reqHash) blockLines.push(`requirements: ${reqHash}`);
+  if (archHash) blockLines.push(`architecture: ${archHash}`);
+  blockLines.push('-->');
+  const newBlock = blockLines.join('\n');
+
+  if (/<!--\s*planning-(?:checksums|hashes):[\s\S]*?-->/i.test(content)) {
+    const updated = content.replace(/<!--\s*planning-(?:checksums|hashes):[\s\S]*?-->/i, newBlock);
+    if (updated !== content) {
+      fs.writeFileSync(tasksPath, updated, 'utf8');
+      return true;
+    }
+    return false;
+  }
+
+  fs.writeFileSync(tasksPath, content.trimEnd() + '\n\n' + newBlock + '\n', 'utf8');
+  return true;
 }
 
 function migrateProjectTemplates(targetDir = process.cwd()) {
@@ -61,6 +92,11 @@ function migrateProjectTemplates(targetDir = process.cwd()) {
     } else {
       results.missing.push({ file: relPath });
     }
+  }
+
+  const tasksPath = path.join(targetDir, 'docs', 'tasks.md');
+  if (stampPlanningChecksums(tasksPath, targetDir)) {
+    results.upgraded.push({ file: 'docs/tasks.md', tag: 'planning-checksums' });
   }
 
   return results;

@@ -24,6 +24,9 @@ function generateMarkdownReport(results, targetDir) {
   let md = `# AI Dev Pipeline Stage Evaluation Report\n\n`;
   md += `> **Audit Target**: \`${taskName}\`  \n`;
   md += `> **Timestamp**: \`${new Date().toISOString()}\`  \n`;
+  if (results.metrics) {
+    md += `> **Codebase Volume**: \`${results.metrics.fileCount}\` files, \`${results.metrics.totalSloc}\` SLOC (\`${results.metrics.kloc}\` KLOC, density factor: ${results.metrics.densityFactor.toFixed(2)})  \n`;
+  }
   md += `> **Hygiene Score**: **${results.overallScore.toFixed(1)}%** (Grade: **${results.grade}**)  \n`;
   md += `> **Status**: **${results.passed ? 'PASSED' : 'FAILED'}** (Threshold: ${results.threshold}%)\n\n`;
 
@@ -57,6 +60,9 @@ function displayResults(results, c) {
   console.log(`============================================================`);
   console.log(`Workspace:  ${c.dim}${results.targetDir}${c.reset}`);
   if (results.taskId) console.log(`Target:     ${c.cyan}${results.taskId}${c.reset}`);
+  if (results.metrics) {
+    console.log(`Volume:     ${c.cyan}${results.metrics.fileCount}${c.reset} source file(s), ${c.cyan}${results.metrics.totalSloc}${c.reset} SLOC (${c.cyan}${results.metrics.kloc} KLOC${c.reset}, density factor: ${c.cyan}${results.metrics.densityFactor.toFixed(2)}${c.reset})`);
+  }
   console.log(`Threshold:  ${c.yellow}${results.threshold}%${c.reset}\n`);
 
   console.log(`DIMENSION                        SCORE    STATUS   WEIGHT`);

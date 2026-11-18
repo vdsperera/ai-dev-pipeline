@@ -22,6 +22,7 @@ const path = require('path');
 const { execFileSync } = require('child_process');
 const reporters = require('./eval-reporters');
 const dimensions = require('./eval-dimensions');
+const layers = require('./eval-layers');
 
 const supportsColor = Boolean(process.stdout.isTTY && !process.env.NO_COLOR);
 const c = {
@@ -146,6 +147,8 @@ function runEvaluation(options = {}) {
     scoreAntiPatterns * 0.25 +
     scoreTraceability * 0.2;
 
+  const metrics = layers.calculateKlocMetrics(sourceFiles, targetDir, isTestFile);
+
   const results = {
     targetDir,
     taskId,
@@ -159,7 +162,8 @@ function runEvaluation(options = {}) {
       antiPatterns: scoreAntiPatterns,
       traceability: scoreTraceability
     },
-    findings
+    findings,
+    metrics
   };
 
   const shouldWriteReport = options.writeReport !== false;

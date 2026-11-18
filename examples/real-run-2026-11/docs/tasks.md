@@ -22,3 +22,9 @@
 - **Status:** [x] Done
 - **Files:** `src/controllers/orders-controller.js`, `src/app.js`, `tests/orders.test.js`
 - **Description:** Add `handleCancelOrder(req, res, orderId, body)` in `OrdersController` and mount `POST /api/orders/:id/cancel` in `src/app.js`. Handle 404 for missing orders and 400 for invalid statuses. Add end-to-end route tests.
+
+
+<!-- planning-checksums:
+requirements: 3af5a6a7
+architecture: 0d41183a
+-->

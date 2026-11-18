@@ -15,7 +15,7 @@
 
 ## How it works
 
-The pipeline has **18 specialised agent personas** packaged as **17 skills** and 1 always-on rule. The 6 planning agents can be invoked individually as standalone skills or chained together via `sdlc-plan`. Instead of copy-pasting between separate AI chat windows, you invoke skills by name and the agent runs automatically.
+The pipeline has **20 specialised agent personas** packaged as **19 skills** and 1 always-on rule. The 6 planning agents can be invoked individually as standalone skills or chained together via `sdlc-plan`. Instead of copy-pasting between separate AI chat windows, you invoke skills by name and the agent runs automatically.
 
 ```
 Your idea
@@ -46,7 +46,7 @@ To understand how the pipeline operates, think of the distinction between **the 
 
 | Component | Nature | When It Triggers | What It Controls |
 |---|---|---|---|
-| **17 Skills** (`.agents/skills/`) | **On-Demand** | Triggered only when you say phrases like `"plan my project"`, `"implement TASK-001"`, `"debug this"`, or `"explain architecture decisions"`. | **WHAT task to do**: Orchestrates multi-agent chains, creates task backlogs, runs code reviews, and writes reports into `docs/`. |
+| **19 Skills** (`.agents/skills/`) | **On-Demand** | Triggered only when you say phrases like `"plan my project"`, `"implement TASK-001"`, `"debug this"`, or `"explain architecture decisions"`. | **WHAT task to do**: Orchestrates multi-agent chains, creates task backlogs, runs code reviews, and writes reports into `docs/`. |
 | **Always-On Rules** (`.agents/AGENTS.md`) | **Always-On** | Injected automatically on **100% of interactions** (every prompt, every skill, and every ad-hoc question). | **HOW the code must be written**: Enforces baseline engineering law across all tools (typed error handling, parameterized SQL, no console.log, zero linter errors, and anti-pattern memory). |
 
 ---
@@ -124,7 +124,7 @@ To understand where `ai-dev-pipeline` sits in the software industry, it helps to
 ┌────────────────────────────────────────────────────────┐
 │  LAYER 3: GOVERNANCE & SDLC FRAMEWORK                  │
 │  👉 AI Dev Pipeline                                    │
-│  (18 specialized roles, architecture contracts, evals) │
+│  (20 specialized roles, architecture contracts, evals) │
 ├────────────────────────────────────────────────────────┤
 │  LAYER 2: THE EDITOR / INTERFACE (The Hands)           │
 │  Cursor, Google Antigravity, Claude Code, Copilot      │
@@ -290,7 +290,7 @@ npx @kadvsperera/ai-dev-pipeline init
 npx @kadvsperera/ai-dev-pipeline init -y
 ```
 
-This scaffolds the 18 agent personas, 17 skills, docs roadmap, anti-patterns memory, and native configuration files tailored to your selected AI tools (**Antigravity**, **Cursor**, **Claude Code**, and **GitHub Copilot**).
+This scaffolds the 20 agent personas, 19 skills, docs roadmap, anti-patterns memory, and native configuration files tailored to your selected AI tools (**Antigravity**, **Cursor**, **Claude Code**, and **GitHub Copilot**).
 
 ### Security & Transparency: What `init` Writes and Runs
 
@@ -348,7 +348,7 @@ npx @kadvsperera/ai-dev-pipeline sync
 
 ### Option 1: Global Setup (Install Once, Available Everywhere)
 
-Use this method if you want the 18 agents, 17 skills, and coding standards available across **every folder and project** you open without copying files into each repository:
+Use this method if you want the 20 agents, 19 skills, and coding standards available across **every folder and project** you open without copying files into each repository:
 
 #### For Google Antigravity:
 1. Clone or copy this repository into your global plugins directory:
@@ -359,7 +359,7 @@ Use this method if you want the 18 agents, 17 skills, and coding standards avail
    # macOS / Linux:
    git clone https://github.com/vdsperera/ai-dev-pipeline.git ~/.gemini/config/plugins/ai-dev-pipeline
    ```
-2. Antigravity discovers the plugin automatically. All 17 skills are immediately available in any workspace you open.
+2. Antigravity discovers the plugin automatically. All 19 skills are immediately available in any workspace you open.
 
 #### For Cursor:
 1. Open Cursor Settings (`Ctrl+Shift+J` or `Cmd+Shift+J`) → **General** → **Rules for AI**.
@@ -502,7 +502,7 @@ graph TD
 
 ## The Complete Software Team (Agent personas)
 
-The 18 agents map directly to a cross-functional real-world software team, covering every phase of the SDLC.
+The 20 agents map directly to a cross-functional real-world software team, covering every phase of the SDLC.
 
 ### 1. Product & Strategy
 | # | Agent | Real-world role | Prompt |
@@ -545,6 +545,8 @@ The 18 agents map directly to a cross-functional real-world software team, cover
 | 15| Codebase Onboarder | Reverse Engineer / Solution Architect | `prompts/15-codebase-onboarder.md` |
 | 16| Bug Investigator & RCA Specialist | Debugger / Reliability Engineer | `prompts/16-bug-investigator.md` |
 | 17| Architectural Retrospective & Socratic Reviewer | Principal Architect / Tech Lead | `prompts/17-architectural-retro.md` |
+| 18| Quick Developer | Pragmatic Task Runner | `prompts/18-quick-dev.md` |
+| 19| Trade-Off Consultant | Principal Consultant / Deliberator | `prompts/19-consultant.md` |
 
 ## Skills reference
 
@@ -565,6 +567,8 @@ The 18 agents map directly to a cross-functional real-world software team, cover
 | `sdlc-onboard` | "onboard this repo", "reverse engineer architecture", "scan existing codebase" | Scans brownfield code, reverse-engineers tech stack and writes baseline `docs/architecture.md` |
 | `sdlc-debug` | "debug this", "fix bug", "investigate error", "root cause analysis", "hotfix" | Scientific RCA: failing test first → minimal fix → linters/tests → `docs/handoffs/BUG-NNN.md` |
 | `sdlc-retro` | "explain architecture decisions", "architectural retro", "audit design choices" | Audits 5 core decisions, failure points, 100x scale, and review cheat sheet → `docs/architecture-retro.md` |
+| `sdlc-quick` | "quick fix", "quick edit", "tweak this script", "small change" | Surgical, single-turn bug fix or tweak without multi-agent planning ceremony |
+| `sdlc-consult` | "consult", "debate this decision", "architectural dilemma", "compare approaches" | Multi-perspective trade-off deliberation (Architect vs Security vs Developer) with decision matrix & ADR |
 | `pr-review` | "review this PR", "review PR #47" | Three-layer PR review with verdict |
 | `pr-triage` | "triage this PR", "this PR is too large" | Segments large PRs for reviewable chunks |
 

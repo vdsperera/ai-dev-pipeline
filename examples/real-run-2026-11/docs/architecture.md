@@ -14,6 +14,11 @@ This document captures the baseline architecture reverse-engineered from the cod
 - **Test Runner:** Node.js native test runner (`node:test`, `node:assert/strict`) via `npm test`
 - **Architecture Pattern:** 3-Tier Layered Architecture (Controller → Service → In-Memory Store)
 
+### Layer Contract
+- **controllers** (`src/controllers`): may import `services`
+- **services** (`src/services`): may import `models`
+- **models** (`src/models`): may import none
+
 ---
 
 ## 2. Component Map
