@@ -19,6 +19,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { execFileSync } = require('child_process');
 const reporters = require('./eval-reporters');
 const dimensions = require('./eval-dimensions');
 
@@ -55,12 +56,13 @@ function getSourceFiles(dir, extensions = ['.js', '.ts', '.jsx', '.tsx', '.py', 
   if (!fs.existsSync(dir)) return results;
 
   const isBench = isBenchmark || dir.includes('benchmarks');
+  const isEx = dir.includes('examples');
   const ignoredDirs = new Set(['node_modules', '.git', 'dist', 'build', 'coverage', '.next']);
 
   const entries = fs.readdirSync(dir, { withFileTypes: true });
   for (const entry of entries) {
     if (entry.isDirectory()) {
-      if (ignoredDirs.has(entry.name) || (!isBench && entry.name === 'benchmarks')) continue;
+      if (ignoredDirs.has(entry.name) || (!isBench && entry.name === 'benchmarks') || (!isEx && entry.name === 'examples')) continue;
       results.push(...getSourceFiles(path.join(dir, entry.name), extensions, isBench));
     } else {
       const ext = path.extname(entry.name).toLowerCase();
@@ -81,12 +83,49 @@ function calculateGrade(score) {
   return 'F';
 }
 
+function getChangedFilesSince(targetDir, commitRef) {
+  if (!commitRef || typeof commitRef !== 'string') return [];
+  const sanitizedRef = commitRef.trim();
+  if (!/^[a-zA-Z0-9_\-\.\/\^~]+$/.test(sanitizedRef)) {
+    throw new Error(`Invalid git commit reference: ${commitRef}`);
+  }
+  try {
+    const output = execFileSync('git', ['diff', '--name-only', sanitizedRef], {
+      cwd: targetDir,
+      encoding: 'utf8',
+      stdio: ['pipe', 'pipe', 'ignore']
+    }).trim();
+    if (!output) return [];
+    return output
+      .split(/\r?\n/)
+      .map(f => f.trim())
+      .filter(Boolean)
+      .map(f => path.resolve(targetDir, f))
+      .filter(f => fs.existsSync(f));
+  } catch {
+    return [];
+  }
+}
+
 function runEvaluation(options = {}) {
   const targetDir = options.targetDir || process.cwd();
   const taskId = options.taskId || null;
   const threshold = options.threshold || 80;
+  const since = options.since || null;
   const findings = [];
-  const sourceFiles = getSourceFiles(targetDir);
+  let sourceFiles = getSourceFiles(targetDir);
+
+  if (since) {
+    const changedFiles = getChangedFilesSince(targetDir, since);
+    const changedSet = new Set(changedFiles);
+    sourceFiles = sourceFiles.filter(f => changedSet.has(path.resolve(f)));
+    findings.push({
+      dimension: 'Scope & Delta',
+      severity: 'INFO',
+      message: `Delta evaluation enabled: inspecting ${sourceFiles.length} file(s) modified since '${since}'.`
+    });
+  }
+
   const jsTsFiles = sourceFiles.filter(f => /\.(js|ts|jsx|tsx|mjs|cjs)$/i.test(f));
   if (sourceFiles.length > 0 && (jsTsFiles.length / sourceFiles.length) < 0.5) {
     findings.push({
@@ -206,7 +245,16 @@ function main() {
     if (threshIdx !== -1 && args[threshIdx + 1]) threshold = parseInt(args[threshIdx + 1], 10) || 80;
   }
 
-  const results = runEvaluation({ targetDir, taskId, threshold });
+  let since = null;
+  const sinceArg = args.find(a => a.startsWith('--since='));
+  if (sinceArg) {
+    since = sinceArg.split('=')[1];
+  } else {
+    const sinceIdx = args.indexOf('--since');
+    if (sinceIdx !== -1 && args[sinceIdx + 1]) since = args[sinceIdx + 1];
+  }
+
+  const results = runEvaluation({ targetDir, taskId, threshold, since });
 
   if (args.includes('--json')) {
     console.log(JSON.stringify(results, null, 2));
@@ -223,7 +271,8 @@ module.exports = {
   calculateGrade,
   isTestFile,
   isScriptOrCliFile,
-  getSourceFiles
+  getSourceFiles,
+  getChangedFilesSince
 };
 
 if (require.main === module) {

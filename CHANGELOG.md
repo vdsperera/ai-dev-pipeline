@@ -5,6 +5,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-11-18
+
+### Added
+- **Real-World Reference Run Project (`examples/real-run-2026-11/`)**:
+  - Added a complete, live 5-endpoint Order & Inventory Fulfillment REST API built with zero runtime dependencies.
+  - Stepped through the entire pipeline: `sdlc-onboard` (7/7 paths verified) $\rightarrow$ `sdlc-plan (track=lite)` $\rightarrow$ mechanical dependency gate verification (demonstrating both task blocking and automatic unblocking) $\rightarrow$ `sdlc-develop` (with handoff notes) $\rightarrow$ `sdlc-review` (10-category checklist + ADR-drift check) $\rightarrow$ `sdlc-retro` (evidence tags + path verification) $\rightarrow$ `eval` (100.0% Grade A+ scorecard).
+  - Authored unedited engineering field notes in `examples/real-run-2026-11/NOTES.md` documenting exact terminal logs, real verification incidents, friction points, and findings.
+  - Linked reference run prominently from `README.md`.
+- **Task Delta Evaluation (`eval --since <commit>`)**:
+  - Added `--since <commit>` flag to `scripts/eval-harness.js` and `bin/cli.js` to evaluate only modified files relative to a git commit or branch, enabling rapid local hygiene checks during active feature work on large codebases.
+  - Parameterized git reference execution using `execFileSync` to enforce security standards and prevent command injection.
+- **Pragmatic Quick Developer Agent & Skill (`sdlc-quick` — Agent 18)**:
+  - Added lightweight, single-turn development skill (`prompts/18-quick-dev.md` and `.agents/skills/sdlc-quick/SKILL.md`) for rapid bug fixes, script adjustments, and minor enhancements without multi-agent planning ceremony.
+  - Fully synchronized across all supported editors: `.claude/commands/sdlc-quick.md`, `.cursor/rules/sdlc-quick.mdc`, and `.github/prompts/sdlc-quick.prompt.md` (58 synchronized editor files).
+- **Template Migration Tooling (`npx ai-dev-pipeline migrate`)**:
+  - Implemented `bin/commands/migrate.js` to safely and non-destructively upgrade older project documentation to current template versions (`pipeline-template: anti-patterns/v2`, `architecture/v1`, `tasks/v1`).
+- **Workspace-Aware Governance Gate (`security-gate.js`)**:
+  - Added `--workspace <dir>` parameter to `security-gate.js` to support evaluating task dependencies across subdirectories and multi-repo setups.
+- **Evaluator Example Isolation**:
+  - Added `examples` directory isolation in `scripts/eval-harness.js` so sub-project reference files and tests do not contaminate parent repository evaluation scorecards.
+- **Expanded Native Unit Test Suite**:
+  - Expanded test suite to 26 unit tests covering delta evaluation, git reference validation, and template migration idempotency.
+
 ## [1.3.1] - 2026-11-18
 
 ### Fixed

@@ -180,6 +180,16 @@ To maintain engineering discipline without overpromising what AI models can do, 
 
 ---
 
+## Real-World Reference Run (November 2026)
+
+Looking for an unedited, real-code execution of the pipeline rather than a curated walkthrough? Inspect the checked-in reference project:
+
+| Reference Project | Architecture & Problem Domain | What It Demonstrates |
+|---|---|---|
+| [**Order & Inventory Fulfillment REST API**](examples/real-run-2026-11/) | Live Node.js 5-endpoint REST API with stock reservation, atomic restocking, and audit logging | **100% Mechanically Verified**: Full pipeline trace from `sdlc-onboard` $\rightarrow$ `sdlc-plan (track=lite)` $\rightarrow$ dependency gate blocking $\rightarrow$ `sdlc-develop` $\rightarrow$ `sdlc-review` (ADR-drift) $\rightarrow$ `sdlc-retro` $\rightarrow$ `eval` (Score: 100.0% A+). Read the unedited field notes in [**`examples/real-run-2026-11/NOTES.md`**](examples/real-run-2026-11/NOTES.md). |
+
+---
+
 ## Illustrative Walkthroughs (Synthetic Reference Scenarios)
 
 The following reference scenarios demonstrate the pipeline's end-to-end artifact flow across greenfield architecture design and brownfield bug investigations (note: these are curated illustrative walkthroughs designed to showcase expected document formats):
@@ -240,6 +250,8 @@ The following reference scenarios demonstrate the pipeline's end-to-end artifact
 ├── scripts/                            # Automation & cross-tool synchronizers
 │   ├── sync-tools.js                  # Syncs AGENTS.md → CLAUDE.md, .cursorrules & Copilot
 │   └── sync-tools.ps1                 # PowerShell synchronizer
+├── examples/                           # Verified real runs & reference projects
+│   └── real-run-2026-11/              # Live 5-endpoint Order Fulfillment REST API + notes
 ├── package.json                        # CLI package manifest & bin definition
 ├── CLAUDE.md                           # Generated for Claude Code (via sync-tools)
 ├── .cursorrules                        # Generated for Cursor (via sync-tools)

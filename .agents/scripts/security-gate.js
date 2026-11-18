@@ -166,7 +166,11 @@ function main() {
   const taskArgIndex = args.indexOf('--check-task');
   if (taskArgIndex !== -1 && args[taskArgIndex + 1]) {
     const taskId = args[taskArgIndex + 1].toUpperCase();
-    const tasksPath = path.join(ROOT_DIR, 'docs', 'tasks.md');
+    const wsIndex = args.indexOf('--workspace');
+    const targetDir = wsIndex !== -1 && args[wsIndex + 1] ? path.resolve(args[wsIndex + 1]) : process.cwd();
+    const tasksPath = fs.existsSync(path.join(targetDir, 'docs', 'tasks.md'))
+      ? path.join(targetDir, 'docs', 'tasks.md')
+      : path.join(ROOT_DIR, 'docs', 'tasks.md');
     if (!fs.existsSync(tasksPath)) {
       console.log(`[security-gate] Warning: docs/tasks.md not found. Allowing ${taskId}.`);
       process.exit(0);

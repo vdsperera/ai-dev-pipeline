@@ -9,7 +9,13 @@
 const test = require('node:test');
 const assert = require('node:assert/strict');
 const path = require('path');
-const { isTestFile, isScriptOrCliFile, calculateGrade } = require('../scripts/eval-harness');
+const {
+  isTestFile,
+  isScriptOrCliFile,
+  calculateGrade,
+  getChangedFilesSince,
+  runEvaluation
+} = require('../scripts/eval-harness');
 const { checkLineInvariants, verifyArchitecturePaths } = require('../scripts/eval-dimensions');
 
 test('isTestFile identifies test paths and prevents false positive exclusions', () => {
@@ -120,4 +126,24 @@ test('verifyArchitecturePaths handles empty documents with zero paths', () => {
   assert.equal(result.total, 0);
   assert.equal(result.verified, 0);
   assert.equal(result.unresolved.length, 0);
+});
+
+test('getChangedFilesSince resolves changed files and rejects invalid commit references', () => {
+  const rootDir = path.resolve(__dirname, '..');
+  const changed = getChangedFilesSince(rootDir, 'HEAD~1');
+  assert.ok(Array.isArray(changed));
+  assert.ok(changed.length > 0);
+
+  // Rejects invalid git ref
+  assert.throws(
+    () => getChangedFilesSince(rootDir, 'invalid;rm -rf /'),
+    /Invalid git commit reference/
+  );
+});
+
+test('runEvaluation with since flag scopes inspection to changed files', () => {
+  const rootDir = path.resolve(__dirname, '..');
+  const results = runEvaluation({ targetDir: rootDir, since: 'HEAD~1', writeReport: false });
+  assert.ok(results.findings.some(f => f.dimension === 'Scope & Delta'));
+  assert.equal(results.passed, true);
 });

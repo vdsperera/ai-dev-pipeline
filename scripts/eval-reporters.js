@@ -40,9 +40,10 @@ function generateMarkdownReport(results, targetDir) {
     md += `*No architectural drift, linter issues, or anti-pattern regressions detected. High fidelity implementation.*\n\n`;
   } else {
     for (const f of results.findings) {
-      const badge = f.severity === 'FAIL' ? '❌ **[CRITICAL]**' : '⚠️ **[WARNING]**';
+      const badge = f.severity === 'FAIL' ? '❌ **[CRITICAL]**' : f.severity === 'INFO' ? 'ℹ️ **[INFO]**' : '⚠️ **[WARNING]**';
       const location = f.file ? `(\`${f.file}\`)` : '';
-      md += `- ${badge} **${f.dimension}** ${location}: ${f.message} *(-${f.deduction} pts)*\n`;
+      const deduction = f.deduction ? ` *(-${f.deduction} pts)*` : '';
+      md += `- ${badge} **${f.dimension}** ${location}: ${f.message}${deduction}\n`;
     }
   }
 
@@ -80,9 +81,10 @@ function displayResults(results, c) {
   if (results.findings.length > 0) {
     console.log(`\n${c.bold}🚨 Actionable Findings & Drift Alerts:${c.reset}`);
     for (const f of results.findings) {
-      const badge = f.severity === 'FAIL' ? `${c.red}✖ [FAIL]${c.reset}` : `${c.yellow}! [WARN]${c.reset}`;
+      const badge = f.severity === 'FAIL' ? `${c.red}✖ [FAIL]${c.reset}` : f.severity === 'INFO' ? `${c.cyan}ℹ [INFO]${c.reset}` : `${c.yellow}! [WARN]${c.reset}`;
       const loc = f.file ? ` ${c.dim}(${f.file})${c.reset}` : '';
-      console.log(`  ${badge} ${c.bold}${f.dimension}${c.reset}${loc}: ${f.message} ${c.red}(-${f.deduction} pts)${c.reset}`);
+      const deduction = f.deduction ? ` ${c.red}(-${f.deduction} pts)${c.reset}` : '';
+      console.log(`  ${badge} ${c.bold}${f.dimension}${c.reset}${loc}: ${f.message}${deduction}`);
     }
   } else {
     console.log(`\n${c.green}✔ No architectural drift, linter failures, or anti-pattern regressions detected.${c.reset}`);

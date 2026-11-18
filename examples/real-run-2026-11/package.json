@@ -1,0 +1,12 @@
+{
+  "name": "order-fulfillment-api",
+  "version": "1.0.0",
+  "description": "Order & Inventory Fulfillment REST API — Reference Real Run for AI Dev Pipeline",
+  "main": "src/app.js",
+  "scripts": {
+    "test": "node --test tests/*.test.js"
+  },
+  "keywords": ["sdlc", "fulfillment", "inventory", "orders"],
+  "author": "AI Dev Pipeline Team",
+  "license": "MIT"
+}

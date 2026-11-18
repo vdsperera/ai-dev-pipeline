@@ -64,6 +64,7 @@ function printHelp() {
   console.log(`  ${c.cyan}eval${c.reset}                  Audit stage outputs for architectural drift and anti-patterns`);
   console.log(`  ${c.cyan}sync${c.reset}                  Synchronize cross-tool rule configs from .agents/AGENTS.md`);
   console.log(`  ${c.cyan}status${c.reset}                Check pipeline health and active tool configs`);
+  console.log(`  ${c.cyan}migrate${c.reset}               Upgrade older documentation templates to current version`);
   console.log(`  ${c.cyan}help, --help, -h${c.reset}      Show this help message`);
   console.log(`  ${c.cyan}version, -v${c.reset}           Print CLI version\n`);
   console.log(`${c.bold}INIT OPTIONS:${c.reset}`);
@@ -145,26 +146,31 @@ function commandStatus() {
 
     healthyCount++;
     let extra = '';
+    const totalPrompts = fs.readdirSync(path.join(PACKAGE_ROOT, 'prompts')).filter(f => f.endsWith('.md')).length;
+    const totalSkills = fs.readdirSync(path.join(PACKAGE_ROOT, '.agents', 'skills')).filter(f => {
+      try { return fs.statSync(path.join(PACKAGE_ROOT, '.agents', 'skills', f)).isDirectory(); } catch { return false; }
+    }).length;
+
     if (check.path.endsWith('prompts')) {
       const count = fs.readdirSync(check.path).filter(f => f.endsWith('.md')).length;
-      extra = ` (${count}/18 personas)`;
+      extra = ` (${count}/${totalPrompts} personas)`;
     } else if (check.path.endsWith('skills')) {
       const count = fs.readdirSync(check.path).filter(f => {
         try { return fs.statSync(path.join(check.path, f)).isDirectory(); } catch { return false; }
       }).length;
-      extra = ` (${count}/17 skills)`;
+      extra = ` (${count}/${totalSkills} skills)`;
     } else if (check.path.endsWith('CLAUDE.md')) {
       const cmdDir = path.join(TARGET_DIR, '.claude', 'commands');
       const count = fs.existsSync(cmdDir) ? fs.readdirSync(cmdDir).filter(f => f.endsWith('.md')).length : 0;
-      if (count > 0) extra = ` (${count}/17 slash commands)`;
+      if (count > 0) extra = ` (${count}/${totalSkills} slash commands)`;
     } else if (check.path.endsWith('.cursorrules')) {
       const rulesDir = path.join(TARGET_DIR, '.cursor', 'rules');
       const count = fs.existsSync(rulesDir) ? fs.readdirSync(rulesDir).filter(f => f.endsWith('.mdc') && f !== 'agents.mdc').length : 0;
-      if (count > 0) extra = ` (${count}/17 skill rules)`;
+      if (count > 0) extra = ` (${count}/${totalSkills} skill rules)`;
     } else if (check.path.endsWith('copilot-instructions.md')) {
       const promptDir = path.join(TARGET_DIR, '.github', 'prompts');
       const count = fs.existsSync(promptDir) ? fs.readdirSync(promptDir).filter(f => f.endsWith('.prompt.md')).length : 0;
-      if (count > 0) extra = ` (${count}/17 prompt skills)`;
+      if (count > 0) extra = ` (${count}/${totalSkills} prompt skills)`;
     }
     console.log(`  ${c.green}✔${c.reset} ${check.label}${c.dim}${extra}${c.reset}`);
   }
@@ -199,6 +205,11 @@ async function main() {
     case 'status':
       commandStatus();
       break;
+    case 'migrate': {
+      const { commandMigrate } = require('./commands/migrate');
+      await commandMigrate(flags, { PACKAGE_ROOT, TARGET_DIR, BANNER, c });
+      break;
+    }
     case 'eval': {
       const { main: evalMain } = require(path.join(PACKAGE_ROOT, 'scripts', 'eval-harness.js'));
       evalMain();
