@@ -100,6 +100,10 @@ Fix: concrete, actionable description of what to change
 - Transaction scope is minimal — only operations that must be atomic are within a transaction
 - Large data operations use batching or streaming — no loading entire tables into memory
 
+### 10. Architectural alignment & ADR drift
+- If the diff modifies any file listed under an ADR's `Implementing files` in `docs/architecture.md`, verify the change aligns with that ADR's decision.
+- If the implementation diverges from the ADR and the ADR is unchanged, flag: *"Possible undocumented architectural change — confirm or supersede ADR-NNN."*
+
 ## Verdict — exactly one per review
 
 | Verdict | Meaning |

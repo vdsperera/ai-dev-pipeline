@@ -921,8 +921,8 @@ graph TD
 
     USER(["👤 User types: 'plan my project'"]):::user
     
-    subgraph "1. Interception Layer"
-        HOOKS[Hooks<br>Intercepts message]:::hook
+    subgraph "1. Mechanical Guardrail Layer"
+        HOOKS[Hooks<br>Pre-tool / pre-commit checks]:::hook
     end
     
     subgraph "2. Context Layer (Always-On)"

@@ -50,6 +50,7 @@ Run all eight review categories from the agent instructions:
 7. Test quality — coverage of happy/failure/edge, independence, minimal mocks
 8. Scope discipline — no unrequested additions, no TODOs without task IDs
 9. Anti-pattern compliance — no recurrence of mistakes or pitfalls documented in `docs/anti-patterns.md`
+10. Architectural alignment & ADR drift — if the diff modifies any file listed under an ADR's `Implementing files` in `docs/architecture.md` and that ADR's Status/Decision is unchanged, flag: *"Possible undocumented architectural change — confirm or supersede ADR-NNN."*
 
 **Adjustable Strictness**: If the user specified a `strictness` parameter, adjust your tolerance for minor SRP or type-safety deviations accordingly.
 

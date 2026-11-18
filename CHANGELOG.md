@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.3.1] - 2026-11-18
+
+### Fixed
+- **Mermaid Diagram Guardrail Label Alignment (`README.md`)**:
+  - Relabeled the interception layer node in the architecture diagram to `HOOKS[Hooks<br>Pre-tool / pre-commit checks]`, eliminating the last text reference to prompt-level interception and maintaining complete alignment with the 3-Tier model.
+
+### Added
+- **Architectural Alignment & ADR-Drift Detection (`sdlc-review` & `prompts/07-code-reviewer.md`)**:
+  - Added Category 10 to code review instructions: flags code diffs that touch any file declared under an ADR's `Implementing files` in `docs/architecture.md` when that ADR's status remains unchanged (*"Possible undocumented architectural change — confirm or supersede ADR-NNN"*), ensuring living architecture tracking remains synchronized over time.
+
 ## [1.3.0] - 2026-11-17
 
 ### Added
