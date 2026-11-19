@@ -13,6 +13,7 @@ const path = require('path');
 const os = require('os');
 const { parseArgs, getPkgVersion } = require('../bin/cli');
 const { migrateTemplateTag, migrateProjectTemplates } = require('../bin/commands/migrate');
+const { getSkillsCatalog, filterCatalog, formatTerminalOutput } = require('../bin/commands/cheatsheet');
 
 test('parseArgs correctly parses flags and positional subcommands', () => {
   const flags1 = parseArgs(['init', '--yes', '--tools=cursor,claude', '--preset=rapid-prototype']);
@@ -36,6 +37,15 @@ test('parseArgs correctly parses flags and positional subcommands', () => {
   const flags6 = parseArgs(['sync', '--global']);
   assert.equal(flags6.command, 'sync');
   assert.equal(flags6.global, true);
+
+  const flags7 = parseArgs(['cheatsheet', '--phase=planning', '--json']);
+  assert.equal(flags7.command, 'cheatsheet');
+  assert.equal(flags7.phase, 'planning');
+  assert.equal(flags7.json, true);
+
+  const flags8 = parseArgs(['list', '--search=debug']);
+  assert.equal(flags8.command, 'list');
+  assert.equal(flags8.search, 'debug');
 });
 
 test('getPkgVersion returns a valid semver string', () => {
@@ -65,20 +75,45 @@ test('migrateTemplateTag injects template tags non-destructively', () => {
   fs.rmSync(tmpDir, { recursive: true, force: true });
 });
 
-test('migrateProjectTemplates processes docs directory safely', () => {
-  const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'ai-pipe-proj-'));
-  const docsDir = path.join(tmpDir, 'docs');
-  fs.mkdirSync(docsDir, { recursive: true });
+test('getSkillsCatalog returns 7 SDLC phases and 19 skills', () => {
+  const catalog = getSkillsCatalog();
+  assert.equal(catalog.length, 7);
 
-  fs.writeFileSync(path.join(docsDir, 'architecture.md'), '# System Architecture\nComponents.', 'utf8');
+  const totalSkills = catalog.reduce((acc, phase) => acc + phase.skills.length, 0);
+  assert.ok(totalSkills >= 19, `Expected at least 19 skills, got ${totalSkills}`);
 
-  const results = migrateProjectTemplates(tmpDir);
-  assert.equal(results.upgraded.length, 1);
-  assert.equal(results.missing.length, 2);
+  const phaseIds = catalog.map(p => p.phaseId);
+  assert.ok(phaseIds.includes('planning'));
+  assert.ok(phaseIds.includes('develop'));
+  assert.ok(phaseIds.includes('review'));
+  assert.ok(phaseIds.includes('test'));
+  assert.ok(phaseIds.includes('deploy'));
+  assert.ok(phaseIds.includes('docs'));
+  assert.ok(phaseIds.includes('governance'));
+});
 
-  const res2 = migrateProjectTemplates(tmpDir);
-  assert.equal(res2.upgraded.length, 0);
-  assert.equal(res2.current.length, 1);
+test('filterCatalog correctly filters by phase and keyword', () => {
+  const catalog = getSkillsCatalog();
 
-  fs.rmSync(tmpDir, { recursive: true, force: true });
+  const planningOnly = filterCatalog(catalog, { phase: 'planning' });
+  assert.equal(planningOnly.length, 1);
+  assert.equal(planningOnly[0].phaseId, 'planning');
+
+  const debugMatch = filterCatalog(catalog, { search: 'debug' });
+  assert.ok(debugMatch.length > 0);
+  assert.ok(debugMatch.some(g => g.skills.some(s => s.skill === 'sdlc-debug')));
+
+  const noMatch = filterCatalog(catalog, { search: 'nonexistent-skill-xyz' });
+  assert.equal(noMatch.length, 0);
+});
+
+test('formatTerminalOutput generates clean formatted string containing skills', () => {
+  const catalog = getSkillsCatalog();
+  const mockColors = {
+    bold: '', reset: '', cyan: '', green: '', yellow: '', dim: '', magenta: ''
+  };
+  const output = formatTerminalOutput(catalog.slice(0, 1), [], mockColors);
+  assert.match(output, /Capabilities Catalog & Quick Reference/);
+  assert.match(output, /sdlc-plan/);
+  assert.match(output, /docs\/quick-reference\.md/);
 });

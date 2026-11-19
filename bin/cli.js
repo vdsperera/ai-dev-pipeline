@@ -66,6 +66,7 @@ function printHelp() {
   console.log(`  ${c.cyan}sync${c.reset}                  Synchronize cross-tool rule configs from .agents/AGENTS.md`);
   console.log(`  ${c.cyan}status${c.reset}                Check pipeline health and active tool configs`);
   console.log(`  ${c.cyan}migrate${c.reset}               Upgrade older documentation templates to current version`);
+  console.log(`  ${c.cyan}cheatsheet, list${c.reset}      Display interactive quick-reference of all skills and workflows`);
   console.log(`  ${c.cyan}help, --help, -h${c.reset}      Show this help message`);
   console.log(`  ${c.cyan}version, -v${c.reset}           Print CLI version\n`);
   console.log(`${c.bold}INIT OPTIONS:${c.reset}`);
@@ -74,6 +75,10 @@ function printHelp() {
   console.log(`  ${c.green}--preset <name>${c.reset}       Architecture preset: enterprise-ddd, rapid-prototype, standard`);
   console.log(`  ${c.green}--type <type>${c.reset}         Project type: greenfield, brownfield`);
   console.log(`  ${c.green}--force${c.reset}               Overwrite existing files without prompting\n`);
+  console.log(`${c.bold}CHEATSHEET OPTIONS:${c.reset}`);
+  console.log(`  ${c.green}--phase <name>${c.reset}        Filter by phase: planning, develop, review, test, deploy, docs, governance`);
+  console.log(`  ${c.green}--search <query>${c.reset}      Search skills and commands by keyword`);
+  console.log(`  ${c.green}--json${c.reset}                Output raw capabilities catalog as JSON\n`);
 }
 
 function parseArgs(args) {
@@ -86,7 +91,10 @@ function parseArgs(args) {
     force: false,
     global: false,
     help: false,
-    version: false
+    version: false,
+    phase: null,
+    search: null,
+    json: false
   };
 
   const positional = [];
@@ -97,6 +105,11 @@ function parseArgs(args) {
     else if (arg === '-y' || arg === '--yes') flags.yes = true;
     else if (arg === '--force') flags.force = true;
     else if (arg === '--global' || arg === '-g') flags.global = true;
+    else if (arg === '--json') flags.json = true;
+    else if (arg.startsWith('--phase=')) flags.phase = arg.split('=')[1];
+    else if (arg === '--phase' && args[i + 1]) flags.phase = args[++i];
+    else if (arg.startsWith('--search=')) flags.search = arg.split('=')[1];
+    else if (arg === '--search' && args[i + 1]) flags.search = args[++i];
     else if (arg.startsWith('--tools=')) flags.tools = arg.split('=')[1].toLowerCase().split(',');
     else if (arg === '--tools' && args[i + 1]) flags.tools = args[++i].toLowerCase().split(',');
     else if (arg.startsWith('--preset=')) flags.preset = arg.split('=')[1].toLowerCase();
@@ -251,6 +264,12 @@ async function main() {
     case 'migrate': {
       const { commandMigrate } = require('./commands/migrate');
       await commandMigrate(flags, { PACKAGE_ROOT, TARGET_DIR: targetDir, BANNER, c });
+      break;
+    }
+    case 'cheatsheet':
+    case 'list': {
+      const { commandCheatsheet } = require('./commands/cheatsheet');
+      commandCheatsheet(flags, { PACKAGE_ROOT, BANNER, c });
       break;
     }
     case 'eval': {

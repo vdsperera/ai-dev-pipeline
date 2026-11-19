@@ -49,6 +49,9 @@ To understand how the pipeline operates, think of the distinction between **the 
 | **19 Skills** (`.agents/skills/`) | **On-Demand** | Triggered only when you say phrases like `"plan my project"`, `"implement TASK-001"`, `"debug this"`, or `"explain architecture decisions"`. | **WHAT task to do**: Orchestrates multi-agent chains, creates task backlogs, runs code reviews, and writes reports into `docs/`. |
 | **Always-On Rules** (`.agents/AGENTS.md`) | **Always-On** | Injected automatically on **100% of interactions** (every prompt, every skill, and every ad-hoc question). | **HOW the code must be written**: Enforces baseline engineering law across all tools (typed error handling, parameterized SQL, no console.log, zero linter errors, and anti-pattern memory). |
 
+> [!TIP]
+> **Need a fast-path lookup table?** Inspect the 1-page [Capabilities Quick Reference](docs/quick-reference.md) or run `npx @kadvsperera/ai-dev-pipeline cheatsheet` to explore all 20 personas, 19 skills, sample triggers, and outputs directly in your terminal.
+
 ---
 
 ## Scope: The Engineering Pillar
@@ -311,6 +314,15 @@ We believe developers should know exactly what any CLI tool installs in their re
 
 #### Built-in CLI Utilities:
 ```bash
+# View interactive capabilities catalog & cheat sheet (all 20 personas, 19 skills, and workflows):
+npx @kadvsperera/ai-dev-pipeline cheatsheet
+# Filter by lifecycle phase, search by keyword, or export machine-readable JSON:
+npx @kadvsperera/ai-dev-pipeline cheatsheet --phase=planning
+npx @kadvsperera/ai-dev-pipeline cheatsheet --search=debug
+npx @kadvsperera/ai-dev-pipeline cheatsheet --json
+# Or use the quick alias:
+npx @kadvsperera/ai-dev-pipeline list
+
 # Check pipeline health, installed personas, and tool rule status:
 npx @kadvsperera/ai-dev-pipeline status
 
