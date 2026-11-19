@@ -50,7 +50,7 @@ To understand how the pipeline operates, think of the distinction between **the 
 | **Always-On Rules** (`.agents/AGENTS.md`) | **Always-On** | Injected automatically on **100% of interactions** (every prompt, every skill, and every ad-hoc question). | **HOW the code must be written**: Enforces baseline engineering law across all tools (typed error handling, parameterized SQL, no console.log, zero linter errors, and anti-pattern memory). |
 
 > [!TIP]
-> **Need a fast-path lookup table?** Inspect the 1-page [Capabilities Quick Reference](docs/quick-reference.md) or run `npx @kadvsperera/ai-dev-pipeline cheatsheet` to explore all 20 personas, 19 skills, sample triggers, and outputs directly in your terminal.
+> **Need a fast-path lookup table?** Inspect the 1-page [Capabilities Quick Reference](docs/quick-reference.md), explore the interactive [Visual Web Catalog](docs/catalog.html), or run `npx @kadvsperera/ai-dev-pipeline cheatsheet` to explore all 20 personas, 19 skills, sample triggers, and outputs directly in your terminal.
 
 ---
 

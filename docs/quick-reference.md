@@ -1,7 +1,8 @@
 # AI Dev Pipeline — Capabilities Quick Reference
 
 <!-- pipeline-template: quick-reference/v1 -->
-_The fast-path task matrix for AI coding agents across Antigravity, Cursor, Claude Code, and Copilot._
+_The fast-path task matrix for AI coding agents across Antigravity, Cursor, Claude Code, and Copilot._  
+_Prefer an interactive browser dashboard? Open the [Visual Web Catalog](catalog.html) with real-time filtering and 1-click prompt copying._
 
 ---
 
