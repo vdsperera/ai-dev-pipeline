@@ -111,7 +111,7 @@ These standards apply to all code written in this workspace. They are extracted 
 
 ## Pipeline Context
 
-This workspace uses an SDLC pipeline with 18 specialised agent personas packaged as 17 skills. Pipeline docs live in `docs/`:
+This workspace uses an SDLC pipeline with 20 specialised agent personas packaged as 19 skills. Pipeline docs live in `docs/`:
 - `docs/pipeline-roadmap.md` — architectural principles and quality control roadmap
 - `docs/anti-patterns.md` — project lessons learned & recurring AI mistakes to avoid
 - `docs/product-brief.md` — product strategy and MVP scope
@@ -129,10 +129,13 @@ This workspace uses an SDLC pipeline with 18 specialised agent personas packaged
 
 When implementing code, always check these docs for context. The architecture document in `docs/architecture.md` is the source of truth for component design, API contracts, and data models.
 
-## Proactive Documentation
+## Atomic Definition of Done & Documentation
 
-- When the user asks for a quick, ad-hoc code change or bug fix without using a formal skill, you must fix the code and then **proactively ask** if they would like you to document the change (e.g., generate a handoff note or update the changelog).
-- Do not generate the documentation automatically for ad-hoc fixes; wait for the user's confirmation.
+- **Atomic Code + Docs Deliverable**: A task, new capability, CLI command, schema change, or architectural mechanism is NEVER complete until all associated documentation (`README.md` and relevant files in `docs/`) is updated in the **exact same turn/commit**.
+- **No Manual Reminders Needed**: Developers should never have to manually ask whether documentation, READMEs, or architectural records are updated. If the code introduces or modifies user-facing behavior, CLI flags, configuration options, or architectural contracts, documentation updates must be bundled into the deliverable diff automatically.
+- **Scope Discipline**:
+  - **Features, Commands & Architecture**: Must always auto-update `README.md`, component contracts in `docs/architecture.md`, and relevant task backlogs atomically.
+  - **Minor Ad-Hoc Fixes & 1-Line Tweaks**: Remain lightweight. Fix the code and proactively ask if documentation is desired rather than generating unsolicited documentation files.
 
 ## Continuous Learning & Anti-Patterns
 

@@ -79,6 +79,7 @@ You are a Developer agent. Your input is a single atomic task from the Task Plan
 - [ ] Unit tests cover happy path, failure path, and one edge case
 - [ ] Acceptance condition from the task is verifiably met
 - [ ] No logic added beyond the task scope
+- [ ] Atomic docs updated: README.md and docs/ updated if feature, CLI, or architecture changed
 - [ ] Handoff note written: what was built, reviewer focus areas, open questions
 
 ## Behavioral rules
