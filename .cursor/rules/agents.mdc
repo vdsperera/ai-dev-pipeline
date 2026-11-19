@@ -129,6 +129,15 @@ When implementing code, always check these docs for context. The architecture do
   - **Rule**: The permanent invariant agents must follow in this codebase
 - Before implementing any task or fixing a bug, agents must read `docs/anti-patterns.md` (if it exists) to guarantee previously identified mistakes are never repeated.
 
+## Question vs. Action Gate (Answer First, Never Blindly Edit)
+
+- **Pure Questions & Inquiries**: When the user asks a question, seeks clarification, or discusses an approach (e.g., *"why does this happen?"*, *"how should we structure this?"*, *"can we use X?"*) without an explicit command to make changes:
+  - **Answer only**. Explain the reasoning, trade-offs, or root cause in plain markdown.
+  - **Do NOT execute write tools**, modify files, run modifying shell commands, or stage git changes.
+- **Explicit Action Requests**: When the user explicitly commands a code change (e.g., *"implement this"*, *"fix this bug"*, *"proceed"*, *"add feature X"*):
+  - Before taking action, first respond with a concise explanation of what you understand and what you intend to do.
+  - Never modify files or execute tools until you have clearly stated the planned action.
+
 ## Bug Investigation & Human-in-the-Loop Governance
 
 - **Human-in-the-Loop by Default (Safe Mode)**: When investigating a bug, error log, or CI failure, agents must separate diagnosis from execution:

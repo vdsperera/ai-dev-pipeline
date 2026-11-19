@@ -603,6 +603,8 @@ The coding standards from Agent 6 (Developer) are installed as `AGENTS.md` — t
 - Logging & observability standards
 - Static analysis & linting configuration and zero-error enforcement
 - Continuous learning & anti-patterns: capturing corrections into `docs/anti-patterns.md`
+- Question vs. Action Gate: answer questions first; never execute tools or modify files prematurely
+- Atomic Definition of Done: features and documentation/README are always updated atomically in the same turn
 - Data & schema standards
 - Unit test requirements
 
