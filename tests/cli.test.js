@@ -32,6 +32,10 @@ test('parseArgs correctly parses flags and positional subcommands', () => {
 
   const flags5 = parseArgs(['--version']);
   assert.equal(flags5.version, true);
+
+  const flags6 = parseArgs(['sync', '--global']);
+  assert.equal(flags6.command, 'sync');
+  assert.equal(flags6.global, true);
 });
 
 test('getPkgVersion returns a valid semver string', () => {

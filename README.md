@@ -336,6 +336,10 @@ npx @kadvsperera/ai-dev-pipeline eval --benchmark
 # Re-synchronize rules across all editors after updating .agents/AGENTS.md:
 npx @kadvsperera/ai-dev-pipeline sync
 
+# Synchronize or verify health of the global Antigravity plugin (~/.gemini/config/plugins/):
+npx @kadvsperera/ai-dev-pipeline sync --global
+npx @kadvsperera/ai-dev-pipeline status --global
+
 # Non-destructively upgrade docs templates and stamp planning checksums:
 npx @kadvsperera/ai-dev-pipeline migrate
 

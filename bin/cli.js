@@ -18,6 +18,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const os = require('os');
 
 const PACKAGE_ROOT = path.resolve(__dirname, '..');
 const TARGET_DIR = process.cwd();
@@ -83,6 +84,7 @@ function parseArgs(args) {
     preset: null,
     type: null,
     force: false,
+    global: false,
     help: false,
     version: false
   };
@@ -94,6 +96,7 @@ function parseArgs(args) {
     else if (arg === '--version' || arg === '-v' || arg === 'version') flags.version = true;
     else if (arg === '-y' || arg === '--yes') flags.yes = true;
     else if (arg === '--force') flags.force = true;
+    else if (arg === '--global' || arg === '-g') flags.global = true;
     else if (arg.startsWith('--tools=')) flags.tools = arg.split('=')[1].toLowerCase().split(',');
     else if (arg === '--tools' && args[i + 1]) flags.tools = args[++i].toLowerCase().split(',');
     else if (arg.startsWith('--preset=')) flags.preset = arg.split('=')[1].toLowerCase();
@@ -109,23 +112,58 @@ function parseArgs(args) {
   return flags;
 }
 
-function commandSync(workspaceDir = TARGET_DIR) {
+function copyDirectoryRecursive(src, dest) {
+  if (!fs.existsSync(src)) return;
+  if (!fs.existsSync(dest)) fs.mkdirSync(dest, { recursive: true });
+  for (const item of fs.readdirSync(src)) {
+    const srcItem = path.join(src, item);
+    const destItem = path.join(dest, item);
+    if (fs.statSync(srcItem).isDirectory()) {
+      copyDirectoryRecursive(srcItem, destItem);
+    } else {
+      fs.copyFileSync(srcItem, destItem);
+    }
+  }
+}
+
+function syncGlobalPlugin(globalDir) {
+  copyDirectoryRecursive(path.join(PACKAGE_ROOT, 'prompts'), path.join(globalDir, 'prompts'));
+  copyDirectoryRecursive(path.join(PACKAGE_ROOT, '.agents', 'skills'), path.join(globalDir, 'skills'));
+  copyDirectoryRecursive(path.join(PACKAGE_ROOT, '.agents'), path.join(globalDir, '.agents'));
+  copyDirectoryRecursive(path.join(PACKAGE_ROOT, 'bin'), path.join(globalDir, 'bin'));
+  copyDirectoryRecursive(path.join(PACKAGE_ROOT, 'scripts'), path.join(globalDir, 'scripts'));
+  copyDirectoryRecursive(path.join(PACKAGE_ROOT, 'docs'), path.join(globalDir, 'docs'));
+  fs.copyFileSync(path.join(PACKAGE_ROOT, 'package.json'), path.join(globalDir, 'package.json'));
+  fs.copyFileSync(path.join(PACKAGE_ROOT, 'README.md'), path.join(globalDir, 'README.md'));
+}
+
+function commandSync(workspaceDir = TARGET_DIR, isGlobal = false) {
   console.log(BANNER);
-  console.log(`${c.bold}🔄 Synchronizing Cross-Tool Rules & Instructions...${c.reset}`);
+  const syncDir = isGlobal
+    ? path.join(os.homedir(), '.gemini', 'config', 'plugins', 'ai-dev-pipeline')
+    : workspaceDir;
+
+  if (isGlobal) {
+    console.log(`${c.bold}🔄 Synchronizing Global Antigravity Plugin (${syncDir})...${c.reset}`);
+    syncGlobalPlugin(syncDir);
+  } else {
+    console.log(`${c.bold}🔄 Synchronizing Cross-Tool Rules & Instructions...${c.reset}`);
+  }
+
   const syncModule = require(path.join(PACKAGE_ROOT, 'scripts', 'sync-tools.js'));
-  const res = syncModule.runSynchronizer(['all'], workspaceDir, false, path.join(PACKAGE_ROOT, '.agents', 'skills'));
+  const res = syncModule.runSynchronizer(['all'], syncDir, false, path.join(PACKAGE_ROOT, '.agents', 'skills'));
   if (res.updated && res.updated.length > 0) {
     console.log(`${c.green}${c.bold}✔ Synchronized ${res.updated.length} configs from .agents/AGENTS.md:${c.reset}`);
     for (const r of res.updated) console.log(`   ${c.green}+${c.reset} ${r}`);
   } else {
-    console.log(`${c.yellow}! No configurations were updated.${c.reset}`);
+    console.log(`${c.green}✔ All configurations are up to date.${c.reset}`);
   }
 }
 
-function commandStatus(workspaceDir = TARGET_DIR) {
+function commandStatus(workspaceDir = TARGET_DIR, isGlobal = false) {
   console.log(BANNER);
   console.log(`${c.bold}🔍 AI Dev Pipeline Diagnostics & Health Check${c.reset}`);
-  console.log(`   Workspace: ${c.dim}${workspaceDir}${c.reset}\n`);
+  console.log(`   ${isGlobal ? 'Global Plugin' : 'Workspace'}: ${c.dim}${workspaceDir}${c.reset}\n`);
 
   const checks = [
     { label: 'Core Standards (.agents/AGENTS.md)', path: path.join(workspaceDir, '.agents', 'AGENTS.md') },
@@ -195,7 +233,8 @@ async function main() {
     return;
   }
 
-  const targetDir = flags.targetDir || TARGET_DIR;
+  const globalPluginDir = path.join(os.homedir(), '.gemini', 'config', 'plugins', 'ai-dev-pipeline');
+  const targetDir = flags.global ? globalPluginDir : (flags.targetDir || TARGET_DIR);
 
   switch (flags.command) {
     case 'init': {
@@ -204,10 +243,10 @@ async function main() {
       break;
     }
     case 'sync':
-      commandSync(targetDir);
+      commandSync(targetDir, flags.global);
       break;
     case 'status':
-      commandStatus(targetDir);
+      commandStatus(targetDir, flags.global);
       break;
     case 'migrate': {
       const { commandMigrate } = require('./commands/migrate');
