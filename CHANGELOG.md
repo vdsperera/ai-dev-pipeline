@@ -5,6 +5,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-11-19
+
+### Added
+- **Capabilities Quick-Reference Guide (`docs/quick-reference.md`)**:
+  - Authored a task-oriented matrix answering *"What do you want to do?"* mapping goals directly to personas, trigger phrases, slash commands, inputs, and primary outputs.
+  - Formatted across all 7 SDLC lifecycle phases (Planning, Development, Review Gates, Testing & Evaluation, DevOps, Documentation, Governance).
+  - Includes cross-tool invocation matrices (Antigravity, Cursor, Claude Code, GitHub Copilot) and baseline quality invariants.
+- **Interactive Terminal Capabilities Catalog (`npx ai-dev-pipeline cheatsheet`)**:
+  - Implemented `bin/commands/cheatsheet.js` and registered `cheatsheet` (alias: `list`) in `bin/cli.js`.
+  - Displays colorized, grouped terminal overview of all 20 agent personas, 19 skills, and core CLI commands.
+  - Added `--phase <name>` flag to filter skills by SDLC stage (planning, develop, review, test, deploy, docs, governance).
+  - Added `--search <query>` flag for keyword searching across skill names, personas, triggers, and purposes.
+  - Added `--json` flag to export the entire capabilities catalog in machine-readable JSON format.
+- **Comprehensive Unit Test Coverage for CLI & Catalog**:
+  - Added test cases in `tests/cli.test.js` covering catalog integrity (verifying 7 phases and 19 skills), phase and search filtering, argument parsing, and terminal formatting (34 unit tests passing).
+- **Documentation Atomic Sync**:
+  - Updated `README.md` with links to the quick reference guide and command usage for `cheatsheet`, `list`, and its option flags.
+
 ## [1.5.0] - 2026-11-18
 
 ### Added

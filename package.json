@@ -1,6 +1,6 @@
 {
   "name": "@kadvsperera/ai-dev-pipeline",
-  "version": "1.5.0",
+  "version": "1.6.0",
   "description": "Agentic SDLC Governance Framework for AI coding agents with native parity across Antigravity, Cursor, Claude Code, and Copilot.",
   "main": "bin/cli.js",
   "bin": {
