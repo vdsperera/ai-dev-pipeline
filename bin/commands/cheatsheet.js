@@ -250,6 +250,11 @@ const CLI_COMMANDS = [
     cmd: 'migrate',
     args: '[--target-dir <path>]',
     desc: 'Non-destructively stamp template tags & planning checksums in docs/'
+  },
+  {
+    cmd: 'check',
+    args: '[--target-dir <path>]',
+    desc: 'Audit release readiness and sync completeness across docs, tools, and plugins (alias: audit)'
   }
 ];
 

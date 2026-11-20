@@ -120,7 +120,10 @@ npx @kadvsperera/ai-dev-pipeline sync --global
 # 5. Non-destructively stamp template tags & planning hashes
 npx @kadvsperera/ai-dev-pipeline migrate
 
-# 6. Scaffold into new or existing repository
+# 6. Audit release readiness and sync completeness across docs, tools, and plugins
+npx @kadvsperera/ai-dev-pipeline check
+
+# 7. Scaffold into new or existing repository
 npx @kadvsperera/ai-dev-pipeline init
 npx @kadvsperera/ai-dev-pipeline init -y
 ```

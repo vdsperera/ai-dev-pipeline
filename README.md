@@ -355,6 +355,10 @@ npx @kadvsperera/ai-dev-pipeline status --global
 # Non-destructively upgrade docs templates and stamp planning checksums:
 npx @kadvsperera/ai-dev-pipeline migrate
 
+# Audit release readiness and sync completeness across docs, tools, and plugins:
+npx @kadvsperera/ai-dev-pipeline check
+npm run check:release
+
 # Run any command against an explicit target workspace directory:
 npx @kadvsperera/ai-dev-pipeline status --target-dir ./my-project
 npx @kadvsperera/ai-dev-pipeline eval --target-dir ./my-project

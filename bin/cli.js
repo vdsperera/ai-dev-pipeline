@@ -66,6 +66,7 @@ function printHelp() {
   console.log(`  ${c.cyan}sync${c.reset}                  Synchronize cross-tool rule configs from .agents/AGENTS.md`);
   console.log(`  ${c.cyan}status${c.reset}                Check pipeline health and active tool configs`);
   console.log(`  ${c.cyan}migrate${c.reset}               Upgrade older documentation templates to current version`);
+  console.log(`  ${c.cyan}check, audit${c.reset}          Verify release and sync completeness across docs, tools, and plugins`);
   console.log(`  ${c.cyan}cheatsheet, list${c.reset}      Display interactive quick-reference of all skills and workflows`);
   console.log(`  ${c.cyan}help, --help, -h${c.reset}      Show this help message`);
   console.log(`  ${c.cyan}version, -v${c.reset}           Print CLI version\n`);
@@ -264,6 +265,13 @@ async function main() {
     case 'migrate': {
       const { commandMigrate } = require('./commands/migrate');
       await commandMigrate(flags, { PACKAGE_ROOT, TARGET_DIR: targetDir, BANNER, c });
+      break;
+    }
+    case 'check':
+    case 'audit': {
+      const { runReleaseAudit } = require(path.join(PACKAGE_ROOT, 'scripts', 'check-release.js'));
+      const result = runReleaseAudit(targetDir);
+      if (!result.passed) process.exit(1);
       break;
     }
     case 'cheatsheet':

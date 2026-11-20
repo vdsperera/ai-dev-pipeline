@@ -30,6 +30,8 @@
   "scripts": {
     "sync-tools": "node scripts/sync-tools.js",
     "sync-tools:check": "node scripts/sync-tools.js --check",
+    "check:release": "node scripts/check-release.js",
+    "audit": "node scripts/check-release.js",
     "eval": "node scripts/eval-harness.js",
     "benchmark": "node scripts/eval-harness.js --benchmark",
     "test": "node --test tests/*.test.js && node scripts/sync-tools.js --check && node scripts/eval-harness.js --benchmark && node bin/cli.js status"

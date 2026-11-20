@@ -46,6 +46,12 @@ test('parseArgs correctly parses flags and positional subcommands', () => {
   const flags8 = parseArgs(['list', '--search=debug']);
   assert.equal(flags8.command, 'list');
   assert.equal(flags8.search, 'debug');
+
+  const flags9 = parseArgs(['check']);
+  assert.equal(flags9.command, 'check');
+
+  const flags10 = parseArgs(['audit']);
+  assert.equal(flags10.command, 'audit');
 });
 
 test('getPkgVersion returns a valid semver string', () => {
