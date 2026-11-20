@@ -5,6 +5,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-11-20
+
+### Added
+- **Architecture Explainer & Knowledge Translator (`sdlc-explain` — Agent 20)**:
+  - Added dedicated standalone skill (`.agents/skills/sdlc-explain/SKILL.md` and `prompts/20-architecture-explainer.md`) to demystify system architecture, tech stack decisions, and design choices.
+  - Tailors explanations across three distinct audience tiers: Non-Technical (Founders/Stakeholders), Working Developer (Mid/Junior), and Principal Architect (Senior/Reviewers).
+  - Automatically defaults to a structured 3-Tier explanation for open-ended architecture inquiries.
+  - Fully synchronized across all editors: `.claude/commands/sdlc-explain.md`, `.cursor/rules/sdlc-explain.mdc`, and `.github/prompts/sdlc-explain.prompt.md` (64 synchronized editor files).
+- **Audience-Aware Explanations Standard (`.agents/AGENTS.md`)**:
+  - Enforced permanent baseline guideline for detecting and calibrating explanations to requested audience personas.
+  - Protects `docs/architecture.md` from token bloat and AI agent confusion by keeping technical contracts concise while placing rich analogies in `docs/architecture-retro.md` and chat responses.
+- **3-Tier Explanations in Architectural Retrospective (`sdlc-retro` — Agent 17)**:
+  - Upgraded Section 5 in `prompts/17-architectural-retro.md` and `.agents/skills/sdlc-retro/SKILL.md` with structured Multi-Tier Audience Explanation & Review Defense.
+- **Executive Impact Summaries in Trade-Off Consultant (`sdlc-consult` — Agent 19)**:
+  - Updated `prompts/19-consultant.md` and `.agents/skills/sdlc-consult/SKILL.md` to include plain-English executive summaries alongside multi-perspective debate tables and ADRs.
+- **Cheatsheet & CLI Diagnostics Expansion**:
+  - Updated `bin/commands/cheatsheet.js` and `bin/cli.js` status diagnostics to recognize all 21 specialized agent personas and 20 skills.
+  - Updated unit test suite (`tests/sync-tools.test.js`, `tests/cli.test.js`) verifying 20 skills with 34/34 passing tests and 100% benchmark score.
+
 ## [1.6.0] - 2026-11-19
 
 ### Added

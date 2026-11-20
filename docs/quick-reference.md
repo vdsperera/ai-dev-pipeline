@@ -29,6 +29,7 @@ _Prefer an interactive browser dashboard? Open the [Visual Web Catalog](catalog.
 | **Scientific 5-Whys root cause debugging** | `sdlc-debug` | Agent 16 (Bug Investigator) | *"debug this: [symptom]"* or *"investigate error"* | `/sdlc-debug [symptom]` | Failing test first, fix, `docs/handoffs/BUG-NNN.md` |
 | **Audit architectural trade-offs & 100x scale** | `sdlc-retro` | Agent 17 (Architectural Retro) | *"audit design choices"* or *"prepare me to explain this"* | `/sdlc-retro` | `docs/architecture-retro.md` |
 | **Debate tech dilemma (Architect vs Dev vs Sec)** | `sdlc-consult` | Agent 19 (Trade-Off Consultant) | *"consult: [dilemma]"* or *"debate this decision"* | `/sdlc-consult [dilemma]` | Trade-off matrix & pre-drafted ADR in `docs/architecture.md` |
+| **Explain architecture for any audience tier** | `sdlc-explain` | Agent 20 (Architecture Explainer) | *"explain this"* or *"explain architecture for [audience]"* | `/sdlc-explain [topic]` | Tailored explanation (Non-Tech, Dev, or Architect tier) |
 
 ---
 
@@ -84,6 +85,7 @@ flowchart LR
 - **`sdlc-debug`**: Scientific bug investigator that follows 5-Whys root cause analysis, writes a failing reproduction test *before* editing code, applies a minimal fix, and registers anti-pattern lessons.
 - **`sdlc-retro`**: Audits past architectural decisions against recorded ADRs and commit churn, stress-tests 100x scaling limits, and prepares technical defense briefs.
 - **`sdlc-consult`**: Triangulates Architect, Security Reviewer, and Developer viewpoints to resolve complex design crossroads with an ADR and trade-off matrix.
+- **`sdlc-explain`**: Translates system architecture, tech stack choices, and design decisions into tailored explanations across 3 audience tiers (Non-Technical, Developer, Architect).
 
 ---
 
