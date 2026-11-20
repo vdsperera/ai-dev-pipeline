@@ -136,6 +136,16 @@ When implementing code, always check these docs for context. The architecture do
   - Before taking action, first respond with a concise explanation of what you understand and what you intend to do.
   - Never modify files or execute tools until you have clearly stated the planned action.
 
+## Audience-Aware Explanations
+
+When explaining system architecture, design decisions, tech choices, or retrospective audits:
+- **Detect Requested Audience**:
+  - **Non-Technical (Stakeholders, Founders, Clients, Beginners)**: Focus on business value, problem solved, user impact, and real-world everyday analogies. Avoid code snippets, acronyms, and low-level mechanics.
+  - **Working Developer (Mid / Junior Engineers)**: Focus on practical code flow, key files, APIs, libraries, and local development/testing ergonomics.
+  - **Principal Architect (Senior Engineers, Tech Leads, Reviewers)**: Focus on formal ADRs, trade-offs, concurrency, failure modes, security boundaries, and scalability limits.
+- **Multi-Tier Default**: If the user asks generally (e.g., *"why was this decision made?"*, *"explain our architecture"*, *"how does the system work?"*) without specifying an audience, provide a structured **3-Tier Explanation** (Executive Summary, Developer Walkthrough, Technical Deep Dive) so all readers find their level immediately.
+- **Keep Architecture Docs Clean**: Multi-tier analogies and non-technical breakdowns belong in `docs/architecture-retro.md` or chat responses. In `docs/architecture.md`, maintain strict, concise technical contracts (with at most a brief 3-line executive summary at the top) to prevent token bloat and avoid confusing coding agents.
+
 ## Bug Investigation & Human-in-the-Loop Governance
 
 - **Human-in-the-Loop by Default (Safe Mode)**: When investigating a bug, error log, or CI failure, agents must separate diagnosis from execution:

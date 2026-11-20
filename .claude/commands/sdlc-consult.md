@@ -43,8 +43,8 @@ Run the Trade-Off Consultant agent (Agent 19) to debate competing approaches, ev
 ### Step 4: Output & ADR Drafting
 
 1. Deliver the full analysis:
-   - Decision Framing
-   - Multi-Perspective Debate Table
+   - Decision Framing & Executive Summary (Non-Technical impact)
+   - Multi-Perspective Debate Table (Architect, Security, Developer)
    - Trade-Off Evaluation Matrix
    - Recommendation & Sensitivity Invariant
    - Pre-Drafted ADR ready to be pasted into `docs/architecture.md`

@@ -55,7 +55,7 @@ Produce the 4 core sections specified in [`prompts/17-architectural-retro.md`](.
 3. **Reversibility Matrix** (One-way doors vs. two-way doors)
 4. **Scale Reasoning** (Stated load profile, probable first bottleneck, sensitivity condition, required architectural shift)
 
-*(Optional: If invoked with `--with-pitch` or trigger phrase `"prepare me to explain this"`, also include Section 5: Review & Elevator Pitch Cheat Sheet using the C-A-T framework).*
+*(Optional: If invoked with `--with-pitch`, trigger phrase `"prepare me to explain this"`, or when asked to explain decisions, also include Section 5: Multi-Tier Audience Explanation & Review Defense covering Tier 1 Non-Technical, Tier 2 Developer, and Tier 3 Senior Architect).*
 
 - **HALT and ask the user if:** Any failure mode mitigation requires an architectural direction the user has explicitly ruled out.
 - **This step is complete when:** All sections are drafted and 100% of claims carry evidence tags.

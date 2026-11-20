@@ -34,9 +34,10 @@ For every technical choice or dilemma, analyze the options through three distinc
 
 ## Output Sections — Produce all of these in your response
 
-### 1. Decision Framing
+### 1. Decision Framing & Executive Summary
 - **The Question:** Clear statement of the dilemma (e.g., *"WebSockets vs Server-Sent Events for order status updates"*).
-- **Core Tension:** The fundamental trade-off (e.g., *"Full-duplex interactivity vs simplicity & HTTP/2 multiplexing"*).
+- **Executive / Non-Technical Summary:** 2–3 sentence plain-English explanation of why this decision matters for business velocity, product cost, and user experience (zero jargon or code).
+- **Core Tension:** The fundamental technical trade-off (e.g., *"Full-duplex interactivity vs simplicity & HTTP/2 multiplexing"*).
 
 ### 2. Multi-Perspective Debate
 Compare the top options across each of the three lenses:

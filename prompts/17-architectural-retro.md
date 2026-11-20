@@ -68,13 +68,23 @@ Reason about system behavior under 100x data volume or concurrent load:
 - **Sensitivity Note:** State the alternative assumption that would change this bottleneck (e.g., *"If writes exceed 30% instead of 5%, DB lock contention becomes the primary bottleneck instead of memory"*).
 - **Required Architectural Shift:** Structural pattern needed to sustain 100x scale (e.g., worker queue, read-replicas, caching, batching, pagination).
 
-### 5. Review & Elevator Pitch Cheat Sheet (Conditional)
-*Include this section only if invoked with `--with-pitch` or trigger phrase `"prepare me to explain this"`.*
-- **Casual / Coffee-Chat Pitch (60 seconds):** Plain-English explanation without heavy jargon, highlighting business value and component flow.
-- **Senior Technical Review Defense:** Grounded in Non-Functional Requirements (NFRs), data ownership, fault tolerance, and API contracts using the **C-A-T** framework:
-  - *Context:* Problem and constraints
-  - *Alternatives:* Options evaluated
-  - *Trade-offs:* Why this approach won and what drawbacks are accepted
+### 5. Multi-Tier Audience Explanation & Review Defense (Conditional)
+*Include this section if invoked with `--with-pitch`, trigger phrase `"prepare me to explain this"`, or when asked to explain decisions, architecture, or system design.*
+
+Structure explanations tailored across three audience tiers:
+- **Tier 1: Non-Technical / Executive Summary (For Founders, Clients & Stakeholders):**
+  - **Problem Solved & Value:** Plain-English explanation without heavy technical jargon, acronyms, or code.
+  - **Everyday Analogy:** A relatable, real-world comparison explaining how the system functions.
+  - **Business Impact:** Velocity, cost efficiency, user experience, and reliability.
+- **Tier 2: Working Developer Walkthrough (For Mid / Junior Engineers):**
+  - **Practical Code Flow:** How requests and data flow through components and functions.
+  - **Key Files & Libraries:** Primary entry points, critical directories, and external packages used.
+  - **Development Ergonomics:** Local testability, setup notes, and practical guidance for modifying code.
+- **Tier 3: Senior Technical Review & ADR Defense (For Principal Architects & Reviewers):**
+  - Grounded in Non-Functional Requirements (NFRs), concurrency, failure modes, data consistency, and API contracts using the **C-A-T** framework:
+    - *Context:* Problem, scale boundaries, and constraints.
+    - *Alternatives:* Competing options evaluated and concrete rejection rationales.
+    - *Trade-offs & Sensitivity Invariant:* Accepted technical debt, failure boundaries, and condition under which the decision inverts.
 
 ---
 

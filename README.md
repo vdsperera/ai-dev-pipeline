@@ -73,7 +73,7 @@ The AI Dev Pipeline solves this by positioning the developer as the **Lead Archi
 * **Every architectural decision is defensible:** Architecture Decision Records (ADRs in `docs/architecture.md`) explicitly capture why an approach was chosen, what alternatives were evaluated, and what trade-offs were accepted.
 * **Full paper trail per task:** Developer handoff notes (`docs/handoffs/`), Gherkin acceptance criteria (`docs/user-stories.md`), and automated drift checks guarantee you can always explain and defend *how* and *why* your system functions.
 * **Instant brownfield visibility (`sdlc-onboard`):** Reverse-engineer any legacy or existing codebase to surface architectural risks, dependency bottlenecks, and tech debt before touching a line of code.
-* **Evidence-grounded architectural retro (`sdlc-retro`):** Automatically audit past decisions against recorded ADRs and git commit churn, reason about 100x scale, and prepare review defense talking points.
+* **Evidence-grounded architectural retro (`sdlc-retro`):** Automatically audit past decisions against recorded ADRs and git commit churn, reason about 100x scale, and prepare multi-tier audience explanations (Non-Technical, Developer, Architect).
 * **Scientific debugging (`sdlc-debug`):** Enforce root-cause analysis with automated failing reproduction tests before applying fixes—preventing "guess-and-check" hallucinated patches.
 
 ### Interrogating & Defending Your Architecture
@@ -595,7 +595,7 @@ The 20 agents map directly to a cross-functional real-world software team, cover
 | `sdlc-docs` | "document TASK-NNN", "generate docs", "update README" | API docs, README, changelog. Auto-syncs architecture drift back to `docs/architecture.md` |
 | `sdlc-onboard` | "onboard this repo", "reverse engineer architecture", "scan existing codebase" | Scans brownfield code, reverse-engineers tech stack and writes baseline `docs/architecture.md` |
 | `sdlc-debug` | "debug this", "fix bug", "investigate error", "root cause analysis", "hotfix" | Scientific RCA: failing test first → minimal fix → linters/tests → `docs/handoffs/BUG-NNN.md` |
-| `sdlc-retro` | "explain architecture decisions", "architectural retro", "audit design choices" | Audits 5 core decisions, failure points, 100x scale, and review cheat sheet → `docs/architecture-retro.md` |
+| `sdlc-retro` | "explain architecture decisions", "architectural retro", "audit design choices" | Audits 5 core decisions, failure points, 100x scale, and 3-tier audience explanations (Non-Tech, Dev, Architect) → `docs/architecture-retro.md` |
 | `sdlc-quick` | "quick fix", "quick edit", "tweak this script", "small change" | Surgical, single-turn bug fix or tweak without multi-agent planning ceremony |
 | `sdlc-consult` | "consult", "debate this decision", "architectural dilemma", "compare approaches" | Multi-perspective trade-off deliberation (Architect vs Security vs Developer) with decision matrix & ADR |
 | `pr-review` | "review this PR", "review PR #47" | Three-layer PR review with verdict |
