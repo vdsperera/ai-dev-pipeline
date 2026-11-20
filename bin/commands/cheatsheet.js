@@ -1,7 +1,7 @@
 /**
  * bin/commands/cheatsheet.js — Interactive Capabilities Catalog & Cheat Sheet
  *
- * Provides a task-oriented terminal reference of all 20 agent personas, 19 skills,
+ * Provides a task-oriented terminal reference of all 21 agent personas, 20 skills,
  * and CLI commands across all 7 SDLC lifecycle phases.
  *
  * Usage:
@@ -208,6 +208,13 @@ const CHEATSHEET_DATA = [
         purpose: 'Synthesizes Architect, Security, and Dev perspectives into ADR + decision matrix',
         trigger: 'consult: [dilemma] | debate this decision',
         output: 'Pre-drafted ADR in docs/architecture.md'
+      },
+      {
+        skill: 'sdlc-explain',
+        agent: 'Agent 20 — Architecture Explainer',
+        purpose: 'Translates architecture, tech choices, and decisions into 3 tailored audience levels',
+        trigger: 'explain this | explain architecture for [audience] | why was this built this way',
+        output: 'Audience-tailored explanation (Non-Tech, Developer, or Architect tier)'
       }
     ]
   }
@@ -222,7 +229,7 @@ const CLI_COMMANDS = [
   {
     cmd: 'cheatsheet',
     args: '[--phase <name>] [--search <query>] [--json]',
-    desc: 'Display interactive quick-reference of all 20 agents, 19 skills, and workflows (alias: list)'
+    desc: 'Display interactive quick-reference of all 21 agents, 20 skills, and workflows (alias: list)'
   },
   {
     cmd: 'status',
@@ -289,7 +296,7 @@ function formatTerminalOutput(catalog, commands, colors) {
   const lines = [];
 
   lines.push(`${bold}📚 AI Dev Pipeline — Capabilities Catalog & Quick Reference${reset}`);
-  lines.push(`${dim}20 Specialized Agent Personas · 19 Skills · 4 AI Editors · Zero-Dependency Governance${reset}\n`);
+  lines.push(`${dim}21 Specialized Agent Personas · 20 Skills · 4 AI Editors · Zero-Dependency Governance${reset}\n`);
 
   for (const group of catalog) {
     lines.push(`${magenta}${bold}=== ${group.phaseName} ===${reset}`);

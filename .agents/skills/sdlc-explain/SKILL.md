@@ -1,0 +1,48 @@
+---
+name: sdlc-explain
+description: >-
+  Use this skill when the user wants to understand, explain, or demystify system architecture,
+  tech stack choices, or design decisions for different audiences (non-technical, developer,
+  or architect). Triggers on phrases like "explain this", "explain architecture", "why was this
+  built this way", "explain for my boss", "explain to junior dev", or "sdlc-explain". Runs Agent 20
+  (Architecture Explainer) to produce tailored multi-tier explanations.
+---
+
+# SDLC Explain — Architecture Explainer & Knowledge Translator
+
+Run the Architecture Explainer agent (Agent 20) to demystify system architecture, explain why specific technology choices or design decisions were made, and translate complex technical mechanics into clear explanations calibrated for any audience.
+
+## Prerequisites
+
+- `docs/architecture.md` (if it exists) to ground the explanation in documented ADRs and contracts
+- Relevant application source code and manifests
+
+## Workflow
+
+### Step 1: Parse Query & Audience
+
+1. Identify the subject: a component, technical decision, database choice, or system flow.
+2. Detect the target audience:
+   - **Non-Technical / Stakeholder**: Founder, product manager, client, beginner.
+   - **Working Developer**: Mid/junior engineer seeking practical code flow.
+   - **Principal Architect**: Senior reviewer seeking formal ADRs and failure boundaries.
+   - **Unspecified**: Default to the complete 3-Tier explanation.
+
+### Step 2: Ground in Artifacts
+
+1. Check `docs/architecture.md` for recorded ADRs, component maps, and data schemas.
+2. Check `docs/anti-patterns.md` for relevant project invariants.
+3. Check relevant source code files to verify actual implementation mechanics.
+
+### Step 3: Deliver Audience-Calibrated Output
+
+- **If Non-Technical requested:** Deliver Tier 1 (Everyday analogies, business value, user impact, zero jargon).
+- **If Developer requested:** Deliver Tier 2 (Practical flow, key files, APIs, local testing steps).
+- **If Architect requested:** Deliver Tier 3 (Formal ADRs, C-A-T framework, failure modes, scale limits).
+- **If General / Multi-Tier:** Deliver all 3 tiers structured cleanly in order.
+
+## Rules
+
+- Never guess or invent architectural contracts; ground claims in `docs/architecture.md` or observed code.
+- Do not modify source code or documentation during an explanation.
+- Keep analogies relatable and avoid condescending language.

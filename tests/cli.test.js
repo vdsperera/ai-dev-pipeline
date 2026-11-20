@@ -75,12 +75,12 @@ test('migrateTemplateTag injects template tags non-destructively', () => {
   fs.rmSync(tmpDir, { recursive: true, force: true });
 });
 
-test('getSkillsCatalog returns 7 SDLC phases and 19 skills', () => {
+test('getSkillsCatalog returns 7 SDLC phases and 20 skills', () => {
   const catalog = getSkillsCatalog();
   assert.equal(catalog.length, 7);
 
   const totalSkills = catalog.reduce((acc, phase) => acc + phase.skills.length, 0);
-  assert.ok(totalSkills >= 19, `Expected at least 19 skills, got ${totalSkills}`);
+  assert.ok(totalSkills >= 20, `Expected at least 20 skills, got ${totalSkills}`);
 
   const phaseIds = catalog.map(p => p.phaseId);
   assert.ok(phaseIds.includes('planning'));

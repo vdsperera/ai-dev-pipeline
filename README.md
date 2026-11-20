@@ -15,7 +15,7 @@
 
 ## How it works
 
-The pipeline has **20 specialised agent personas** packaged as **19 skills** and 1 always-on rule. The 6 planning agents can be invoked individually as standalone skills or chained together via `sdlc-plan`. Instead of copy-pasting between separate AI chat windows, you invoke skills by name and the agent runs automatically.
+The pipeline has **21 specialised agent personas** packaged as **20 skills** and 1 always-on rule. The 6 planning agents can be invoked individually as standalone skills or chained together via `sdlc-plan`. Instead of copy-pasting between separate AI chat windows, you invoke skills by name and the agent runs automatically.
 
 ```
 Your idea
@@ -46,11 +46,11 @@ To understand how the pipeline operates, think of the distinction between **the 
 
 | Component | Nature | When It Triggers | What It Controls |
 |---|---|---|---|
-| **19 Skills** (`.agents/skills/`) | **On-Demand** | Triggered only when you say phrases like `"plan my project"`, `"implement TASK-001"`, `"debug this"`, or `"explain architecture decisions"`. | **WHAT task to do**: Orchestrates multi-agent chains, creates task backlogs, runs code reviews, and writes reports into `docs/`. |
+| **20 Skills** (`.agents/skills/`) | **On-Demand** | Triggered only when you say phrases like `"plan my project"`, `"implement TASK-001"`, `"debug this"`, or `"explain architecture decisions"`. | **WHAT task to do**: Orchestrates multi-agent chains, creates task backlogs, runs code reviews, and writes reports into `docs/`. |
 | **Always-On Rules** (`.agents/AGENTS.md`) | **Always-On** | Injected automatically on **100% of interactions** (every prompt, every skill, and every ad-hoc question). | **HOW the code must be written**: Enforces baseline engineering law across all tools (typed error handling, parameterized SQL, no console.log, zero linter errors, and anti-pattern memory). |
 
 > [!TIP]
-> **Need a fast-path lookup table?** Inspect the 1-page [Capabilities Quick Reference](docs/quick-reference.md), explore the interactive [Visual Web Catalog](docs/catalog.html), or run `npx @kadvsperera/ai-dev-pipeline cheatsheet` to explore all 20 personas, 19 skills, sample triggers, and outputs directly in your terminal.
+> **Need a fast-path lookup table?** Inspect the 1-page [Capabilities Quick Reference](docs/quick-reference.md), explore the interactive [Visual Web Catalog](docs/catalog.html), or run `npx @kadvsperera/ai-dev-pipeline cheatsheet` to explore all 21 personas, 20 skills, sample triggers, and outputs directly in your terminal.
 
 ---
 
@@ -127,7 +127,7 @@ To understand where `ai-dev-pipeline` sits in the software industry, it helps to
 ┌────────────────────────────────────────────────────────┐
 │  LAYER 3: GOVERNANCE & SDLC FRAMEWORK                  │
 │  👉 AI Dev Pipeline                                    │
-│  (20 specialized roles, architecture contracts, evals) │
+│  (21 specialized roles, architecture contracts, evals) │
 ├────────────────────────────────────────────────────────┤
 │  LAYER 2: THE EDITOR / INTERFACE (The Hands)           │
 │  Cursor, Google Antigravity, Claude Code, Copilot      │
@@ -293,7 +293,7 @@ npx @kadvsperera/ai-dev-pipeline init
 npx @kadvsperera/ai-dev-pipeline init -y
 ```
 
-This scaffolds the 20 agent personas, 19 skills, docs roadmap, anti-patterns memory, and native configuration files tailored to your selected AI tools (**Antigravity**, **Cursor**, **Claude Code**, and **GitHub Copilot**).
+This scaffolds the 21 agent personas, 20 skills, docs roadmap, anti-patterns memory, and native configuration files tailored to your selected AI tools (**Antigravity**, **Cursor**, **Claude Code**, and **GitHub Copilot**).
 
 ### Security & Transparency: What `init` Writes and Runs
 
@@ -314,7 +314,7 @@ We believe developers should know exactly what any CLI tool installs in their re
 
 #### Built-in CLI Utilities:
 ```bash
-# View interactive capabilities catalog & cheat sheet (all 20 personas, 19 skills, and workflows):
+# View interactive capabilities catalog & cheat sheet (all 21 personas, 20 skills, and workflows):
 npx @kadvsperera/ai-dev-pipeline cheatsheet
 # Filter by lifecycle phase, search by keyword, or export machine-readable JSON:
 npx @kadvsperera/ai-dev-pipeline cheatsheet --phase=planning
@@ -377,7 +377,7 @@ npx @kadvsperera/ai-dev-pipeline migrate --target-dir ./my-project
 
 ### Option 1: Global Setup (Install Once, Available Everywhere)
 
-Use this method if you want the 20 agents, 19 skills, and coding standards available across **every folder and project** you open without copying files into each repository:
+Use this method if you want the 21 agents, 20 skills, and coding standards available across **every folder and project** you open without copying files into each repository:
 
 #### For Google Antigravity:
 1. Clone or copy this repository into your global plugins directory:
@@ -388,7 +388,7 @@ Use this method if you want the 20 agents, 19 skills, and coding standards avail
    # macOS / Linux:
    git clone https://github.com/vdsperera/ai-dev-pipeline.git ~/.gemini/config/plugins/ai-dev-pipeline
    ```
-2. Antigravity discovers the plugin automatically. All 19 skills are immediately available in any workspace you open.
+2. Antigravity discovers the plugin automatically. All 20 skills are immediately available in any workspace you open.
 
 #### For Cursor:
 1. Open Cursor Settings (`Ctrl+Shift+J` or `Cmd+Shift+J`) → **General** → **Rules for AI**.
@@ -531,7 +531,7 @@ graph TD
 
 ## The Complete Software Team (Agent personas)
 
-The 20 agents map directly to a cross-functional real-world software team, covering every phase of the SDLC.
+The 21 agents map directly to a cross-functional real-world software team, covering every phase of the SDLC.
 
 ### 1. Product & Strategy
 | # | Agent | Real-world role | Prompt |
@@ -598,6 +598,7 @@ The 20 agents map directly to a cross-functional real-world software team, cover
 | `sdlc-retro` | "explain architecture decisions", "architectural retro", "audit design choices" | Audits 5 core decisions, failure points, 100x scale, and 3-tier audience explanations (Non-Tech, Dev, Architect) → `docs/architecture-retro.md` |
 | `sdlc-quick` | "quick fix", "quick edit", "tweak this script", "small change" | Surgical, single-turn bug fix or tweak without multi-agent planning ceremony |
 | `sdlc-consult` | "consult", "debate this decision", "architectural dilemma", "compare approaches" | Multi-perspective trade-off deliberation (Architect vs Security vs Developer) with decision matrix & ADR |
+| `sdlc-explain` | "explain this", "explain architecture for <audience>", "why was this built this way" | Translates architecture, tech stack, and design decisions into 3 tailored audience tiers (Non-Tech, Dev, Architect) |
 | `pr-review` | "review this PR", "review PR #47" | Three-layer PR review with verdict |
 | `pr-triage` | "triage this PR", "this PR is too large" | Segments large PRs for reviewable chunks |
 

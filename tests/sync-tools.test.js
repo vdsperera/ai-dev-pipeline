@@ -29,9 +29,9 @@ const sampleSkill = {
 
 const sampleAgentsContent = '# AI Dev Pipeline — Coding Standards\n\n- All I/O operations are wrapped in error handling.';
 
-test('getAvailableSkills discovers all 19 skills from .agents/skills/', () => {
+test('getAvailableSkills discovers all 20 skills from .agents/skills/', () => {
   const skills = getAvailableSkills(path.join(__dirname, '..', '.agents', 'skills'));
-  assert.equal(skills.length, 19);
+  assert.equal(skills.length, 20);
   const names = skills.map(s => s.name);
   assert.ok(names.includes('sdlc-develop'));
   assert.ok(names.includes('sdlc-architect'));
@@ -39,6 +39,7 @@ test('getAvailableSkills discovers all 19 skills from .agents/skills/', () => {
   assert.ok(names.includes('sdlc-retro'));
   assert.ok(names.includes('sdlc-quick'));
   assert.ok(names.includes('sdlc-consult'));
+  assert.ok(names.includes('sdlc-explain'));
   assert.ok(names.includes('pr-review'));
 });
 
