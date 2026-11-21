@@ -638,6 +638,33 @@ Both `AGENTS.local.md` and `prompts/overrides/` are **never** overwritten by pip
 
 ---
 
+## Synchronizing Rules & Global Plugins (`npx @kadvsperera/ai-dev-pipeline sync`)
+
+The pipeline maintains a single source of truth for coding standards (`.agents/AGENTS.md`) and skills (`.agents/skills/`). Whenever you customize standards, add project-specific rules, or update the pipeline, use `sync` to propagate updates across all your editors:
+
+### 1. Local Workspace Sync
+Synchronizes `.agents/AGENTS.md` and skills into native configurations for Cursor, Claude Code, and Copilot:
+```bash
+npx @kadvsperera/ai-dev-pipeline sync
+
+# Run against a specific target directory:
+npx @kadvsperera/ai-dev-pipeline sync --target-dir ./my-project
+
+# Dry-run check for CI / pre-commit verification:
+npm run sync-tools:check
+```
+
+### 2. Global Antigravity Plugin Sync
+Pushes all 21 personas, 20 skills, CLI tools, and templates into your global plugin directory (`~/.gemini/config/plugins/ai-dev-pipeline/`) so the latest features and CLI tools are instantly active across all your projects:
+```bash
+npx @kadvsperera/ai-dev-pipeline sync --global
+
+# Verify global health status:
+npx @kadvsperera/ai-dev-pipeline status --global
+```
+
+---
+
 ## Automated Stage Evaluation Layer (`npx @kadvsperera/ai-dev-pipeline eval`)
 
 The evaluation harness (`ai-dev-pipeline eval`) is a fast, zero-dependency static hygiene evaluator that catches layer boundary leaks, static analysis failures, known anti-patterns, and incomplete task handoffs before code review.
@@ -1019,6 +1046,7 @@ Prompts are the source of truth — skills reference them. To update agent behav
 1. Edit the relevant file in `prompts/`
 2. Commit the change: `improve: tighten input validation rules in developer agent`
 3. The skills will read the updated prompt on the next invocation — no other changes needed
+4. Run `npx @kadvsperera/ai-dev-pipeline sync` (or `sync --global`) to update your other AI editors and global plugins
 
 ---
 

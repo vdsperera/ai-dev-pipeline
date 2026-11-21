@@ -104,8 +104,8 @@ function checkCountAlignment(rootDir = ROOT_DIR) {
 
     const actualSkills = fs.existsSync(skillsDir)
       ? fs.readdirSync(skillsDir).filter(f => {
-          try { return fs.statSync(path.join(skillsDir, f)).isDirectory(); } catch { return false; }
-        }).length
+        try { return fs.statSync(path.join(skillsDir, f)).isDirectory(); } catch { return false; }
+      }).length
       : 0;
 
     const readmePath = path.join(rootDir, 'README.md');
@@ -175,14 +175,14 @@ function checkGlobalPluginSync(rootDir = ROOT_DIR) {
 
     const localSkillCount = fs.existsSync(localSkillsDir)
       ? fs.readdirSync(localSkillsDir).filter(f => {
-          try { return fs.statSync(path.join(localSkillsDir, f)).isDirectory(); } catch { return false; }
-        }).length
+        try { return fs.statSync(path.join(localSkillsDir, f)).isDirectory(); } catch { return false; }
+      }).length
       : 0;
 
     const globalSkillCount = fs.existsSync(globalSkillsDir)
       ? fs.readdirSync(globalSkillsDir).filter(f => {
-          try { return fs.statSync(path.join(globalSkillsDir, f)).isDirectory(); } catch { return false; }
-        }).length
+        try { return fs.statSync(path.join(globalSkillsDir, f)).isDirectory(); } catch { return false; }
+      }).length
       : 0;
 
     const isVersionSync = !localVersion || !globalVersion || localVersion === globalVersion;
