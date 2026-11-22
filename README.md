@@ -373,7 +373,7 @@ npx @kadvsperera/ai-dev-pipeline migrate --target-dir ./my-project
 | Tool | Option 1: One-Line Scaffolder (Fastest) | Option 2: Global Setup (All projects) | Option 3: Per-Project Git Clone |
 |---|---|---|---|
 | **Google Antigravity** | `npx @kadvsperera/ai-dev-pipeline init` | Clone into `~/.gemini/config/plugins/ai-dev-pipeline/` | Keep `.agents/` in project root |
-| **Cursor** | `npx @kadvsperera/ai-dev-pipeline init` | Paste `AGENTS.md` into **Settings → Rules for AI** | Keep `.cursorrules` / `.cursor/rules/` in root |
+| **Cursor** | `npx @kadvsperera/ai-dev-pipeline init` | Copy `.cursor/rules/*.mdc` to `~/.cursor/rules/` | Keep `.cursorrules` / `.cursor/rules/` in root |
 | **Claude Code** | `npx @kadvsperera/ai-dev-pipeline init` | Copy `CLAUDE.md` to `~/.claude/CLAUDE.md` | Keep `CLAUDE.md` in project root |
 | **GitHub Copilot** | `npx @kadvsperera/ai-dev-pipeline init` | Set in VS Code user instructions | Keep `.github/copilot-instructions.md` in root |
 
@@ -395,9 +395,25 @@ Use this method if you want the 21 agents, 20 skills, and coding standards avail
 2. Antigravity discovers the plugin automatically. All 20 skills are immediately available in any workspace you open.
 
 #### For Cursor:
-1. Open Cursor Settings (`Ctrl+Shift+J` or `Cmd+Shift+J`) → **General** → **Rules for AI**.
-2. Paste the contents of `.agents/AGENTS.md` into the global user rules box.
-3. Cursor's Composer and inline completion will enforce these standards in all projects.
+
+You can install the pipeline globally in Cursor so that both the baseline coding standards and all 20 skills are active across every workspace:
+
+1. **Copy all `.mdc` rule and skill files to Cursor's global rules folder**:
+   ```bash
+   # Windows (PowerShell):
+   New-Item -ItemType Directory -Force -Path "$HOME\.cursor\rules"
+   Copy-Item -Path ".cursor/rules/*.mdc" -Destination "$HOME\.cursor\rules\" -Force
+
+   # macOS / Linux:
+   mkdir -p ~/.cursor/rules && cp .cursor/rules/*.mdc ~/.cursor/rules/
+   ```
+
+2. **How it works across all your projects**:
+   * **`agents.mdc`** (`alwaysApply: true`): Injected automatically on **100% of chats**, enforcing typed error handling, parameterized SQL, no `console.log`, zero linter errors, and anti-pattern memory in every project.
+   * **The 20 `@sdlc-*` skills** (`alwaysApply: false`): Available **on-demand** across any project by typing `@sdlc-plan`, `@sdlc-develop`, `@sdlc-review`, `@sdlc-debug`, etc., in Composer, or by typing natural prompt triggers like *"plan my project"* or *"debug this error"*.
+
+> [!TIP]
+> **Lightweight Alternative (Rules Only)**: If you only want the baseline coding standards without the individual `@sdlc-*` skill files, open Cursor Settings (`Ctrl+Shift+J` or `Cmd+Shift+J`) → **General** → **Rules for AI**, and paste the contents of `.agents/AGENTS.md`.
 
 #### For Claude Code:
 1. Copy the generated `CLAUDE.md` to your global Claude configuration:
